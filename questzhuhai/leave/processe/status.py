@@ -181,7 +181,7 @@ class PendingManager(BaseStatus):
 	def __init__(self, leaveRequest, employee, name=PENDINGMANAGER):
 		super(PendingManager, self).__init__(leaveRequest, employee, name)
 		
-	def get_template_and_subject():
+	def get_template_and_subject(self):
 		if self.is_approve:
 			template = 'leave/email/approve.txt'
 			subject = self.email_subject + ' - Approved'
@@ -209,7 +209,7 @@ class WaitingAdminConfirm(PendingManager):
 	def __init__(self, leaveRequest, employee, name=WAITINGADMINCONFIRM):
 		super(WaitingAdminConfirm, self).__init__(leaveRequest, employee, name)
 		
-	def get_template_and_subject():
+	def get_template_and_subject(self):
 		if self.is_approve:
 			template = 'leave/email/admin_confirm.txt'
 			subject = self.email_subject + ' - Admin confirmed'
