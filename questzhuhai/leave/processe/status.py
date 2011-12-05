@@ -125,7 +125,7 @@ class BaseStatus(object):
 		import settings
 		host = settings.LEAVESYSTEMHOST or ''
 		
-		c = Context({'employee': self.leaveRequest.employee, 'leaverequest': self.leaveRequest, 'reason': self.reason, 'host': host})
+		c = Context({'employee': self.leaveRequest.employee, 'leaverequest': self.leaveRequest, 'reason': self.reason, 'host': host, 'operator': self.employee})
 		email_text = t.render(c)
 		
 		msg = MIMEText(email_text)
@@ -181,22 +181,26 @@ class PendingManager(BaseStatus):
 	def __init__(self, leaveRequest, employee, name=PENDINGMANAGER):
 		super(PendingManager, self).__init__(leaveRequest, employee, name)
 		
+	def get_template_and_subject():
+		if self.is_approve:
+			template = 'leave/email/approve.txt'
+			subject = self.email_subject + ' - Approved'
+		elif self.is_edit:
+			template = 'leave/email/edit.txt'
+			subject = self.email_subject + ' - Edited'
+		else:
+			template = 'leave/email/reject.txt'
+			subject = self.email_subject + ' - Rejected'
+			
+		return template, subject
+	
 	def send_email(self):
 		if self.is_cancel:
 			self.send_cancel_email()
 		elif self.is_resubmit:
 			self.send_resubmit_email()
 		else:
-			if self.is_approve:
-				template = 'leave/email/approve.txt'
-				subject = self.email_subject + ' - Approved'
-			elif self.is_edit:
-				template = 'leave/email/submit.txt'
-				subject = self.email_subject + ' - Edited'
-			else:
-				template = 'leave/email/reject.txt'
-				subject = self.email_subject + ' - Rejected'
-				
+			template, subject = self.get_template_and_subject()
 			tolist = [self.leaveRequest.employee.email]
 			cc = admin_emails() + [self.employee.email]
 			self._send_email(tolist, cc, subject, template)
@@ -204,6 +208,19 @@ class PendingManager(BaseStatus):
 class WaitingAdminConfirm(PendingManager):
 	def __init__(self, leaveRequest, employee, name=WAITINGADMINCONFIRM):
 		super(WaitingAdminConfirm, self).__init__(leaveRequest, employee, name)
+		
+	def get_template_and_subject():
+		if self.is_approve:
+			template = 'leave/email/admin_confirm.txt'
+			subject = self.email_subject + ' - Admin confirmed'
+		elif self.is_edit:
+			template = 'leave/email/edit.txt'
+			subject = self.email_subject + ' - Edited'
+		else:
+			template = 'leave/email/reject.txt'
+			subject = self.email_subject + ' - Rejected'
+			
+		return template, subject
 
 class PendingAdmin(BaseStatus):
 	def __init__(self, leaveRequest, employee, name=PENDINGADMIN):

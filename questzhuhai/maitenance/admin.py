@@ -226,7 +226,7 @@ class EmployeeAdmin(admin.ModelAdmin):
 	delete_selected_confirmation_template = 'maitenance/delete_selected_confirmation.html'
 	update_selected_confirmation_template = 'maitenance/update_selected_confirmation.html'
 	
-	list_filter = ('department', 'title', 'join_date', 'is_administrative_staff', 'is_active')
+	list_filter = ('department', 'team', 'title', 'join_date', 'is_administrative_staff', 'is_active')
 	list_per_page = 20
 	list_select_related = True
 	ordering = ('-display_name',)

@@ -1,4 +1,5 @@
 from status import *
+from leave.models import LeaveType
 
 class BaseProcessor(object):
 	
@@ -67,9 +68,9 @@ class AnnualLeaveProcessor(BaseProcessor):
 		self.status[PENDINGADMIN].afterCancel = CANCELED
 		
 		
-class MaritalLeaveProcessor(BaseProcessor):
+class AdminConfirmLeaveProcessor(BaseProcessor):
 	def __init__(self, leaveRequest, employee):
-		super(MaritalLeaveProcessor, self).__init__(leaveRequest, employee)
+		super(AdminConfirmLeaveProcessor, self).__init__(leaveRequest, employee)
 		
 		self.status[INITIAL].afterSubmit = WAITINGADMINCONFIRM
 		self.status[WAITINGADMINCONFIRM].afterApprove = PENDINGMANAGER
@@ -87,16 +88,19 @@ class MaritalLeaveProcessor(BaseProcessor):
 		self.status[PENDINGMANAGER].afterCancel = CANCELED
 		self.status[PENDINGEMPLOYEE].afterCancel = CANCELED
 		self.status[PENDINGADMIN].afterCancel = CANCELED
-		
-processors = {
-	'Annual Leave': AnnualLeaveProcessor,
-	'Marriage Leave': MaritalLeaveProcessor,
-	'Sick Leave': AnnualLeaveProcessor,
-	'Maternity Leave': MaritalLeaveProcessor,
-	'Bereavement Leave': MaritalLeaveProcessor
-}
+
+def available_processors():
+	need_notify_admin_types = LeaveType.objects.filter(notifyadmin = True)
+	other_types = LeaveType.objects.filter(notifyadmin = False)
+	processors = {}
+	for i in need_notify_admin_types:
+		processors[i.name] = AdminConfirmLeaveProcessor
+	for i in other_types:
+		processors[i.name] = AnnualLeaveProcessor
+	return processors
 
 def get_processor(leaveRequest, employee=None):
+	processors = available_processors()
 	if processors.has_key(leaveRequest.leave_type.name):
 		return processors[leaveRequest.leave_type.name](leaveRequest, employee)
 	else:

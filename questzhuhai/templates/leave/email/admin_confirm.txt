@@ -1,6 +1,6 @@
 Dear,
 
-Your following {{leaverequest.leave_type.name}} request has rejected by {{operator.display_name}}.
+Your following maternity (marriage) leave request has confirmed by {{operator.display_name}}.
 
 	Name:				{{employee.display_name}}
 	
@@ -10,8 +10,6 @@ Your following {{leaverequest.leave_type.name}} request has rejected by {{operat
 					{{p}}
 					{% endfor %}
 	Leave length:			{{leaverequest.days}} days
-
-	Reject reason:			{{reason}}
 	
 	{{host}}{{leaverequest.get_absolute_url}}
 
