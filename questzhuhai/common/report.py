@@ -267,7 +267,9 @@ def create_sick_leave_report_data(employees, base_day, month=None, year=None):
 		month = month or today.month
 		
 		base_date = datetime.date(year, month, base_day)
-		days_to_base_date_of_this_year = float((base_date - datetime.date(year, 1,1)).days) + 1
+		start_date = datetime.datetime(year, 1, 1)
+		start_date = employee.start_fiscal_date < start_date and start_date or employee.start_fiscal_date
+		days_to_base_date_of_this_year = float((base_date - start_date).days) + 1
 		slr.working_days = days_to_base_date_of_this_year
 		slr.report_date = base_date
 		
