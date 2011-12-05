@@ -250,8 +250,8 @@ def create_report_data(employees, base_day, month=None, year=None):
 		res = monthly_taken_days(alr, employee, base_day, month)
 		alr.taken_in_this_year = sum(res)
 		
-		res = monthly_deduction_days(alr, employee, month)
-		alr.available_annual_leave_unclaimed = convert_to_tow_places_float(alr.total_entitled_as_of - alr.taken_in_this_year + sum(res))
+		deduction_days = monthly_deduction_days(alr, employee, month)
+		alr.available_annual_leave_unclaimed = convert_to_tow_places_float(alr.total_entitled_as_of - alr.taken_in_this_year + sum(deduction_days) + employee.balanced_days)
 		
 		alr.report_date = datetime.datetime(year, month, base_day)
 		alr.save()
