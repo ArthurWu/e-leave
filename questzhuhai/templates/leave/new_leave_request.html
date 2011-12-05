@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load leave_utils %}
+{% load compress %}
+{% block title %}Ask a leave{% endblock %}
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="/static/admin/css/widgets.css" /> 
+	<script type="text/javascript" src="/admin/jsi18n/"></script> 
+	{% compress js %}
+	<script type="text/javascript" src="/static/admin/js/core.js"></script>
+	<script type="text/javascript" src="/static/admin/js/jquery.min.js"></script> 
+	<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script> 
+	<script type="text/javascript" src="/static/admin/js/calendar.js"></script> 
+	<script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts-copy.js"></script>
+	<script type="text/javascript" src="/static/scripts/leaverequest.js"></script>
+	{% endcompress %}
+	<style type="text/css">
+		textarea#id_comments{width: 100%;}
+		table#formtable{border-top: 5px solid #ddd;}
+	</style>
+{% endblock %}
+{% block content %}
+	<div class="leave-form">
+		<div class="center"><h1>Leave Request</h1></div>
+		<form id="leaveForm" method='POST' action=''>{% csrf_token %}
+			<table id="formtable" style="margin: 0 auto; width: 820px;">
+				<tr>
+					<td class="col1"><strong>Employee:</strong></td>
+					<td>{% if edit %}{{leaverequest.employee.display_name}}{% else %}{{employee.display_name}}{% endif %}</td>
+				</tr>
+				<tr>
+					<td class="col1"><strong>Department:</strong></td>
+					<td>{% if edit %}{{leaverequest.employee.department}}{% else %}{{employee.department}}{% endif %}</td>
+				</tr>
+				<tr>
+					<td class="col1"><strong>Team:</strong></td>
+					<td>{% if edit %}{{leaverequest.employee.team}}{% else %}{{employee.team}}{% endif %}</td>
+				</tr>
+				<tr>
+					<td class="col1"><strong>Leave type:</strong></td>
+					<td>
+						<div>
+						{{form.leave_type}}
+						{% if form.leave_type.errors %}
+							{{form.leave_type.errors}}
+						{% endif %}
+						</div>
+						<div id="leave_type_helps" style="width: 590px;display:none">
+						{% for k, v in availableDays.items %}
+						{% if k == "annual_leave" %}
+						<span id="annual_leave_help" class="help">
+							Until next settlement day, you have
+							<strong id="{{k}}_total_days">{{v.total_days|floatformat}}</strong>
+							days of annual leave in total.
+							<strong id="{{k}}_used_days" class="">{{v.used_days}}</strong>
+							days have been used, and there are
+							<strong id="{{k}}_need_approval" class="">{{v.need_approval}}</strong>
+							days are waiting for approval or settlement. so, your available annual leave is
+							<strong id="{{k}}_available_days" class="">{{v.available_days|floatformat}}</strong> day.
+						</span>
+						{% else %}
+						<span id="{{k}}_help" class="help">
+							Total: <strong id="{{k}}_total_days">{{v.total_days|floatformat}}</strong> days,
+							Used: <strong id="{{k}}_used_days" class="">{{v.used_days}}</strong> days;
+							Waiting for approval or settlement: <strong id="{{k}}_need_approval" class="">{{v.need_approval}}</strong> days;
+							Available: <strong id="{{k}}_available_days" class="">{{v.available_days|floatformat}}</strong> days. {% if v.expire_date %}<strong>Expire on: {{v.expire_date|date:"Y-m-d"}}</strong>{% endif %}
+						</span>
+						{% endif %}
+						{% endfor %}
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="col1"><strong>Period:</strong>
+						<p class="help">Please skip vacations!</p>
+					</td>
+					<td>
+						{% if periods %}
+							{% for p in periods %}
+								<div class="period">
+								From:<input id="id-start-date" value="{{p.start|date:"Y-m-d"}}" class="vDateField notdatewidget" type="text" name="start_date0" size="11" />
+								<select name="start_time0" id="id_start_time" class="timeOptions">
+									<option value="9" {% period_AM_selected p.start %}>AM</option>
+									<option value="13" {% period_PM_selected p.start %}>PM</option>
+								</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								To:<input id="id-end-date" value="{{p.end|date:"Y-m-d"}}" class="vDateField notdatewidget" type="text" name="end_date0" size="11" />
+								<select name="end_time0" id="id_end_time" class="timeOptions">
+									<option value="9" {% period_AM_selected p.end %}>AM</option>
+									<option value="13" {% period_PM_selected p.end %}>PM</option>
+								</select>
+								<input class="btn-delete-period" type="image" src="/static/admin/img/admin/icon_deletelink.gif" alt="" />
+								</div>
+							{% endfor %}
+						{% else %}
+							<div class="period">
+							From:<input id="id-start-date" class="vDateField notdatewidget" type="text" name="start_date0" size="11" />
+							<select name="start_time0" id="id_start_time" class="timeOptions">
+								<option value="9" selected="selected">AM</option>
+								<option value="13">PM</option>
+							</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							To:<input id="id-end-date" class="vDateField notdatewidget" type="text" name="end_date0" size="11" />
+							<select name="end_time0" id="id_end_time" class="timeOptions">
+								<option value="9" selected="selected">AM</option>
+								<option value="13">PM</option>
+							</select>
+							</div>
+						{% endif %}
+						<div id="total-days" style="float:right;font-size:24px;">
+							<span id="days">0</span>Days
+						</div>
+						<div id="add-period-box">
+							<a id="link-add-period" class="add-another" href="">
+								   <img src="/static/admin/img/admin/icon_addlink.gif" alt="">
+								   Add another period
+							<a/>
+							<span id="period_warn" class='red bold' style="margin-left: 20px;"></span>							
+						</div>
+						<ul class="errorlist" style="display:none"><li id="period_errors"></li></ul>
+						<script type="text/javascript">
+							DateTimeShortcuts.showDays();
+						</script>
+					</td>
+				</tr>
+				<tr>
+					<td class="col1"><strong>Status:</strong></td>
+					<td>
+						{{form.status}}
+					</td>
+				</tr>
+				<tr>
+					<td class="col1"><strong>Approvers:</strong></td>
+					<td>{% for e in employee.get_approvers %}{{e}}{% endfor %}</td>
+				</tr>
+				<tr>
+					<td class="col1"><strong>Comments:</strong></td>
+					<td>
+						{{form.comments}}
+					</td>
+				</tr>
+				<tr>
+					<td class="col-btn" colspan="2">
+						{% if edit %}
+						<input type="hidden" value="1" name="modify" />
+						<input type="hidden" value="{{leaverequest.id}}" name="leave_request_id" />
+						{% endif %}
+						<input type="hidden" value="{% if edit %}{{leaverequest.employee.id}}{% else %}{{employee.id}}{% endif %}" name="employee" />
+						<input id="leave-request-submit" class="default" type="submit" value="Submit" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			
+		});
+	</script>
+{% endblock %}

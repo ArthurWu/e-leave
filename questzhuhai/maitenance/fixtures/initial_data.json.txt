@@ -1,0 +1,74 @@
+[
+	{
+		"model": "maitenance.Department",
+		"pk": 1,
+		"fields":{
+			"name":"Administrative Department",
+			"supervisor": "prod\\awu3"
+		}
+	},
+	{
+		"model": "maitenance.Department",
+		"pk": 2,
+		"fields":{
+			"name":"Windows Management",
+			"supervisor": "prod\\rgong"
+		}
+	},
+	{
+		"model": "maitenance.Department",
+		"pk": 3,
+		"fields":{
+			"name":"Database Management",
+			"supervisor": ""
+		}
+	},
+	{
+		"model": "maitenance.Employee",
+		"pk": 1,
+		"fields": {
+			"sid": "S-1-5-21-636461855-2365528612-2953867313-66047",
+			"domain_id": "prod\\vchen",
+			"display_name": "Vivien Chen",
+			"title": "Office Manager",
+			"email": "vivien.chen@quest.com",
+			"department": 1,
+			
+			"join_date": "2007-05-09",
+   			"start_fiscal_date": "2007-05-09",
+   			"balanced_forward": 0,
+   			"al_entitlement": 12,
+   			"sl_entitlement": 15,
+   			"approvers": "prod\\rgong",
+   			"cc_to": "",
+   			"is_administrative_staff": "True",
+   			"is_active": "True",
+   			"last_login_date": "2011-01-01",
+   			"balanced_days": 0
+		}
+	},
+	{
+		"model": "maitenance.Employee",
+		"pk": 2,
+		"fields": {
+			"sid": "S-1-5-21-636461855-2365528612-2953867313-87714",
+			"domain_id": "prod\\awu3",
+			"display_name": "Arthur Wu",
+			"title": "Devloper 2",
+			"email": "arthur.wu@quest.com",
+			"department": 2,
+			
+			"join_date": "2010-04-12",
+			"start_fiscal_date": "2010-04-12",
+			"balanced_forward": 0,
+			"al_entitlement": 12,
+			"sl_entitlement": 15,
+			"approvers": "prod\\rgong",
+			"cc_to": "prod\\awu1",
+			"is_administrative_staff": "True",
+			"is_active": "True",
+			"last_login_date": "2011-01-01",
+			"balanced_days": 0
+		}
+	}
+]

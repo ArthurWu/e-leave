@@ -1,0 +1,7 @@
+plugin_RegexPicker.py
+setup.py
+RegexPicker_plugin.egg-info/PKG-INFO
+RegexPicker_plugin.egg-info/SOURCES.txt
+RegexPicker_plugin.egg-info/dependency_links.txt
+RegexPicker_plugin.egg-info/entry_points.txt
+RegexPicker_plugin.egg-info/top_level.txt

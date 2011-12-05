@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Quest System Maitenance{% endblock %}
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="/static/css/dep.css" />
+	<link rel="stylesheet" type="text/css" href="/static/css/forms.css" />
+	<!--<script type="text/javascript" src="/static/scripts/dep.js"></script>
+	<script type="text/javascript" src="/static/scripts/team.js"></script>-->
+{% endblock %}
+
+{% block content %}
+<div class="admin-block">
+	<h2  class="admin-title">Departments & Teams</h2>
+			
+	<div id="departments" class="left" style="width: 500px;">
+		
+		<table>
+			<tr>
+				<th>Name</th><th>Supervisor</th><th></th><th></th>
+			</tr>
+			{% for dep in deps.data %}
+			<tr>
+				<td>{{dep.name}}</td><td>{{dep.supervisor}}</td>
+				<td><a href="auth/group/" class="changelink">Change</a></td>
+				<td><a href="auth/group/" class="deletelink">Change</a></td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+	<div style="display: none">
+		<form method="post" action="">{% csrf_token %}
+			<table>
+			{{ form.as_table }}
+			<tr>
+				<td colspan="2">
+					<input type="submit" value="Submit" />
+				</td>
+			</tr>
+			</table>
+		</form>
+	</div>
+	<div style="clear: both">&nbsp;</div>
+</div>
+
+{% endblock %}
+	

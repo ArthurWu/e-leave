@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Ask a leave{% endblock %}
+{% block head %}
+	<style type="text/css">
+		.leaverequest_list{position: relative; width: 960px; min-height: 230px; margin: 0 auto;}
+		.list-table{width: 100%;}
+		#leaverequest_list_top{position: relative;border-bottom:5px solid #ddd; width: 100%; }
+		#leaverequest_list_top #fitler-links{
+			position: absolute;
+			bottom: 3px;
+			right: 0;
+		}
+		#leaverequest_list_top #fitler-links a{
+			font-size: 12px;
+			margin: 0 5px;
+			padding: 2px 6px;
+			border: #aaa 1px solid;
+			line-height: 20px;
+		}
+		#leaverequest_list_top #fitler-links a:hover{
+			background-color: #ccc;
+		}
+		.gray{background-color: #ccc;}
+		#my_leave_info{
+			position: absolute;
+			width:150px;
+			background-color: #ddd;
+			right: -180px;
+			top:27px;
+			padding: 0 10px 10px 10px;;
+			font-size: 12px;
+		}
+		#my_leave_info strong{
+			display: block;
+			padding: 5px 0;
+			border-bottom: 1px solid #aaa;
+		}
+		#my_leave_info span{
+			display: block;
+			padding-top: 3px;
+		}
+		
+	</style>
+{% endblock %}
+{% block content %}
+
+	<div class="leaverequest_list">
+		<div id="leaverequest_list_top">
+			<h1 class="list-title">{{title}}</h1>
+			<div id="fitler-links">
+				<a id="id_processing" href="?status=processing">Processing</a>
+				<a id="id_finished" href="?status=finished">Finished</a>
+				<a id="id_canceled" href="?status=canceled">Canceled</a>
+				<a id="id_all" href="?status=all">View All</a>
+			</div>
+			<script type="text/javascript">
+				document.getElementById('id_{{status}}').style.backgroundColor = "#ddd";
+			</script>
+		</div>
+		<table class="list-table">
+			<tr>
+				<th>Employee</th><th>Leave Type</th><th>Period</th><th></th><th>Status</th><th>Date</th>
+			</tr>
+			{% for lr in leaverequest_list.object_list %}
+			<tr>
+				<td><a href="{{lr.get_absolute_url}}">{{lr.employee.display_name}}</a></td>
+				<td><a href="{{lr.get_absolute_url}}">{{lr.leave_type.name}}</a></td>
+				<td>
+					{% for p in lr.period_set.all %}
+					<strong>{{p}}</strong><br/>
+					{% endfor %}
+				</td>
+				<td>({{lr.days}}Days)</td>
+				<td>{{lr.status}}</td>
+				<td>{{lr.create_date}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% if leaverequest_list.object_list %}
+		<div class="pagination center">
+			<span class="step-links">
+				{% if leaverequest_list.has_previous %}
+					<a href="?page={{ leaverequest_list.previous_page_number }}">previous</a>
+				{% endif %}
+
+				<span class="current">
+					Page {{ leaverequest_list.number }} of {{ leaverequest_list.paginator.num_pages }}.
+				</span>
+
+				{% if leaverequest_list.has_next %}
+					<a href="?page={{ leaverequest_list.next_page_number }}">next</a>
+				{% endif %}
+			</span>
+		</div>
+		{% else %}
+			<p class="center">There is no leave request for this query.</p>	
+		{% endif%}
+		
+		{% if title == "My Leave Request" %}
+		<div id="my_leave_info">
+			{% for leavetype, value in  employee.days_available.items %}
+				{% if leavetype == 'annual_leave' %}
+					<strong>Annual Leave:</strong>
+					<span>Total: {{value.total_days|floatformat}} days</span>
+					<span>Used: {{value.used_days}} days</span>
+					<span>Processing: {{value.need_approval}} days</span>
+					<span>Available: {{value.available_days|floatformat}} days</span>
+				{% endif %}
+				{% if leavetype == 'sick_leave' %}
+					<strong>Sick Leave:</strong>
+					<span>Total: {{value.total_days|floatformat}} days</span>
+					<span>Used: {{value.used_days}} days</span>
+					<span>Processing: {{value.need_approval}} days</span>
+					<span>Available: {{value.available_days|floatformat}} days</span>
+				{% endif %}
+			{% endfor %}
+		</div>
+		{% endif %}
+	</div>
+{% endblock %}

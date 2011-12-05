@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+ "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>{% block title %}base page{% endblock %}</title>
+
+	<link type="text/css" rel="stylesheet" href="/static/css/base_e.css" />
+	<link type="text/css" rel="stylesheet" href="/static/css/base.css" />
+	<link type="text/css" rel="stylesheet" href="/static/css/button.css" />
+	
+	<script type="text/javascript" src="/static/scripts/jquery.js"></script>
+	<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script> 
+	{% block head %}{% endblock %}
+</head>
+<body>
+	<div id="container">
+		<div id="header">
+			<div id="menu">
+				<span>Hi, {{employee.display_name}}!</span>
+				<a id="id_new_leave_request" href="/leave/leaverequest/new/">New Leave Request</a>
+				<a id="id_my_leave_requests" 
+				{% if not employee.is_approver %}
+					style="border-right: none"
+				{% endif %}
+				href="/leave/leaverequests/my/">My Leave Requests</a>
+				{% if employee.is_approver %}
+					<a id="id_to_do_list" 
+					{% if not employee.is_administrative_staff %}
+						style="border-right: none"
+					{% endif %}
+					href="/leave/leaverequests/todo/?status=processing">To Do List</a>
+				{% endif %}
+				{% if employee.is_administrative_staff %}
+					<a id="id_all_leave_requests" href="/leave/leaverequests/">All Leave Requests</a>
+					<a id="id_reports" href="/main/reports/">Leaves Report</a>
+					<a id="id_employees" href="/main/employees/">Employees</a>
+					<a id="id_departments" href="/main/department/">Departments</a>
+					<a id="id_teams" href="/main/team/">Teams</a>
+					<a id="id_settings" href="/main/settings/">Settings</a>
+					<a id="id_action_logs" style="border-right: none" href="/main/action_logs">Action Logs</a>
+				{% endif %}
+			<script type="text/javascript">
+				var active_nav = document.getElementById('id_{{nav}}');
+				if (active_nav != null)
+					active_nav.style.fontWeight = 'bold';
+			</script>
+			</div>
+		</div>
+		<div id="content">
+		{% block content %}{% endblock %}
+		</div>
+		<div id="footer">
+			<div id="copyright">
+			&copy; {% now "Y" %} Quest Software Zhuhai, Version 1.0
+			</div>
+		</div>
+	</div>
+</body>
+</html>

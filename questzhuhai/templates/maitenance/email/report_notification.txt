@@ -1,0 +1,7 @@
+Dear,
+{% if type == 'leave report' %}
+Monthly leave report for {{end_date|date:'Y-m-d'}} had been generated.
+{% else %}
+Monthly leave record report for ({{start_date|date:'Y-m-d'}}~{{end_date|date:'Y-m-d'}})
+{% endif %}
+Download the report file {{host}}{{link}}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h3>Authorization failed</h3>
+	<p>The {{request.META.REMOTE_USER}} account does not have enough permission to see this page. Please contact the administrative stuff to resolve the issue.</p>
+{% endblock %}

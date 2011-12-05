@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n l10n %}
+
+{% block title %}Generate leave report{% endblock %}
+{% block head %}
+    <link type="text/css" rel="stylesheet" href="/static/css/forms.css" /> 
+    {% url 'admin:jsi18n' as jsi18nurl %}
+    <script type="text/javascript" src="/admin/jsi18n/"></script> 
+    <script type="text/javascript" src="/static/admin/js/core.js"></script> 
+    <script type="text/javascript" src="/static/admin/js/jquery.init.js"></script> 
+    <script type="text/javascript" src="/static/admin/js/calendar.js"></script> 
+    <script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script> 
+    <style type="text/css">
+        lable{font-weight: bold; font-size: 14px; width: 200px; display: block;}
+        
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <p>{% blocktrans %}Are you sure you want to archive the adjustment days of the selected {{ objects_name }}? {% endblocktrans %}</p>
+
+    <form action="" method="post">{% csrf_token %}
+	<span><strong>Year:</strong></span><input type="text" name="year" />
+    <div>
+    {% for obj in queryset %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk|unlocalize }}" />
+    {% endfor %}
+	<input type="hidden" name="action" value="archive_year_adjustment_days" />
+    <input type="hidden" name="post" value="yes" />
+    <input type="submit" value="{% trans "  Archive  " %}" />
+    </div>
+    </form>
+	<br />
+	All of the following objects will be updated:
+    {% for item in queryset %}
+        <ul>{{ item }}</ul>
+    {% endfor %}
+{% endblock %}

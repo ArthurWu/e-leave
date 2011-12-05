@@ -1,0 +1,14 @@
+<tr class="admin-row">
+	<td id="notify-admin" style="padding-left:40px;">
+		<input id="{{leavetype.id}}" type="checkbox" name="notifyAdmin"
+			   {% if leavetype.notifyadmin %}checked="checked"{% endif %} />
+	</td>
+	<td id="leavetype-name">{{leavetype.name}}</td>
+	<td id="leavetype-name">{{leavetype.max_days}}</td>
+	<td id="leavetype-delete-btn">
+		<input name="{{leavetype.name|escapejs}}" type="hidden" />
+		<input id="btn-delete-leavetype-{{leavetype.id}}"
+			   class="{% if leavetype.build_in %}invisible{% endif %}"
+			   name="{{leavetype.id}}" src="/static/images/delete.gif" type="image" align="right" />
+	</td>
+</tr>

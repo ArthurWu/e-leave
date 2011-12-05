@@ -1,0 +1,68 @@
+[
+	{
+		"model": "leave.LeaveType",
+		"pk": 1,
+		"fields":
+		{
+			"name":"Annual Leave",
+			"notifyadmin": "False",
+			"max_days": 12,
+			"build_in": "True"
+		}
+	},
+	{
+		"model": "leave.LeaveType",
+		"pk": 2,
+		"fields":
+		{
+			"name":"Sick Leave",
+			"notifyadmin": "False",
+			"max_days": 15,
+			"build_in": "True"
+		}
+	},
+	{
+		"model": "leave.LeaveType",
+		"pk": 3,
+		"fields":
+		{
+			"name":"Marriage Leave",
+			"notifyadmin": "True",
+			"max_days": 13,
+			"build_in": "True"
+		}
+	},
+	{
+		"model": "leave.LeaveType",
+		"pk": 4,
+		"fields":
+		{
+			"name":"Maternity Leave",
+			"notifyadmin": "False",
+			"max_days": 170,
+			"build_in": "True"
+		}
+	},
+	{
+		"model": "leave.LeaveType",
+		"pk": 5,
+		"fields":
+		{
+			"name":"Bereavement Leave",
+			"notifyadmin": "False",
+			"max_days": 3,
+			"build_in": "True"
+		}
+	},
+	{
+		"model": "leave.LeaveType",
+		"pk": 6,
+		"fields":
+		{
+			"name":"Paternity Leave",
+			"notifyadmin": "False",
+			"max_days": 10,
+			"build_in": "True"
+		}
+	}
+]

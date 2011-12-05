@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Administrator action logs{% endblock %}
+{% block head %}
+    <style type="text/css">
+        .center-box{width:960px; margin: 0 auto;}
+        .center-box h1 {margin: 10px 0;}
+        .action-logs{width:100%; border-top: 1px solid #ddd;}
+        .action-logs td{line-height:20px;}
+        .operator{color: blue;}
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div>
+    <h1>Your recently action logs</h1>
+    <table class="action-logs">
+        {% for action in actions.data %}
+        <tr>
+            <td>
+                <span class="operator">{{action.who|escape}}</span> {{action.operation}} at {{action.when}}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+{% endblock %}

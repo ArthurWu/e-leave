@@ -1,0 +1,3 @@
+[nose.plugins]
+plugin_RegexPicker = plugin_RegexPicker:RegexPicker
+

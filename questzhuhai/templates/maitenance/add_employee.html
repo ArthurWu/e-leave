@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load i18n admin_modify adminmedia %}
+{% load url from future %}
+{% block title %}Employee Manage{% endblock %}
+{% url 'admin:jsi18n' as jsi18nurl %}
+
+{% block head %}
+	<link type="text/css" rel="stylesheet" href="/static/css/forms.css" />
+	<script type="text/javascript" src="{{ jsi18nurl|default:"/admin/jsi18n/" }}"></script>
+	{{ media }}
+	<script type="text/javascript" src="/static/scripts/add_employee.js" }}"></script>
+{% endblock %}
+
+{% block content %}
+<h1>{{title}}</h1>
+<div id="content-main">
+{% block object-tools %}
+{% if change %}{% if not is_popup %}
+  
+{% endif %}{% endif %}
+{% endblock %}
+<form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
+<div>
+{% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
+{% if save_on_top %}{% submit_row %}{% endif %}
+{% if errors %}
+    <p class="errornote">
+    {% blocktrans count errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+    </p>
+    {{ adminform.form.non_field_errors }}
+{% endif %}
+
+{% for fieldset in adminform %}
+  {% include "admin/includes/fieldset.html" %}
+{% endfor %}
+
+{% block after_field_sets %}{% endblock %}
+
+{% for inline_admin_formset in inline_admin_formsets %}
+    {% include inline_admin_formset.opts.template %}
+{% endfor %}
+
+{% block after_related_objects %}{% endblock %}
+
+{% submit_row %}
+
+{% if adminform and add %}
+   <script type="text/javascript">document.getElementById("{{ adminform.first_field.id_for_label }}").focus();</script>
+{% endif %}
+
+{# JavaScript for prepopulated fields #}
+{% prepopulated_fields_js %}
+
+</div>
+</form></div>
+{% endblock %}

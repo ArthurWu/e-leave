@@ -1,0 +1,18 @@
+Dear,
+
+Please kindly review the following annual leave request:
+
+	Name:				{{employee.display_name}}
+	
+	Leave type:			{{leaverequest.leave_type.name}}
+
+	Leave schedule:	{% for p in leaverequest.period_set.all %}
+					{{p}}
+					{% endfor %}
+	Leave length:			{{leaverequest.days}} days
+
+	Leave reason:		{{leaverequest.comments}}
+
+Kindly approve or reject on ({{host}}{{leaverequest.get_absolute_url}})
+
+Thanks & Regards

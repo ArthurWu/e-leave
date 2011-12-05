@@ -1,0 +1,16 @@
+Dear,
+
+Please note the following {{leaverequest.leave_type.name}} request has cancelled
+
+	Name:				{{employee.display_name}}
+	
+	Leave type:			{{leaverequest.leave_type.name}}
+
+	Leave schedule:	{% for p in leaverequest.period_set.all %}
+					{{p}}
+					{% endfor %}
+	Leave length:			{{leaverequest.days}} days
+	
+	{{host}}{{leaverequest.get_absolute_url}}
+
+Thanks & Regards

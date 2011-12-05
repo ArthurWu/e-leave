@@ -1,0 +1,5 @@
+#deps{ width: 300px; float: left;}
+#deps ul{list-style-type: none; }
+#deps ul li{display: block; text-align: left;}
+#teams_list{float: left;}
+

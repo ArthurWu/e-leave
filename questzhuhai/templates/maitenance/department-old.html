@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Quest System Maitenance{% endblock %}
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="/static/css/jquery-jvert-tabs-1.1.4.css" />
+	
+	<script type="text/javascript" src="/static/scripts/dep.js"></script>
+	<script type="text/javascript" src="/static/scripts/team.js"></script>
+	<script type="text/javascript" src="/static/scripts/jquery-jvert-tabs-1.1.4.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="admin-block">
+	<h2  class="admin-title">Departments & Teams</h2>
+			
+	<div id="departments" class="left">
+		<div class="add-form" >
+			<div id="add-text" class="left">
+				<label>&nbsp;Department Name:</label><br/>
+				<input id="dep_name" class="input_text" type="text" size="40" maxlength="50" name="name" />
+			</div>
+			<div id="add-btn" class="left buttons">
+				<br />
+				<button id="btn-add-dep" type="submit" class="positive">
+					 Add 
+				</button>
+			</div>
+			<div id="dep-error" class="spec error-message invisible"></div>
+		</div>
+	</div>
+
+	<div id="teams" class="right">
+		
+		<div class="add-form">
+			<div id="add-text" class="left"><label>&nbsp;Team Name:</label><br />
+				<input id="team_name" class="input_text" type="text" size="40" maxlength="50" name="name" />
+			</div>
+			<div id="add-btn" class="left buttons"><br />
+				<button id="btn-add-team" type="submit" class="positive">
+					 Add 
+				</button>
+			</div>
+			<div id="team-error" class="spec error-message invisible"></div>
+		</div>
+		
+	</div>
+	<div id="d-t-items">
+	<div id="vtabs1" style="clear:both;">
+		<div id="deps">
+			<ul >
+				{% for dep in departments.data %}
+					{% include "maitenance/row_dep.html" %}
+				{% endfor %}
+			</ul>
+		</div>
+		<div id="teams_list">
+			{% for dep in departments.data %}
+			<div id="vtabs-content-{{dep.id}}">
+				{% for team in dep.teams.all %}
+					{% include "maitenance/row_team.html" %}
+				{% endfor %}
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+	</div>
+	<div style="clear: both">&nbsp;</div>
+</div>
+
+{% endblock %}
+	

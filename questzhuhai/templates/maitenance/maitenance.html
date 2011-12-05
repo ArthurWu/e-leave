@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Quest System Maitenance{% endblock %}
+
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="/static/css/jquery-jvert-tabs-1.1.4.css" />
+
+	<script type="text/javascript" src="/static/scripts/admin.js"></script>
+	<script type="text/javascript" src="/static/scripts/leavetype.js"></script>
+	
+	
+	
+{% endblock %}
+
+{% block content %}
+	
+	<div class="admin-block">
+		<h2 class="admin-title">Administrators</h2>
+		<p class="spec">
+		To grant a user full access to the Maitenance Site, 
+		specify the user account name (domain\username) in the box, and then click Add.
+		</p>
+		<div id="adminform">
+			
+				<div id="div-admin-id" class="left"><input id="admin_id" class="input_text" type="text" size="60" maxlength="50" name="name" /></div>
+				<div id="div-add-admin" class="buttons left">
+					<button id="btn-add-admin" type="submit" class="positive">
+						<img src="/static/images/user_grant.png" alt=""/> Add
+					</button>
+				</div>
+				<div id="admin-error" class="spec error-message invisible">
+					
+					
+				</div>
+		</div>
+		<div class="block">
+			<table id="super-user">
+				
+					{% for admin in admins.data %}
+						{% include "maitenance/row_admin.html" with admin=admin %}
+					{% endfor %}
+				
+			</table>
+		</div>
+		
+	</div>
+	<div class="admin-block">
+		<h2  class="admin-title">Leave Types</h2>
+		<p class="spec">
+		To add a Leave Type which will displayed on the form when an employee filling a leave request.
+		If you want the system notify the admins immediately, just tick the check box in front of each Leave Type.
+		</p>
+		<div id="adminform">
+			
+				<div id="div-leavetype-name" class="left"><input id="leavetype_name" class="input_text" type="text" size="60" maxlength="50" name="name" /></div>
+				<div id="div-add-leavetype" class="buttons left">
+					<button id="btn-add-leavetype" type="submit" class="positive">
+						<img src="/static/images/add.png" alt=""/> Add 
+					</button>
+				</div>
+				<div id="leavetype-error" class="spec error-message invisible"></div>
+		</div>
+		<div class="block">
+			<table id="leave-types">
+				<tr style="background-color:#ddd;">
+					<th>Notify Admin</th><th>Name</th><th>Max Days</th><th></th>
+				</tr>
+				{% for leavetype in leavetypes.data %}
+					{% include "maitenance/row_leavetype.html" with leavetype=leavetype %}
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+{% endblock %}

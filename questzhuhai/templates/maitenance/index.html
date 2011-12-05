@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Administrator action logs{% endblock %}
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <div id="boxA">
+        <h1>Summarly</h1>
+        <pre>
+                                count       leaves
+        Total Employees:        150         30
+        Windows Management:     40          8
+        Databse Management:     35          10
+        Foglight QA:            50          10
+        Foglight Developement:  30          2
+        Administrative Stuff:   4           0
+        
+        There are 5 stuffs' annualleave is negative in this month. Please handle.
+        </pre>
+    </div>
+    <div id="boxA">
+        <h1>Recently leave requests</h1>
+        <pre>
+        Arthur Wu     1 day       from 2011-07-20 to 2011-07-21       Rebert: approve
+        Andy Wu       1 day       from 2011-07-20 to 2011-07-21       Rebert: approve
+        Tony Zhang    1 day       from 2011-07-20 to 2011-07-21       Rebert: approve
+        Jimmy Liu     1 day       from 2011-07-20 to 2011-07-21       Rebert: approve
+        </pre>
+    </div>
+    <div id="boxA">
+        <h1>Recently Actions</h1>
+        <pre>
+        warrior\administrator added a new Department c at July 24, 2011, 1:21 p.m.
+        warrior\dministrator added a new Department b at July 24, 2011, 1:20 p.m.
+        warrior\dministrator added a new Department a at July 24, 2011, 1:19 p.m.
+        warrior\dministrator added a new Leave Type Annual Leave at July 24, 2011, 1:08 a.m.
+        </pre>
+    </div>
+{% endblock %}

@@ -1,0 +1,1 @@
+httpd -k uninstall -n "quest.zhuhai.leavesystem"

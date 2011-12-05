@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Employee Import Results{% endblock %}
+{% block head %}
+    <style type="text/css">
+        .center-box{width:960px; margin: 0 auto;}
+        .center-box h1 {margin: 10px 0;}
+        .action-logs{width:100%; border-top: 1px solid #ddd;}
+        .action-logs td{line-height:20px;}
+        .operator{color: blue;}
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div>
+    <h1>Employee Import Results:</h1>
+    {% if errors %}
+    <h3>Please Check the errors below:</h3>
+    <ul>
+        {% for k, v in errors.items %}
+        <li>{{k}}: {{v}}</li>
+        {% endfor %}
+    </ul>
+    <a href="/main/employees/"><< View Results</a>
+    {% else %}
+    <h3>Import Successfully! </h3> <a href="/main/employees/">View Results >></a>
+    {% endif %}
+{% endblock %}

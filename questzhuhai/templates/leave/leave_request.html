@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load leave_utils %}
+{% block title %}Leave Request{% endblock %}
+{% block head %}
+	<script type="text/javascript">
+		$(function(){
+			$('#id_action_Reject').click(function(e){
+				e.preventDefault();
+				$('#popup_back').show();
+				$('#popup').show();
+				$('#reason_message').hide();
+			});
+			$('#id_action_Cancel').click(function(e){
+				if (!window.confirm("Are you sure to cancel this request?"))
+				{
+					e.preventDefault();
+				}
+			});
+			$('#id_close').click(function(e){
+				e.preventDefault();
+				$('#popup_back').hide();
+				$('#popup').hide();
+			});
+			$('#id_cancel').click(function(e){
+				e.preventDefault();
+				$('#popup_back').hide();
+				$('#popup').hide();
+			});
+			$('#id_ok').click(function(e){
+				var reason = $('#id_reason').val();
+				if (reason == ''){
+					$('#reason_message').text("The reason can not be empty!").addClass('red').show();
+					e.preventDefault();
+				}else{
+					$('#reason_message').hide();
+					var request_url = $('#id_action_Reject').attr('href') + '?reason='+reason;
+					alert(request_url);
+					$(this).attr('href', request_url);
+				}
+			});
+		});
+	</script>
+	<style type="text/css">
+		.leave-form ul.messagelist{width: 750px; margin: 0 auto;}
+		#ltable{margin: 0 auto; width:750px;border-top: 5px solid #ddd;}
+	</style>
+{% endblock %}
+{% block content %}
+	<div class="leave-form">
+		<div id="formtitle" class="center"><h1>Leave Request</h1></div>
+		{% if messages %}
+		<ul class="messagelist">
+			{% for message in messages %}
+			<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+		<table id="ltable">
+			<tr>
+				<td class="col1"><strong>Employee:</strong></td>
+				<td>{{leaverequest.employee.display_name}}</td>
+			</tr>
+			<tr>
+				<td class="col1"><strong>Department:</strong></td>
+				<td>{{leaverequest.employee.department}}</td>
+			</tr>
+			<tr>
+				<td class="col1"><strong>Team:</strong></td>
+				<td>{{leaverequest.employee.team}}</td>
+			</tr>
+			<tr>
+				<td class="col1"><strong>Leave type:</strong></td>
+				<td>
+					{{leaverequest.leave_type.name}}
+				</td>
+			</tr>
+			<tr>
+				<td class="col1"><strong>Period:</strong>
+					<p class="help">Please skip vacations!</p>
+				</td>
+				<td>
+					<div class="period">
+						{% for period in leaverequest.period_set.all %}<p>{{period}}</p>{% endfor %}
+					</div>
+					<div style="float:right; font-size:24px;">{{leaverequest.days}}Days</div>
+						
+				</td>
+			</tr>
+			<tr>
+				<td class="col1"><strong>Status:</strong></td>
+				<td class="red">
+					{{leaverequest.status}}
+				</td>
+			</tr>
+			<tr>
+				<td class="col1"><strong>Approvers:</strong></td>
+				<td>
+				{% for e in leaverequest.employee.get_approvers %}{{e}}{% endfor %}
+				</td>
+			</tr>
+			<tr>
+				<td class="col1"><strong>Comments:</strong></td>
+				<td>
+					{{leaverequest.comments|default:'None'}}
+				</td>
+			</tr>
+			{% if lrps %}
+				<tr><td colspan="2">
+				{% for l in lrps %}
+					<div style="background-color:#eef5fc;margin-bottom:3px;"><span class="blue bold">{{l.who}} {{l.do}}</span> this leave form at {{l.at}}</br>
+					{% if l.reason %}Reason: {{l.reason}}.{% endif %}
+					</div>
+				{% endfor %}
+				</td></tr>
+			{% endif %}	
+			<tr>
+				<td class="col-btn" colspan="2">
+					{% if actions %}
+						{% for name, url in actions.items %}
+							<a id="id_action_{{name}}" href="{{url}}" class="actionlink">{{name}}</a>
+						{% endfor %}
+					{% endif %}
+				</td>
+			</tr>
+		</table>
+		<div id="popup_back"></div>
+		<div id="popup">
+			<div id="p_title">
+				<div class="left">Reason</div>
+				<span class="right"><a id="id_close" href="">Close X</a></span>
+			</div>
+			<div id="p_content">
+				<textarea id="id_reason" rows="5" cols="80" name="reason"></textarea>
+				<div class="left"><span id="reason_message"></span></div>
+				<div class="right" style="margin-top: 5px;">
+					<a id="id_cancel" href="" class="actionlink">Cancel<a/>
+					<a id="id_ok" href="" class="actionlink">Ok<a/>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

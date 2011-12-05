@@ -1,0 +1,13 @@
+Dear {{employee.approvers}},
+
+	Please kindly review the following annual leave request:
+		
+		Name:              {{employee.display_name}}
+		Leave type:        {{leaverequest.leave_type.name}}
+		Leave schedule:    
+		Leave length:      {{leaverequest.days}}
+		Leave reason:      {{leaverequest.comments}}
+	
+	Kindly approve or reject on (link)
+
+Thanks & Regards

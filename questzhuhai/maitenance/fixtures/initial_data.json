@@ -1,0 +1,99 @@
+
+[
+	{
+		"model": "maitenance.Department",
+		"pk": 1,
+		"fields":{
+			"name":"Administrative Department",
+			"supervisor": "warrior\\sheldon"
+		}
+	},
+	{
+		"model": "maitenance.Department",
+		"pk": 2,
+		"fields":{
+			"name":"Windows Management",
+			"supervisor": "warrior\\administrator"
+		}
+	},
+	{
+		"model": "maitenance.Department",
+		"pk": 3,
+		"fields":{
+			"name":"Database Management",
+			"supervisor": "warrior\\infoportaladmin"
+		}
+	},
+	{
+		"model": "maitenance.Employee",
+		"pk": 1,
+		"fields": {
+			"sid": "1",
+			"domain_id": "warrior\\sheldon",
+			"display_name": "Sheldon",
+			"title": "Devloper 2",
+			"email": "arthur.wu@quest.com",
+			"department": 2,
+			
+			"join_date": "2010-04-12",
+			"start_fiscal_date": "2010-04-12",
+			"balanced_forward": 0,
+			"al_entitlement": 12,
+			"sl_entitlement": 15,
+			"approvers": "warrior\\peter;",
+			"cc_to": "warrior\\administrator;",
+			"is_administrative_staff": "True",
+			"is_active": "True",
+			"last_login_date": "2011-01-01",
+			"balanced_days": 0
+		}
+	},
+	{
+		"model": "maitenance.Employee",
+		"pk": 2,
+		"fields": {
+			"sid": "2",
+			"domain_id": "warrior\\administrator",
+			"display_name": "Administrator",
+			"title": "Devloper 2",
+			"email": "arthur.wu@quest.com",
+			"department": 2,
+			
+			"join_date": "2010-04-12",
+			"start_fiscal_date": "2010-04-12",
+			"balanced_forward": 0,
+			"al_entitlement": 12,
+			"sl_entitlement": 15,
+			"approvers": "warrior\\sheldon;",
+			"cc_to": "warrior\\administrator;",
+			"is_administrative_staff": "False",
+			"is_active": "True",
+			"last_login_date": "2011-01-01",
+			"balanced_days": 0
+		}
+	},
+	{
+		"model": "maitenance.Employee",
+		"pk": 3,
+		"fields": {
+			"sid": "3",
+			"domain_id": "warrior\\peter",
+			"display_name": "Peter NG",
+			"title": "Devloper 2",
+			"email": "arthur.wu@quest.com",
+			"department": 2,
+			
+			"join_date": "2010-04-12",
+			"start_fiscal_date": "2010-04-12",
+			"balanced_forward": 0,
+			"al_entitlement": 12,
+			"sl_entitlement": 15,
+			"approvers": "warrior\\administrator;",
+			"cc_to": "warrior\\administrator;",
+			"is_administrative_staff": "False",
+			"is_active": "True",
+			"last_login_date": "2011-01-01",
+			"balanced_days": 0
+		}
+	}
+]
