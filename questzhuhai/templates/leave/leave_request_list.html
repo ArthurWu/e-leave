@@ -101,17 +101,17 @@
 			{% for leavetype, value in  employee.days_available.items %}
 				{% if leavetype == 'annual_leave' %}
 					<strong>Annual Leave:</strong>
-					<span>Total: {{value.total_days|floatformat}} days</span>
-					<span>Used: {{value.used_days}} days</span>
-					<span>Processing: {{value.need_approval}} days</span>
-					<span>Available: {{value.available_days|floatformat}} days</span>
+					<span>Total: {{value.total_days|floatformat:2}} days</span>
+					<span>Used: {{value.used_days|floatformat:2}} days</span>
+					<span>Processing: {{value.need_approval|floatformat:2}} days</span>
+					<span>Available: {{value.available_days|floatformat:2}} days</span>
 				{% endif %}
 				{% if leavetype == 'sick_leave' %}
 					<strong>Sick Leave:</strong>
-					<span>Total: {{value.total_days|floatformat}} days</span>
-					<span>Used: {{value.used_days}} days</span>
-					<span>Processing: {{value.need_approval}} days</span>
-					<span>Available: {{value.available_days|floatformat}} days</span>
+					<span>Total: {{value.total_days|floatformat:2}} days</span>
+					<span>Used: {{value.used_days|floatformat:2}} days</span>
+					<span>Processing: {{value.need_approval|floatformat:2}} days</span>
+					<span>Available: {{value.available_days|floatformat:2}} days</span>
 				{% endif %}
 			{% endfor %}
 		</div>

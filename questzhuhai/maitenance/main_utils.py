@@ -261,16 +261,20 @@ def delete_team(id, operator):
 def add_employee(domain_id, chinese_name, department, team, join_date, start_fiscal_date, balanced_forward, al_entitlement, sl_entitlement, approvers, cc_to, isadmin, is_active, balanced_days, errors):	
 
 	def create_employee(cc_to):
-		try:
+		if isinstance(join_date, tuple) and isinstance(start_fiscal_date, tuple):
 			jd = datetime(*join_date)
 			sfd = datetime(*start_fiscal_date)
-		except ValueError:
+		else:
 			try:
 				jd = datetime.strptime(join_date, "%d/%m/%Y")
 				sfd = datetime.strptime(start_fiscal_date, "%d/%m/%Y")
 			except:
-				errors[domain_id] = resource.log_prefix + "the date format is not match to 'day/month/year' or 'year/month/day'"
-				return
+				try:
+					jd = datetime.strptime(join_date, "%Y/%m/%d")
+					sfd = datetime.strptime(start_fiscal_date, "%Y/%m/%d")	
+				except:
+					errors[domain_id] = resource.log_prefix + "the date format is not match to 'day/month/year' or 'year/month/day'"
+					return
 		
 
 		deps = Department.objects.filter(name=department)
@@ -369,7 +373,6 @@ def add_employees(filename, operator):
 			raise ErrorInAddEmployee("Employee Error: Can't create an employee infomation.")
 		add_maitenance_log(operator, 'imported employees ')	
 	except:
-		log.Info(sys.exc_info()[1].__str__())
 		log.Except(sys.exc_info()[1].__str__())
 		errors['ERROR'] = resource.failed_to_add_object % Employee.__name__
 		transaction.rollback()

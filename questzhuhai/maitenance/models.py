@@ -172,6 +172,10 @@ class Employee(models.Model):
 		except:
 			sfd = self.start_fiscal_date
 		
+		first_day_of_this_year = datetime.date(today.year, 1, 1)
+		if sfd < first_day_of_this_year:
+			sfd = first_day_of_this_year
+			
 		days_to = float((account_day - sfd).days)
 		return days_to
 	
