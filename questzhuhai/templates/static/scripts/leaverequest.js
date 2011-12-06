@@ -102,25 +102,33 @@ $(document).ready(function(){
 		var days = $('#days').text();
 		$('#leaveForm').append('<input type="hidden" name="days" value="'+days+'" />');
 		
-		var check_url = "/leave/checkrequest?periods=" + periods;
-		$.ajax({
-			url: check_url,
-			dataType: 'json',
-			success: function(data){
-				if (data['data'])
-				{
-					$('#period_errors').text('Period repeat! Please check!');
-					$('.errorlist').show();
-				}
-				else
-				{
-					$('.errorlist').hide();
-					if (validation()){
-						$('#leaveForm').submit();
+		if ($('input[name="modify"]') != []){
+			$('.errorlist').hide();
+			if (validation()){
+				$('#leaveForm').submit();
+			}
+		}
+		else{
+			var check_url = "/leave/checkrequest?periods=" + periods;
+			$.ajax({
+				url: check_url,
+				dataType: 'json',
+				success: function(data){
+					if (data['data'])
+					{
+						$('#period_errors').text('Period repeat! Please check!');
+						$('.errorlist').show();
+					}
+					else
+					{
+						$('.errorlist').hide();
+						if (validation()){
+							$('#leaveForm').submit();
+						}
 					}
 				}
-			}
-		});
+			});
+		}
 	}
 	
 	$('#id_leave_type').change(function(e){
