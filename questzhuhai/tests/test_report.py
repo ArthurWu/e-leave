@@ -38,7 +38,10 @@ def _setup():
 	Period.objects.create(leave_request=lr7, start=datetime.datetime(2011,1,10,9),end=datetime.datetime(2011,1,11,13))
 	
 	lr8 = LeaveRequest.objects.create(employee=employee, status="Approved",leave_type=sickleave, days=3)
-	Period.objects.create(leave_request=lr8, start=datetime.datetime(2011,1,24,9),end=datetime.datetime(2011,1,26,13))
+	Period.objects.create(leave_request=lr8, start=datetime.datetime(2011,10,24,9),end=datetime.datetime(2011,10,26,13))
+	Period.objects.create(leave_request=lr8, start=datetime.datetime(2011,10,27,9),end=datetime.datetime(2011,10,27,13))
+	Period.objects.create(leave_request=lr8, start=datetime.datetime(2011,11,25,9),end=datetime.datetime(2011,11,25,13))
+	Period.objects.create(leave_request=lr8, start=datetime.datetime(2011,11,27,9),end=datetime.datetime(2011,11,27,13))
 	
 	return employee, employee1
 
@@ -161,7 +164,7 @@ def test_generate_annual_report_file():
 	
 def test_create_sick_leave_report_data():
 	employee = _setup()
-	res = report.create_sick_leave_report_data([employee], base_day=25, month=1)
+	res = report.create_sick_leave_report_data(employee, base_day=25, month=1)
 	_teardown(employee)
 	
 	slr = res[0]
@@ -187,3 +190,12 @@ def test_create_sick_leave_report_data():
 	assert_equals(4.0, slr.taken_in_this_year)
 	assert_equals(11.0, slr.balance)
 	
+	
+def test_generate_leave_report_file():
+	employees = _setup()
+	start_date = datetime.datetime(2011, 1, 1)
+	end_date = datetime.datetime(2011, 10, 25, 17, 30)
+	filename = report.generate_leave_record_report_file(employees, start_date, end_date)
+	_teardown(employees)
+	print filename
+	assert_equals(1, 0)

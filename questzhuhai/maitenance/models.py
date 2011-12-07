@@ -212,8 +212,11 @@ MONTH_CHOICES = (
 	(CURRENT_YEAR+'-11', 'Nov, '+CURRENT_YEAR),
 	(CURRENT_YEAR+'-12', 'Dec, '+CURRENT_YEAR)
 )
-
-from leave.models import LeaveType
+try:
+	from leave.models import LeaveType
+except:
+	LeaveType = 'LeaveType'
+	
 class AdjustmentDays(models.Model):
 	employee = models.ForeignKey(Employee)
 	leave_type = models.ForeignKey(LeaveType, blank=True, null=True)

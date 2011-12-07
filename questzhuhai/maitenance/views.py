@@ -47,7 +47,7 @@ def generate_report(request):
 		end = request.GET.get('end')
 		
 		start_date = datetime.strptime(start, "%Y-%m-%d")
-		end_date = datetime.strptime(end, "%Y-%m-%d")
+		end_date = datetime.strptime(end + ' 17:30', "%Y-%m-%d %H:%M")
 		main_utils.generate_reports(report_type, year = today.year, month = today.month, start_date = start_date, end_date = end_date)
 	
 		subject = "Monthly leave record report(%s~%s)" % (start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))

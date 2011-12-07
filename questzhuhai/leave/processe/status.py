@@ -145,7 +145,7 @@ class BaseStatus(object):
 	
 	def send_resubmit_email(self):
 		tolist, cc = self._edit_cancel_emails()
-		subject = self.email_subject + ' - Edited'
+		subject = self.email_subject + ' - Edited and Resubmited'
 		self._send_email(tolist, cc, subject, 'leave/email/resubmit.txt')
 	
 	def _edit_cancel_emails(self):

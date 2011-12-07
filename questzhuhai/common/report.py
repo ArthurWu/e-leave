@@ -1,7 +1,7 @@
 import datetime, calendar
 import settings
 from maitenance.models import AnnualLeaveReport, SickLeaveReport
-from leave.models import LeaveRequest, LeaveType
+from leave.models import LeaveRequest, LeaveType, Period
 from leave.processe import status
 from django.db.models import Q
 
@@ -14,11 +14,14 @@ from common.logger import log
 	
 def generate_leave_record_report_file(employees, start_date, end_date):
 	queryset = LeaveRequest.objects.filter(
-		(Q(period__start__range=(start_date, end_date))|
-		Q(period__end__range=(start_date, end_date)))&
+		(
+			Q(period__start__range=(start_date, end_date))|
+			Q(period__end__range=(start_date, end_date))
+		)&
 		Q(status__in=[status.PENDINGADMIN, status.ARCHIVED])
 	).distinct()
-	print queryset
+	#print queryset
+	#print len(queryset)
 	
 	template = open_workbook(settings.REPORT_TEMPLATE + r'leave record report.xls', formatting_info=True)
 	wb = copy(template)
@@ -67,14 +70,22 @@ def generate_leave_record_report_file(employees, start_date, end_date):
 				
 				leaverequests = queryset.filter(employee=employee, leave_type=leavetype)
 				leavetype_rows = len(leaverequests)
-				print 'leavetype_rows', leavetype_rows
+				#print 'leavetype_rows', leavetype_rows
 				if leavetype_rows > 0:
 					duration = 0.0
 					for l in leaverequests:
-						for p in l.period_set.all():
-							lrws.write(curr_index, 2, p.__unicode__(), style_bg)
+						periods = l.period_set.all().filter(
+											Q(start__range=(start_date, end_date))|
+											Q(end__range=(start_date, end_date)))
+						for p in periods:
+							p_start = max(p.start, start_date)
+							p_end = min(p.end, end_date)
+							lrws.write(
+								curr_index, 2, \
+								Period(leave_request=l, start=p_start, end=p_end).__unicode__(), \
+								style_bg)
 							curr_index += 1
-						duration += l.days
+							duration += duration_days(p_start, p_end)
 					
 					style_bg.alignment = center_center
 					lrws.write_merge(start_index, curr_index - 1, 3, 3, duration, style_bg)

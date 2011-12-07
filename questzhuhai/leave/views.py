@@ -58,14 +58,17 @@ def leave_request(request, id=None, edit=False):
 				process.get_processor(current_lr, request.employee).submit()
 				messages.add_message(request, messages.INFO, 'You leave request has been submited successfully!')
 			else:
+				do = 'modified'
 				if request.employee.is_mine(current_lr):
 					process.get_processor(current_lr, request.employee).resubmit()
+					messages.add_message(request, messages.INFO, current_lr.employee.display_name + "'s leave request has been modified and resubmited!")
+					do += ' and resubmited'
 				else:
 					process.get_processor(current_lr, request.employee).edit()
-				messages.add_message(request, messages.INFO, 'You leave request has been modified successfully!')
+					messages.add_message(request, messages.INFO, current_lr.employee.display_name + "'s leave request has been modified successfully!")
 				LeaveRequestProcesses(leave_request=current_lr,
 									  who=request.employee.display_name,
-									  do='modified').save()
+									  do=do).save()
 				
 			return redirect(current_lr)
 	elif id and edit:
