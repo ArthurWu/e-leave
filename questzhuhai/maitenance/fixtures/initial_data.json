@@ -1,4 +1,3 @@
-
 [
 	{
 		"model": "maitenance.Department",
@@ -79,6 +78,150 @@
 			"sid": "3",
 			"domain_id": "warrior\\peter",
 			"display_name": "Peter NG",
+			"title": "Devloper 2",
+			"email": "arthur.wu@quest.com",
+			"department": 2,
+			
+			"join_date": "2010-04-12",
+			"start_fiscal_date": "2010-04-12",
+			"balanced_forward": 0,
+			"al_entitlement": 12,
+			"sl_entitlement": 15,
+			"approvers": "warrior\\administrator;",
+			"cc_to": "warrior\\administrator;",
+			"is_administrative_staff": "False",
+			"is_active": "True",
+			"last_login_date": "2011-01-01",
+			"balanced_days": 0
+		}
+	},
+	{
+		"model": "maitenance.Employee",
+		"pk": 4,
+		"fields": {
+			"sid": "4",
+			"domain_id": "warrior\\infoportaladmin",
+			"display_name": "infoportaladmin",
+			"title": "Devloper 2",
+			"email": "arthur.wu@quest.com",
+			"department": 2,
+			
+			"join_date": "2010-04-12",
+			"start_fiscal_date": "2010-04-12",
+			"balanced_forward": 0,
+			"al_entitlement": 12,
+			"sl_entitlement": 15,
+			"approvers": "warrior\\administrator;",
+			"cc_to": "warrior\\administrator;",
+			"is_administrative_staff": "False",
+			"is_active": "True",
+			"last_login_date": "2011-01-01",
+			"balanced_days": 0
+		}
+	},
+	{
+		"model": "maitenance.Employee",
+		"pk": 5,
+		"fields": {
+			"sid": "5",
+			"domain_id": "warrior\\arthur",
+			"display_name": "arthur",
+			"title": "Devloper 2",
+			"email": "arthur.wu@quest.com",
+			"department": 2,
+			
+			"join_date": "2010-04-12",
+			"start_fiscal_date": "2010-04-12",
+			"balanced_forward": 0,
+			"al_entitlement": 12,
+			"sl_entitlement": 15,
+			"approvers": "warrior\\administrator;",
+			"cc_to": "warrior\\administrator;",
+			"is_administrative_staff": "False",
+			"is_active": "True",
+			"last_login_date": "2011-01-01",
+			"balanced_days": 0
+		}
+	},
+	{
+		"model": "maitenance.Employee",
+		"pk": 6,
+		"fields": {
+			"sid": "6",
+			"domain_id": "warrior\\jimmy",
+			"display_name": "jimmy",
+			"title": "Devloper 2",
+			"email": "arthur.wu@quest.com",
+			"department": 2,
+			
+			"join_date": "2010-04-12",
+			"start_fiscal_date": "2010-04-12",
+			"balanced_forward": 0,
+			"al_entitlement": 12,
+			"sl_entitlement": 15,
+			"approvers": "warrior\\administrator;",
+			"cc_to": "warrior\\administrator;",
+			"is_administrative_staff": "False",
+			"is_active": "True",
+			"last_login_date": "2011-01-01",
+			"balanced_days": 0
+		}
+	},
+	{
+		"model": "maitenance.Employee",
+		"pk": 7,
+		"fields": {
+			"sid": "7",
+			"domain_id": "warrior\\tony",
+			"display_name": "tonny",
+			"title": "Devloper 2",
+			"email": "arthur.wu@quest.com",
+			"department": 2,
+			
+			"join_date": "2010-04-12",
+			"start_fiscal_date": "2010-04-12",
+			"balanced_forward": 0,
+			"al_entitlement": 12,
+			"sl_entitlement": 15,
+			"approvers": "warrior\\administrator;",
+			"cc_to": "warrior\\administrator;",
+			"is_administrative_staff": "False",
+			"is_active": "True",
+			"last_login_date": "2011-01-01",
+			"balanced_days": 0
+		}
+	},
+	{
+		"model": "maitenance.Employee",
+		"pk": 8,
+		"fields": {
+			"sid": "8",
+			"domain_id": "warrior\\lina",
+			"display_name": "lina",
+			"title": "Devloper 2",
+			"email": "arthur.wu@quest.com",
+			"department": 2,
+			
+			"join_date": "2010-04-12",
+			"start_fiscal_date": "2010-04-12",
+			"balanced_forward": 0,
+			"al_entitlement": 12,
+			"sl_entitlement": 15,
+			"approvers": "warrior\\administrator;",
+			"cc_to": "warrior\\administrator;",
+			"is_administrative_staff": "False",
+			"is_active": "True",
+			"last_login_date": "2011-01-01",
+			"balanced_days": 0
+		}
+	},
+	{
+		"model": "maitenance.Employee",
+		"pk": 9,
+		"fields": {
+			"sid": "9",
+			"domain_id": "warrior\\andy",
+			"display_name": "andy",
 			"title": "Devloper 2",
 			"email": "arthur.wu@quest.com",
 			"department": 2,

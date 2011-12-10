@@ -277,16 +277,16 @@ def add_employee(domain_id, chinese_name, department, team, join_date, start_fis
 					return
 		
 
-		deps = Department.objects.filter(name=department)
+		deps = Department.objects.filter(name=department.strip())
 		if not deps and department.strip():
-			dep = Department(name=department)
+			dep = Department(name=department.strip())
 			dep.save()
 		else:
 			dep = deps and deps[0] or None
 		
-		teams = Team.objects.filter(department=dep, name=team)
+		teams = Team.objects.filter(department=dep, name=team.strip())
 		if not teams and team.strip():
-			myteam = Team(department=dep, name=team)
+			myteam = Team(department=dep, name=team.strip())
 			myteam.save()
 		else:
 			myteam = teams and teams[0] or None
@@ -351,7 +351,11 @@ def add_employees(filename, operator):
 			except:
 				join_date = sheet.cell(row_index,4).value
 				start_fiscal_date = sheet.cell(row_index,5).value
-
+			
+			balanced_forward = convert_to_fload_or_default(sheet.cell(row_index,6).value)
+			al_entitlement = convert_to_fload_or_default(sheet.cell(row_index,7).value)
+			sl_entitlement = convert_to_fload_or_default(sheet.cell(row_index,8).value)
+			balanced_days = convert_to_fload_or_default(sheet.cell(row_index,13).value)
 			res = add_employee(
 				sheet.cell(row_index,0).value,
 				sheet.cell(row_index,1).value,
@@ -359,14 +363,14 @@ def add_employees(filename, operator):
 				sheet.cell(row_index,3).value,
 				join_date,
 				start_fiscal_date,
-				sheet.cell(row_index,6).value,
-				sheet.cell(row_index,7).value,
-				sheet.cell(row_index,8).value,
+				balanced_forward,
+				al_entitlement,
+				sl_entitlement,
 				sheet.cell(row_index,9).value,
 				sheet.cell(row_index,10).value,
 				sheet.cell(row_index,11).value,
 				sheet.cell(row_index,12).value,
-				sheet.cell(row_index,13).value,
+				balanced_days,
 				errors)
 		
 		if errors:
@@ -380,6 +384,13 @@ def add_employees(filename, operator):
 		transaction.commit()
 
 	return errors
+	
+def convert_to_fload_or_default(value):
+	try:
+		val = float(value)
+	except:
+		val = 0.0
+	return val
 	
 class ErrorInAddEmployee(Exception):
 	pass

@@ -1,6 +1,6 @@
 Dear,
 
-Your following maternity (marriage) leave request has confirmed by {{operator.display_name}}.
+Your following {{leaverequest.leave_type.name}} request has confirmed by {{operator.display_name}}.
 
 	Name:				{{employee.display_name}}
 	

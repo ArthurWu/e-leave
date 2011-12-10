@@ -1,6 +1,6 @@
 Dear,
 
-Please kindly review the following annual leave request:
+Please kindly review the following {{leaverequest.leave_type.name}} request:
 
 	Name:				{{employee.display_name}}
 	

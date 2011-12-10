@@ -48,9 +48,9 @@
 		"pk": 5,
 		"fields":
 		{
-			"name":"Bereavement Leave",
+			"name":"Paternity Leave",
 			"notifyadmin": "False",
-			"max_days": 3,
+			"max_days": 10,
 			"build_in": "True"
 		}
 	},
@@ -59,9 +59,9 @@
 		"pk": 6,
 		"fields":
 		{
-			"name":"Paternity Leave",
+			"name":"Bereavement Leave",
 			"notifyadmin": "False",
-			"max_days": 10,
+			"max_days": 3,
 			"build_in": "True"
 		}
 	}
