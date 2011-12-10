@@ -1,1 +1,1 @@
-httpd -k uninstall -n "quest.zhuhai.leavesystem"
+httpd -k uninstall -n "Quest.Zhuhai.E-LeaveSystem"

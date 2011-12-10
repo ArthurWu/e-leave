@@ -68,7 +68,7 @@
 				
 				{% if v.generate_link %}
 					{% for g in v.generate_link %}
-						<a href="{{g.link}}">
+						<a href="{{g.link}}" {% if g.type == 'leave record' %}class="record"{% endif %}>
 							Create 
 							{% if g.type == 'leave record' %}Leave Record{% else %}Leave Report{% endif %}
 						</a><span class="sperate">({{g.actual_on|date:"Y-m-d"}})</span>

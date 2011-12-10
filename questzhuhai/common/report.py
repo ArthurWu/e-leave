@@ -62,16 +62,17 @@ def generate_leave_record_report_file(employees, start_date, end_date):
 		
 		if name_rows > 0:
 			leavetypes = list(LeaveType.objects.all())			
-			for leavetype in leavetypes:			
-				if style_bg.pattern == pattern1:
-					style_bg.pattern = pattern2
-				else:
-					style_bg.pattern = pattern1
+			for leavetype in leavetypes:
 				
 				leaverequests = queryset.filter(employee=employee, leave_type=leavetype)
 				leavetype_rows = len(leaverequests)
 				#print 'leavetype_rows', leavetype_rows
 				if leavetype_rows > 0:
+					if style_bg.pattern == pattern1:
+						style_bg.pattern = pattern2
+					else:
+						style_bg.pattern = pattern1
+					
 					duration = 0.0
 					for l in leaverequests:
 						periods = l.period_set.all().filter(
@@ -262,12 +263,24 @@ def create_report_data(employees, base_day, month=None, year=None):
 		alr.taken_in_this_year = sum(res)
 		
 		deduction_days = monthly_deduction_days(alr, employee, month)
-		alr.available_annual_leave_unclaimed = convert_to_tow_places_float(alr.total_entitled_as_of - alr.taken_in_this_year + sum(deduction_days) + employee.balanced_days)
+		alr.available_annual_leave_unclaimed = convert_to_tow_places_float(alr.total_entitled_as_of - \
+						alr.taken_in_this_year + sum(deduction_days) + employee.balanced_days)
+		alr.marrige_leave_balance = marriage_leave_balance(employee, start_date, base_date)
 		
 		alr.report_date = datetime.datetime(year, month, base_day)
 		alr.save()
 		res_data.append(alr)
 	return res_data
+	
+def marriage_leave_balance(emp, start_date, end_date):
+	'''
+	the marriage leave balance untill the date specify for the current year.
+	'''
+	marriageleave = LeaveType.objects.filter(name = 'Marriage Leave')
+	if marriageleave:
+		marriageleave = marriageleave[0]
+	leaverequests = emp.leaverequest_set.all().filter(leave_type=marriageleave)
+	return marriageleave.max_days - leave_requests_duration_days(leaverequests, start_date, end_date)
 		
 def create_sick_leave_report_data(employees, base_day, month=None, year=None):
 	res_data = []
@@ -290,7 +303,7 @@ def create_sick_leave_report_data(employees, base_day, month=None, year=None):
 		
 		res = monthly_taken_days(slr, employee, base_day, month, leave_type="Sick Leave")
 		slr.taken_in_this_year = sum(res)
-		slr.balance = convert_to_tow_places_float(slr.al_entitlement_of - slr.taken_in_this_year)
+		slr.balance = convert_to_tow_places_float(slr.total_entitled_as_of - slr.taken_in_this_year)
 		
 		slr.save()
 		res_data.append(slr)
@@ -469,6 +482,18 @@ def month_leave_taken_days(employee, month, base_day=None, leave_type="Annual Le
 					duration += duration_days(p.start, end_date)
 	return duration
 
+def leave_requests_duration_days(leaverequests, start_date, end_date):
+	duration = 0.0
+	for l in leaverequests:
+		periods = l.period_set.all().filter(
+							Q(start__range=(start_date, end_date))|
+							Q(end__range=(start_date, end_date)))
+		for p in periods:
+			p_start = max(p.start, start_date)
+			p_end = min(p.end, end_date)
+			duration += duration_days(p_start, p_end)
+	return duration
+	
 def duration_days(start, end):
 	def caculate(s, e):
 		if s == e: return 0.5
