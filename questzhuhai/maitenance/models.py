@@ -163,9 +163,9 @@ class Employee(models.Model):
 		import datetime, settings
 		today = datetime.date.today()
 		
-		account_day = datetime.date(today.year, today.month, settings.LEAVE_REPORT_FIRST_DAY)
-		if today > account_day:
-			account_day = datetime.date(today.year, today.month+1, settings.LEAVE_REPORT_FIRST_DAY)
+		# account_day = datetime.date(today.year, today.month, settings.LEAVE_REPORT_FIRST_DAY)
+		# if today > account_day:
+			# account_day = datetime.date(today.year, today.month+1, settings.LEAVE_REPORT_FIRST_DAY)
 		
 		try:
 			sfd = self.start_fiscal_date.date()
@@ -176,7 +176,7 @@ class Employee(models.Model):
 		if sfd < first_day_of_this_year:
 			sfd = first_day_of_this_year
 			
-		days_to = float((account_day - sfd).days)
+		days_to = float((today - sfd).days)
 		return days_to
 	
 	def get_annual_leave_days(self):

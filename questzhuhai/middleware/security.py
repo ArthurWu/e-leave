@@ -3,6 +3,7 @@ import win32security
 from django.contrib.auth.models import User
 from maitenance.models import Employee
 from django.shortcuts import render_to_response
+from common.logger import log
 
 class RequestHandlerMiddleware(object):
 	def process_request(self, request):
@@ -19,15 +20,20 @@ class RequestHandlerMiddleware(object):
 		emp = Employee.objects.filter(domain_id=current_user)
 		if len(emp) > 0:
 			request.employee = emp[0]
+			log.Info('Current Employee: %s' % request.employee.display_name)
 		else:
 			request.employee = None
 			
 		return request.employee
 	
 	def set_admin_or_default(self, request):
-		user = User.objects.get(username = 'admin')
+		log.Info('Set current user as admin, if admin not exist, then create default admin infomation.')
+		user = User.objects.filter(username = 'admin')
 		if not user:
-			user = User.Objects.create_superuser(username='admin', email='admin@admin.com', password='1')
+			user = User.objects.create_superuser(username='admin', email='admin@admin.com', password='1')
+		else:
+			user = user[0]
+		log.Info('Current User: %s' % user.username)
 		request.user = user
 		
 		
