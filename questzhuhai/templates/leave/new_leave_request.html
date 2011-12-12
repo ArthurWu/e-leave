@@ -49,20 +49,20 @@
 						{% if k == "annual_leave" %}
 						<span id="annual_leave_help" class="help">
 							Until next settlement day, you have
-							<strong id="{{k}}_total_days">{{v.total_days|floatformat}}</strong>
+							<strong id="{{k}}_total_days">{{v.total_days|floatformat:2}}</strong>
 							days of annual leave in total.
 							<strong id="{{k}}_used_days" class="">{{v.used_days}}</strong>
 							days have been used, and there are
 							<strong id="{{k}}_need_approval" class="">{{v.need_approval}}</strong>
 							days are waiting for approval or settlement. so, your available annual leave is
-							<strong id="{{k}}_available_days" class="">{{v.available_days|floatformat}}</strong> day.
+							<strong id="{{k}}_available_days" class="">{{v.available_days|floatformat:2}}</strong> day.
 						</span>
 						{% else %}
 						<span id="{{k}}_help" class="help">
-							Total: <strong id="{{k}}_total_days">{{v.total_days|floatformat}}</strong> days,
+							Total: <strong id="{{k}}_total_days">{{v.total_days|floatformat:2}}</strong> days,
 							Used: <strong id="{{k}}_used_days" class="">{{v.used_days}}</strong> days;
 							Waiting for approval or settlement: <strong id="{{k}}_need_approval" class="">{{v.need_approval}}</strong> days;
-							Available: <strong id="{{k}}_available_days" class="">{{v.available_days|floatformat}}</strong> days. {% if v.expire_date %}<strong>Expire on: {{v.expire_date|date:"Y-m-d"}}</strong>{% endif %}
+							Available: <strong id="{{k}}_available_days" class="">{{v.available_days|floatformat:2}}</strong> days. {% if v.expire_date %}<strong>Expire on: {{v.expire_date|date:"Y-m-d"}}</strong>{% endif %}
 						</span>
 						{% endif %}
 						{% endfor %}
