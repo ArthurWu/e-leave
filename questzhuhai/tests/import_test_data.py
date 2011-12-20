@@ -1,5 +1,5 @@
 import sys, os
-sys.path.append(r'C:\projects\questzhuhai')
+sys.path.append(r'C:\LeaveSystem\questzhuhai')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 from maitenance.models import *
@@ -26,6 +26,8 @@ def clear_leave_quest_data():
 	emps = [sheldon, administrator, peter, infoportaladmin, arthur, jimmy, tony, lina, andy]
 	for e in emps:
 		e.leaverequest_set.all().delete()
+		
+	print "data cleared!"
 
 def prepare_leave_request_data():
 	leave_request = LeaveRequest.objects.create(employee=peter, status="Approved",leave_type=annual_leave, days=1)
@@ -77,14 +79,14 @@ def prepare_leave_request_data():
 	Period.objects.create(leave_request=leave_request, start=datetime.datetime(2011,12,12,9),end=datetime.datetime(2011,12,14,13))
 	
 	leave_request = LeaveRequest.objects.create(employee=arthur, status="Approved",leave_type=annual_leave, days=1.5)
-	Period.objects.create(leave_request=lr3, start=datetime.datetime(2011,8,23,9),end=datetime.datetime(2011,8,23,13))
-	Period.objects.create(leave_request=lr3, start=datetime.datetime(2011,8,26,9),end=datetime.datetime(2011,8,26,9))
+	Period.objects.create(leave_request=leave_request, start=datetime.datetime(2011,8,23,9),end=datetime.datetime(2011,8,23,13))
+	Period.objects.create(leave_request=leave_request, start=datetime.datetime(2011,8,26,9),end=datetime.datetime(2011,8,26,9))
 	
 	leave_request = LeaveRequest.objects.create(employee=tony, status="Approved",leave_type=annual_leave, days=4)
 	Period.objects.create(leave_request=leave_request, start=datetime.datetime(2011,9,8,9),end=datetime.datetime(2011,9,9,13))
 	Period.objects.create(leave_request=leave_request, start=datetime.datetime(2011,9,12,9),end=datetime.datetime(2011,9,13,13))
 	
-	leave_request = LeaveRequest.objects.create(employee=infoporataladmin, status="Approved",leave_type=sick_leave, days=5)
+	leave_request = LeaveRequest.objects.create(employee=infoportaladmin, status="Approved",leave_type=sick_leave, days=5)
 	Period.objects.create(leave_request=leave_request, start=datetime.datetime(2011,10,24,9),end=datetime.datetime(2011,10,26,13))
 	Period.objects.create(leave_request=leave_request, start=datetime.datetime(2011,10,27,9),end=datetime.datetime(2011,10,27,13))
 	Period.objects.create(leave_request=leave_request, start=datetime.datetime(2011,11,25,9),end=datetime.datetime(2011,11,25,13))
@@ -93,8 +95,10 @@ def prepare_leave_request_data():
 	leave_request = LeaveRequest.objects.create(employee=arthur, status="Approved",leave_type=annual_leave, days=1)
 	Period.objects.create(leave_request=leave_request, start=datetime.datetime(2011,8,10,9),end=datetime.datetime(2011,8,10,13))
 	
+	print "data created succussfully!"
+	
 if __name__ == '__main__':
-	args = sys.args[1:]
+	args = sys.argv[1:]
 	if not args:
 		print 'Please input a command(-c => clear test data; -p => prepare test data)'
 	else:
@@ -103,4 +107,4 @@ if __name__ == '__main__':
 		elif args[0] == '-p':
 			prepare_leave_request_data()
 		else:
-			print "'%s' is not recognizated as a command."
+			print "'%s' is not recognizated as a command." % args[0]

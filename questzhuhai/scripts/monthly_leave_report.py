@@ -1,5 +1,5 @@
 import sys, os
-sys.path.append(r'C:\projects\questzhuhai')
+sys.path.append(r'C:\LeaveSystem\questzhuhai')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 from common import report

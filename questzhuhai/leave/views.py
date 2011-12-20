@@ -12,12 +12,40 @@ import simplejson
 
 def index(request):
 	pass
+	
+def marriage_leave_expire(request, periods):
+	emp_id = request.GET.get('id')
+	from maitenance.models import Employee
+	
+	mar_confirm = None
+	try:
+		emp = Employee.objects.get(id=int(emp_id))
+		all_mar_confirm = emp.marriageleaveconfirm_set.all()
+		
+		if all_mar_confirm: 
+			mar_confirm = all_mar_confirm[0]
+	except:
+		log.Except('Can not get Employee with id %s' % id)
+	
+	
+	expired = False
+	if mar_confirm:
+		expire_date = mar_confirm.expire_date
+	
+		for p in periods:
+			start_str, end_str = p.split(',')
+			start=datetime.datetime.strptime(start_str, '%Y-%m-%d-%H')
+			end=datetime.datetime.strptime(end_str, '%Y-%m-%d-%H')
+			if (expire_date < end) or (expire_date < datetime.datetime.today()):
+				expired = True
+
+	return expired
 
 def has_repeate_period(request):
 	periods_str = request.GET.get('periods')
 	periods = periods_str.rstrip(";").split(';')
 	
-	result = False
+	repeated = False
 	for p in periods:
 		start_str, end_str = p.split(',')
 		start=datetime.datetime.strptime(start_str, '%Y-%m-%d-%H')
@@ -26,9 +54,11 @@ def has_repeate_period(request):
 		e_in = Period.objects.filter(start__gte=end, end__lte=end)
 		
 		if s_in or e_in:
-			result = True
+			repeated = True
+			
+	expired = marriage_leave_expire(request, periods)
 		
-	return HttpResponse(simplejson.dumps({'data': result}))
+	return HttpResponse(simplejson.dumps({'repeated': repeated, 'expired': expired}))
 
 def leave_request(request, id=None, edit=False):
 	form = periods = leave_request = None

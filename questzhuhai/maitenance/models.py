@@ -102,10 +102,11 @@ class Employee(models.Model):
 		available_days = {}
 		for leavetype in leavetypes:
 			used_days, need_approval = self.get_used_leave_days(leavetype)
+			leave_adjustment_days = self.get_leave_adjustment_days(leavetype)
+			
 			if leavetype.name == 'Annual Leave':
 				usable_annual_leave_days = self.get_annual_leave_days()
 				from decimal import Decimal
-				leave_adjustment_days = self.get_leave_adjustment_days(leavetype)
 				
 				total_annual_leave_days = usable_annual_leave_days + \
 												self.balanced_forward + \
@@ -121,7 +122,8 @@ class Employee(models.Model):
 					'available_days': ad if ad > 0 else 0
 				}
 			elif leavetype.name == 'Sick Leave':
-				usable_sick_leave_days = self.get_sick_leave_days()
+				usable_sick_leave_days = self.get_sick_leave_days() + leave_adjustment_days
+				
 				available_days[leavetype.name.lower().replace(' ', '_')] = {
 					'total_days': usable_sick_leave_days,
 					'used_days': used_days,
@@ -134,7 +136,7 @@ class Employee(models.Model):
 				
 				mlc = self.marriageleaveconfirm_set.all()
 				if mlc:
-					marriage_leave_days = mlc[0].days
+					marriage_leave_days = mlc[0].days + leave_adjustment_days
 					expire_date = mlc[0].expire_date	
 				
 				available_days[leavetype.name.lower().replace(' ', '_')] = {
@@ -146,11 +148,12 @@ class Employee(models.Model):
 				}
 				
 			else:
+				tol_days = leavetype.max_days + leave_adjustment_days
 				available_days[leavetype.name.lower().replace(' ', '_')] = {
-					'total_days': leavetype.max_days,
+					'total_days': tol_days,
 					'used_days': used_days,
 					'need_approval': need_approval,
-					'available_days': leavetype.max_days - used_days - need_approval
+					'available_days': tol_days - used_days - need_approval
 				}
 				
 		return available_days

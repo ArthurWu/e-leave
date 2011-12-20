@@ -279,8 +279,14 @@ def marriage_leave_balance(emp, start_date, end_date):
 	marriageleave = LeaveType.objects.filter(name = 'Marriage Leave')
 	if marriageleave:
 		marriageleave = marriageleave[0]
+		
+	max_days = marriageleave.max_days
+	marriageleaveconfirm = emp.marriageleaveconfirm_set.all()
+	if marriageleaveconfirm:
+		max_days = marriageleaveconfirm[0].days
+		
 	leaverequests = emp.leaverequest_set.all().filter(leave_type=marriageleave)
-	return marriageleave.max_days - leave_requests_duration_days(leaverequests, start_date, end_date)
+	return max_days - leave_requests_duration_days(leaverequests, start_date, end_date)
 		
 def create_sick_leave_report_data(employees, base_day, month=None, year=None):
 	res_data = []

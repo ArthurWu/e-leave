@@ -62,7 +62,7 @@
 							Total: <strong id="{{k}}_total_days">{{v.total_days|floatformat:2}}</strong> days,
 							Used: <strong id="{{k}}_used_days" class="">{{v.used_days}}</strong> days;
 							Waiting for approval or settlement: <strong id="{{k}}_need_approval" class="">{{v.need_approval}}</strong> days;
-							Available: <strong id="{{k}}_available_days" class="">{{v.available_days|floatformat:2}}</strong> days. {% if v.expire_date %}<strong>Expire on: {{v.expire_date|date:"Y-m-d"}}</strong>{% endif %}
+							Available: <strong id="{{k}}_available_days" class="">{{v.available_days|floatformat:2}}</strong> days. {% if v.expire_date %}<strong id="marriage_leave_expire_date">Expire on: {{v.expire_date|date:"Y-m-d"}}</strong>{% endif %}
 						</span>
 						{% endif %}
 						{% endfor %}
@@ -128,7 +128,13 @@
 				</tr>
 				<tr>
 					<td class="col1"><strong>Approvers:</strong></td>
-					<td>{% for e in employee.get_approvers %}{{e}}{% endfor %}</td>
+					<td>
+					{% if edit %}
+					{% for e in leaverequest.employee.get_approvers %}{{e}}{% endfor %}
+					{% else %}
+					{% for e in employee.get_approvers %}{{e}}{% endfor %}
+					{% endif %}
+					</td>
 				</tr>
 				<tr>
 					<td class="col1"><strong>Comments:</strong></td>

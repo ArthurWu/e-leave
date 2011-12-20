@@ -305,7 +305,7 @@ var DateTimeShortcuts = {
                 if (available_days < total_days){
                     var nopaydays = total_days-available_days;
                     if (!(available_days > 0)){ nopaydays = total_days;}
-                    $('#period_warn').text(nopaydays + " days will be no pay.");
+                    $('#period_warn').text(nopaydays.toFixed(2) + " days will be no pay.");
                 }
                 else{
                     $('#period_warn').text('');
