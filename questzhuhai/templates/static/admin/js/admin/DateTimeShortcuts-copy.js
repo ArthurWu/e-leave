@@ -279,8 +279,7 @@ var DateTimeShortcuts = {
         var total_days = DateTimeShortcuts.getTotalDays();
 
         if (!isNaN(total_days)){
-            unit = 'Day';
-            if (total_days > 1) unit = 'Days';
+			unit = total_days > 1 ? 'Days' : 'Day';
             
             $('#total-days').html('<span id="days">'+total_days+'</span>'+unit);
             
@@ -290,20 +289,23 @@ var DateTimeShortcuts = {
             var leave_type = $('#id_leave_type option:selected').val();
             if (leave_type == '')
             {
-                $('#period_warn').text('Please select a leave type!');
+                $('#leave_type_error').text('You must select a Leave Type!').show();
             }
             else
             {
+				$('#leave_type_error').empty().hide();
                 var available_days_id = $('#id_leave_type option:selected').text().toLowerCase().replace(' ', '_');
                 var available_days = new Number($('#'+available_days_id+'_available_days').text());
-                var modify = $('input[name="modify"]');
+				var modify = $('input[name="modify"]');
                 if (modify != [])
                 {
                     var need_approval_days = new Number($('#'+available_days_id+'_need_approval').text());
                     available_days += need_approval_days;
                 }
                 if (available_days < total_days){
-                    var nopaydays = total_days-available_days;
+                    alert(total_days);
+                    alert(available_days);
+					var nopaydays = total_days-available_days;
                     if (!(available_days > 0)){ nopaydays = total_days;}
                     $('#period_warn').text(nopaydays.toFixed(2) + " days will be no pay.");
                 }
@@ -325,7 +327,11 @@ var DateTimeShortcuts = {
             var end_time = $(this).find('#id_end_time>option:selected').text();
             
             var days = (end_date - start_date)/1000/60/60/24; // millisecond to day
-            days = days + DateTimeShortcuts.caculateTime(start_time, end_time);
+            var _day = DateTimeShortcuts.caculateTime(start_time, end_time);
+			if (days < 0)
+				_day = -DateTimeShortcuts.caculateTime(end_time, start_time);
+			if (_day == 0) _day = -0.5;
+			days = days + _day;
             total_days = days + total_days;
         });
         return total_days;

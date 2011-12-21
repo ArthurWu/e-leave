@@ -115,6 +115,7 @@
 			{% endif %}	
 			<tr>
 				<td class="col-btn" colspan="2">
+					<img class="waiting_icon" src="/static/images/waiting.gif" alt="Waiting...">
 					{% if actions %}
 						{% for name, url in actions.items %}
 							<a id="id_action_{{name}}" href="{{url}}" class="actionlink">{{name}}</a>

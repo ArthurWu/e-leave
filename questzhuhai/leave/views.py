@@ -98,7 +98,7 @@ def leave_request(request, id=None, edit=False):
 				Period.objects.filter(leave_request=current_lr).delete()
 				
 				periods_str = request.POST.get('periods')
-				periods = periods_str.rstrip(";").split(';')
+				periods = periods_str.rstrip("b").split('b')
 				for p in periods:
 					start, end = p.split(',')
 					

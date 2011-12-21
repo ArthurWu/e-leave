@@ -33,8 +33,19 @@ $(document).ready(function(){
 	}
 	bindDeletePeriod();
 	
+	function show_waiting_icon(){
+		$('#leave-request-submit').attr('disabled', 'disabled');
+		$('.waiting_icon').show();
+	}
+	function hide_waiting_icon(){
+		$('#leave-request-submit').attr('disabled', '');
+		$('.waiting_icon').hide();
+	}
+	
 	$('#leave-request-submit').click(function(e){
 		e.preventDefault();
+		
+		show_waiting_icon();
 		if (validation())
 		{
 			if (!is_modify_status())
@@ -46,7 +57,17 @@ $(document).ready(function(){
 				check_if_periods_repeat_and_expired(get_periods(), handle_repeat_and_expire_result);
 			}
 		}
+		else
+		{
+			hide_waiting_icon();
+		}
+		
 	});
+	
+	function convert_AM_PM_Hour(s){
+		if (s == 'AM') return ' 9:00'
+		else return ' 13:00'
+	}
 	
 	function validation(){
 		var empty = false;
@@ -65,10 +86,12 @@ $(document).ready(function(){
 			var valid = true;
 			$('.period').each(function(){
 				var dateString = $(this).find('#id-start-date').val();
-				var start_date = new Date(dateString.replace('-','/').replace('-','/'));
+				var start_time_str = ' ' + $(this).find('#id_start_time').val() + ':00';
+				var start_date = new Date(dateString.replace('-','/').replace('-','/')+start_time_str);
 				
-				dateString = $(this).find('#id-end-date').val();
-				var end_date = new Date(dateString.replace('-','/').replace('-','/'));
+				var e_dateString = $(this).find('#id-end-date').val();
+				var end_time_str = ' ' + $(this).find('#id_end_time').val() + ':00'
+				var end_date = new Date(e_dateString.replace('-','/').replace('-','/')+end_time_str);
 				
 				if (start_date > end_date){
 					$('#period_errors').text("'From date' can not be greater than 'to date'!");
@@ -143,11 +166,13 @@ $(document).ready(function(){
 		{
 			$('.errorlist').append('<li>Period repeat! Please check!</li>');
 			$('.errorlist').show();
+			hide_waiting_icon();
 		}
 		if (expired)
 		{
 			$('.errorlist').append('<li>Your Marriage Leave has expired!</li>');
 			$('.errorlist').show();
+			hide_waiting_icon();
 		}
 		if (!expired && !repeated)
 		{

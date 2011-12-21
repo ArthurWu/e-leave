@@ -39,10 +39,11 @@
 					<td class="col1"><strong>Leave type:</strong></td>
 					<td>
 						<div>
-						{{form.leave_type}}
-						{% if form.leave_type.errors %}
-							{{form.leave_type.errors}}
-						{% endif %}
+							{{form.leave_type}}
+							{% if form.leave_type.errors %}
+								{{form.leave_type.errors}}
+							{% endif %}
+							<span id="leave_type_error" class="red bold" style="margin-left: 20px;"></span>
 						</div>
 						<div id="leave_type_helps" style="width: 590px;display:none">
 						{% for k, v in availableDays.items %}
@@ -71,7 +72,7 @@
 				</tr>
 				<tr>
 					<td class="col1"><strong>Period:</strong>
-						<p class="help">Please skip vacations!</p>
+						<p class="help">Please skip wekend days and public holidays!</p>
 					</td>
 					<td>
 						{% if periods %}
@@ -149,6 +150,7 @@
 						<input type="hidden" value="{{leaverequest.id}}" name="leave_request_id" />
 						{% endif %}
 						<input type="hidden" value="{% if edit %}{{leaverequest.employee.id}}{% else %}{{employee.id}}{% endif %}" name="employee" />
+						<img class="waiting_icon" src="/static/images/waiting.gif" alt="Waiting...">
 						<input id="leave-request-submit" class="default" type="submit" value="Submit" />
 					</td>
 				</tr>
