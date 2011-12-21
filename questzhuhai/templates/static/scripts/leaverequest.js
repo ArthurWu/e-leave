@@ -127,7 +127,8 @@ $(document).ready(function(){
 
 	function check_if_periods_repeat_and_expired(periods, success_callback){
 		var empId = $('input[name="employee"]').val();
-		var check_url = "/leave/checkrequest?id=" + empId + "&periods=" + periods;
+		var leave_type_id = $('#id_leave_type option:selected').val();
+		var check_url = "/leave/checkrequest?id=" + empId + "&periods=" + periods + "&leave_type_id=" + leave_type_id;
 		$.ajax({
 			url: check_url,
 			dataType: 'json',
@@ -160,7 +161,7 @@ $(document).ready(function(){
 		$('.period').each(function(){
 			var start = $(this).find('#id-start-date').val()+'-'+$(this).find('#id_start_time').val();
 			var end = $(this).find('#id-end-date').val()+'-'+$(this).find('#id_end_time').val();
-			periods = periods+start+','+end+';';
+			periods = periods+start+','+end+'b';
 		});
 		return periods;
 	}

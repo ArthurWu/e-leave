@@ -21,5 +21,5 @@ urlpatterns = patterns('',
 	url(r'^leaverequests/my/$', "leave.views.leave_request_by_emp"),
 	url(r'^leaverequests/todo/$', "leave.views.leave_request_by_approver"),
 	url(r'^leaverequests/(?P<id>\d+)/$', "leave.views.leave_request_view"),
-	url(r'^checkrequest$', "leave.views.has_repeate_period"),
+	url(r'^checkrequest$', "leave.views.check_period"),
 )
