@@ -109,6 +109,7 @@ h5 {
 .while-bottom{border-bottom: 1px solid #FFF;}
 
 #content{
+	clear: both;
 	height: auto;
 	margin-top: 10px;
 }
@@ -287,4 +288,8 @@ form img{vertical-align: middle;}
 .waiting_icon{
 	display: none;
 	margin-right: 10px;
+}
+.tip{
+	font-size: 10px !important;
+	color: #999;
 }

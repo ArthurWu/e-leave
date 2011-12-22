@@ -200,15 +200,6 @@ $(document).ready(function(){
 		return periods;
 	}
 	
-	function is_modify_status(){
-		if (!(typeof($('input[name="modify"]').val()) == 'undefinded' ||
-			$('input[name="modify"]').val() == null))
-		{
-			return false;
-		}
-		return true;
-	}
-	
 	function submitReuest(){
 		periods = get_periods();
 		$('#leaveForm').append('<input type="hidden" name="periods" value="'+periods+'" />');

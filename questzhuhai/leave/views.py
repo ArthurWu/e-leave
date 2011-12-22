@@ -129,6 +129,10 @@ def leave_request(request, id=None, edit=False):
 		form = CreateLeaveRequestForm(instance=leave_request)
 		periods = Period.objects.filter(leave_request__id=leave_request.id)
 		availableDays = leave_request.employee.days_available()
+		for k, v in availableDays.items():
+			if k == leave_request.leave_type.name.lower().replace(' ', '_'):
+				v['available_days'] = v['total_days'] - v['used_days']
+				if v['available_days'] < 0: v['available_days'] = 0
 	else:
 		form = CreateLeaveRequestForm()
 		availableDays = request.employee.days_available()
@@ -146,6 +150,10 @@ def leave_request(request, id=None, edit=False):
 							  
 def leave_request_view(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
+	
+	if not have_can_view_permission(request.employee, leave_request):
+		return render_to_response('can_not_view.html', RequestContext(request, {}))
+	
 	lrps = LeaveRequestProcesses.objects.filter(leave_request=leave_request).order_by('at')
 	actions = process.get_processor(leave_request, request.employee).actions()
 
@@ -160,6 +168,14 @@ def leave_request_view(request, id):
 	}
 	return render_to_response('leave/leave_request.html',
 							  RequestContext(request, context))
+							  
+def have_can_view_permission(emp, leave_request):
+	if emp.is_approver_of(leave_request) \
+				or emp.is_mine(leave_request) \
+				or emp.is_administrative_staff:
+		return True
+	else:
+		return False
 
 def leave_request_by_emp(request):
 	s = request.GET.get('status', 'processing')
@@ -261,7 +277,7 @@ def leave_request_archive(request, id):
 def leave_request_cancel(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
 	process.get_processor(leave_request, request.employee).cancel()
-	messages.add_message(request, messages.INFO, "%s's leave request has been cancel successfully!" % leave_request.employee.display_name)
+	messages.add_message(request, messages.INFO, "%s's leave request has been canceled successfully!" % leave_request.employee.display_name)
 	LeaveRequestProcesses(leave_request=leave_request,
 						who=request.employee.display_name,
 						do='Canceled').save()

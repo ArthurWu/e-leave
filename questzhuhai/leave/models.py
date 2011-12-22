@@ -51,7 +51,7 @@ class Period(models.Model):
 	end = models.DateTimeField()
 	
 	def __unicode__(self):
-		return '%s~%s' % (self.start.strftime('%Y-%m-%d %p'), self.end.strftime('%Y-%m-%d %p'))
+		return '%s  ~  %s' % (self.start.strftime('%Y-%m-%d %p'), self.end.strftime('%Y-%m-%d %p'))
 			
 	def have_started(self):
 		import datetime

@@ -52,16 +52,16 @@
 							Until next settlement day, you have
 							<strong id="{{k}}_total_days">{{v.total_days|floatformat:2}}</strong>
 							days of annual leave in total.
-							<strong id="{{k}}_used_days" class="">{{v.used_days}}</strong>
+							<strong id="{{k}}_used_days" class="">{{v.used_days|floatformat:2}}</strong>
 							days have been used, and there are
 							<strong id="{{k}}_need_approval" class="">{{v.need_approval}}</strong>
 							days are waiting for approval or settlement. so, your available annual leave is
-							<strong id="{{k}}_available_days" class="">{{v.available_days|floatformat:2}}</strong> day.
+							<strong id="{{k}}_available_days" class="">{{v.available_days|floatformat:2}}</strong> days.
 						</span>
 						{% else %}
 						<span id="{{k}}_help" class="help">
 							Total: <strong id="{{k}}_total_days">{{v.total_days|floatformat:2}}</strong> days,
-							Used: <strong id="{{k}}_used_days" class="">{{v.used_days}}</strong> days;
+							Used: <strong id="{{k}}_used_days" class="">{{v.used_days|floatformat:2}}</strong> days;
 							Waiting for approval or settlement: <strong id="{{k}}_need_approval" class="">{{v.need_approval}}</strong> days;
 							Available: <strong id="{{k}}_available_days" class="">{{v.available_days|floatformat:2}}</strong> days. {% if v.expire_date %}<strong id="marriage_leave_expire_date">Expire on: {{v.expire_date|date:"Y-m-d"}}</strong>{% endif %}
 						</span>
@@ -72,7 +72,7 @@
 				</tr>
 				<tr>
 					<td class="col1"><strong>Period:</strong>
-						<p class="help">Please skip wekend days and public holidays!</p>
+						<p class="tip">Please skip wekend days and public holidays!</p>
 					</td>
 					<td>
 						{% if periods %}
@@ -147,6 +147,7 @@
 					<td class="col-btn" colspan="2">
 						{% if edit %}
 						<input type="hidden" value="1" name="modify" />
+						<input type="hidden" value="{{leaverequest.days}}" name="modify_days" />
 						<input type="hidden" value="{{leaverequest.id}}" name="leave_request_id" />
 						{% endif %}
 						<input type="hidden" value="{% if edit %}{{leaverequest.employee.id}}{% else %}{{employee.id}}{% endif %}" name="employee" />

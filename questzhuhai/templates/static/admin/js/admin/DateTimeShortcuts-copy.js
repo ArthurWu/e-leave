@@ -296,11 +296,11 @@ var DateTimeShortcuts = {
 				$('#leave_type_error').empty().hide();
                 var available_days_id = $('#id_leave_type option:selected').text().toLowerCase().replace(' ', '_');
                 var available_days = new Number($('#'+available_days_id+'_available_days').text());
-				var modify = $('input[name="modify"]');
-                if (modify != [])
+				
+                if (is_modify_status())
                 {
-                    var need_approval_days = new Number($('#'+available_days_id+'_need_approval').text());
-                    available_days += need_approval_days;
+                    var need_approval_days = new Number($('input[name="modify_days"]').val());
+                    available_days = (available_days - need_approval_days)>0 ? available_days + need_approval_days : available_days;
                 }
                 if (available_days < total_days){
 					var nopaydays = total_days-available_days;
