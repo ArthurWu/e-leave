@@ -56,21 +56,20 @@ class BaseStatus(object):
 		
 	def get_actions(self, roles):		
 		actions = {}
-		for role in roles:
-			if role == 'owner' and not self.leaveRequest.is_approved():
-				actions.update(self.actionList['owner'])
-			if role == 'approver':
-				if self.leaveRequest.status not in (ARCHIVED, CANCELED):
+		if self.leaveRequest.status not in (ARCHIVED, CANCELED):
+			for role in roles:
+				if role == 'owner' and not self.leaveRequest.is_approved():
 					actions.update(self.actionList['owner'])
-				if self.leaveRequest.status == PENDINGMANAGER:
-					actions.update(self.actionList['approver'])
-			if role == 'admin':
-				if self.leaveRequest.status not in (ARCHIVED, CANCELED):
+				if role == 'approver':
 					actions.update(self.actionList['owner'])
-				if self.leaveRequest.status == WAITINGADMINCONFIRM:
-					actions.update(self.actionList['approver'])
-				if self.leaveRequest.status == PENDINGADMIN:
-					actions.update(self.actionList['admin'])
+					if self.leaveRequest.status == PENDINGMANAGER:
+						actions.update(self.actionList['approver'])
+				if role == 'admin':
+					actions.update(self.actionList['owner'])
+					if self.leaveRequest.status == WAITINGADMINCONFIRM:
+						actions.update(self.actionList['approver'])
+					if self.leaveRequest.status == PENDINGADMIN:
+						actions.update(self.actionList['admin'])
 		return actions
 	
 	def _have_actions(self, role):

@@ -34,11 +34,11 @@ $(document).ready(function(){
 	bindDeletePeriod();
 	
 	function show_waiting_icon(){
-		$('#leave-request-submit').attr('disabled', 'disabled');
+		$('#leave-request-submit').css('cursor', 'default').attr('disabled', 'disabled');
 		$('.waiting_icon').show();
 	}
 	function hide_waiting_icon(){
-		$('#leave-request-submit').attr('disabled', '');
+		$('#leave-request-submit').css('cursor', 'pointer').attr('disabled', '');
 		$('.waiting_icon').hide();
 	}
 	
@@ -71,14 +71,23 @@ $(document).ready(function(){
 	
 	function validation(){
 		var empty = false;
+		
+		var leave_type = $('#id_leave_type option:selected').val();
+		if (leave_type == '')
+		{
+			$('#leave_type_error').text('You must select a Leave Type!').show();
+			empty = true;
+		}
+		
 		var dates = $('.period input.vDateField');
 		for(var i=0; i<dates.length; i=i+1){
 			if ($(dates[i]).val() != "")
 				continue;
 			empty = true;
 		}
+		
 		if (empty){
-			$('#period_errors').text('The date can not be empty!');
+			$('#period_errors').text('You must select a period!');
 			$('.errorlist').show();
 			return false;
 		}
@@ -112,7 +121,7 @@ $(document).ready(function(){
 			if (leave_type != 'Annual Leave'){
 				total_days = DateTimeShortcuts.getTotalDays();
 				if (total_days > available_days){
-					$('#period_errors').text("The days you ask for "+ leave_type + " is more than the max days. Please ask a Annual Leave for the beyond days.");
+					$('#period_errors').text("The days you ask for "+ leave_type + " is more than you have. Please ask a Annual Leave for the beyond days.");
 					$('.errorlist').show();
 					valid = false;
 				}

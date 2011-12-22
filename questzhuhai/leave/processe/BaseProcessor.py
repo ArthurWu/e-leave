@@ -15,7 +15,10 @@ class BaseProcessor(object):
 			ARCHIVED: Archived(leaveRequest, employee),
 			CANCELED: Canceled(leaveRequest, employee)
 		}
-		self.currentStatus = self.status[self.leaverequest.status]
+		status_str = self.leaverequest.status
+		if not self.leaverequest.status:
+			status_str = INITIAL
+		self.currentStatus = self.status[status_str]
 		
 	def submit(self):
 		self.currentStatus.submit()

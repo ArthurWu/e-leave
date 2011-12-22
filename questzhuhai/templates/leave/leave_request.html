@@ -3,41 +3,81 @@
 {% block title %}Leave Request{% endblock %}
 {% block head %}
 	<script type="text/javascript">
+		var clickOnce = false;
 		$(function(){
-			$('#id_action_Reject').click(function(e){
-				e.preventDefault();
-				$('#popup_back').show();
-				$('#popup').show();
-				$('#reason_message').hide();
-			});
-			$('#id_action_Cancel').click(function(e){
-				if (!window.confirm("Are you sure to cancel this request?"))
+			setDetaultActions();
+			
+			$('.col-btn a').click(function(e){
+				
+				if (clickOnce)
 				{
 					e.preventDefault();
+					return;
 				}
-			});
-			$('#id_close').click(function(e){
-				e.preventDefault();
-				$('#popup_back').hide();
-				$('#popup').hide();
+				clickOnce = true;
+				$('.col-btn a').css({'cursor': 'default',
+								'backgroud': 'black',
+								'border-color': '#AAAAAA',
+								'backgroup-image': 'url(../images/admin/default-bg-reverse.gif)'
+							});
+				$('.waiting_icon').show();
 			});
 			$('#id_cancel').click(function(e){
-				e.preventDefault();
-				$('#popup_back').hide();
-				$('#popup').hide();
+				$('.waiting_icon').hide();
+				resetClick();
 			});
-			$('#id_ok').click(function(e){
-				var reason = $('#id_reason').val();
-				if (reason == ''){
-					$('#reason_message').text("The reason can not be empty!").addClass('red').show();
+			
+			function resetClick(){
+				resetClick();
+				$('.col-btn a').css({'cursor': 'pointer',
+								'border-color': '#5B80B2',
+								'backgroup-image': 'url(../images/admin/default-bg.gif)'
+							});
+			}
+			
+			function setDetaultActions(){
+				$('#id_action_Reject').click(function(e){
 					e.preventDefault();
-				}else{
+					$('#popup_back').show();
+					$('#popup').show();
 					$('#reason_message').hide();
-					var request_url = $('#id_action_Reject').attr('href') + '?reason='+reason;
-					alert(request_url);
-					$(this).attr('href', request_url);
-				}
-			});
+				});
+				$('#id_action_Cancel').click(function(e){
+					if (!window.confirm("Are you sure to cancel this request?"))
+					{
+						e.preventDefault();
+						$('.waiting_icon').hide();
+						resetClick();
+					}
+				});
+				$('#id_close').click(function(e){
+					e.preventDefault();
+					$('#popup_back').hide();
+					$('#popup').hide();
+					resetClick();
+				});
+				$('#id_cancel').click(function(e){
+					e.preventDefault();
+					$('#popup_back').hide();
+					$('#popup').hide();
+					$('.waiting_icon').hide();
+					resetClick();
+				});
+				$('#id_ok').click(function(e){
+					var reason = $('#id_reason').val();
+					if (reason == ''){
+						$('#reason_message').text("The reason can not be empty!").addClass('red').show();
+						e.preventDefault();
+					}else{
+						$('#reason_message').hide();
+						var request_url = $('#id_action_Reject').attr('href') + '?reason='+reason;
+						$(this).attr('href', request_url);
+					}
+				});
+			}
+			
+			
+			
 		});
 	</script>
 	<style type="text/css">

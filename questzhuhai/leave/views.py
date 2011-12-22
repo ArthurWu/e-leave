@@ -84,7 +84,7 @@ def split_periods(dates_string):
 	return start, end
 	
 def leave_request(request, id=None, edit=False):
-	form = periods = leave_request = None
+	form = periods = leave_request = availableDays = None
 	if request.method == 'POST':
 		if edit and request.POST.has_key('leave_request_id'):
 			lr = get_object_or_404(LeaveRequest, id=request.POST.get('leave_request_id'))
@@ -143,6 +143,7 @@ def leave_request(request, id=None, edit=False):
 	}
 	return render_to_response('leave/new_leave_request.html',
 							  RequestContext(request, context))
+							  
 def leave_request_view(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
 	lrps = LeaveRequestProcesses.objects.filter(leave_request=leave_request).order_by('at')
@@ -197,7 +198,7 @@ def leave_request_by_admin(request):
 	return leave_request_list(request, queryset, title)
 			
 def leave_request_list(request, queryset, title, s="processing"):
-	lr_list = queryset
+	lr_list = list(queryset)
 	paginator = Paginator(lr_list, 20)
 	
 	# Make sure page request is an int. If not, deliver first page.
