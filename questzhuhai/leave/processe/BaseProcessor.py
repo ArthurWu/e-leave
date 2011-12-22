@@ -60,9 +60,12 @@ class AnnualLeaveProcessor(BaseProcessor):
 		self.status[INITIAL].afterSubmit = PENDINGMANAGER
 		self.status[PENDINGMANAGER].afterApprove = PENDINGADMIN
 		self.status[PENDINGMANAGER].afterReject = PENDINGEMPLOYEE
+		
 		self.status[PENDINGEMPLOYEE].afterResubmit = PENDINGMANAGER
 		self.status[PENDINGMANAGER].afterResubmit = PENDINGMANAGER
 		self.status[PENDINGADMIN].afterResubmit = PENDINGMANAGER
+		self.status[WAITINGADMINCONFIRM].afterResubmit = PENDINGMANAGER
+		
 		self.status[PENDINGADMIN].afterArchive = ARCHIVED
 		
 		self.status[INITIAL].afterCancel = CANCELED
