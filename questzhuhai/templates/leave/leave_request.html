@@ -6,9 +6,12 @@
 		var clickOnce = false;
 		$(function(){
 			setDetaultActions();
+
+			$('.col-btn a[id!="id_action_Cancel"]').click(function(e){
+				disableLinks(e);
+			});
 			
-			$('.col-btn a').click(function(e){
-				
+			function disableLinks(e){
 				if (clickOnce)
 				{
 					e.preventDefault();
@@ -21,57 +24,64 @@
 								'backgroup-image': 'url(../images/admin/default-bg-reverse.gif)'
 							});
 				$('.waiting_icon').show();
-			});
-			$('#id_cancel').click(function(e){
-				$('.waiting_icon').hide();
-				resetClick();
-			});
+			}
 			
-			function resetClick(){
-				resetClick();
-				$('.col-btn a').css({'cursor': 'pointer',
+			function enableLinks(){
+				clickOnce = false;
+				$('.col-btn a').css({
+								'cursor': 'pointer',
 								'border-color': '#5B80B2',
 								'backgroup-image': 'url(../images/admin/default-bg.gif)'
 							});
+				$('.waiting_icon').hide();
 			}
+			
 			
 			function setDetaultActions(){
 				$('#id_action_Reject').click(function(e){
 					e.preventDefault();
-					$('#popup_back').show();
-					$('#popup').show();
-					$('#reason_message').hide();
+					if (!clickOnce){
+						$('#popup_back').show();
+						$('#popup').show();
+						$('#reason_message').hide();
+					}
 				});
 				$('#id_action_Cancel').click(function(e){
-					if (!window.confirm("Are you sure to cancel this request?"))
+					if (!clickOnce && !window.confirm("Are you sure to cancel this request?"))
 					{
 						e.preventDefault();
-						$('.waiting_icon').hide();
-						resetClick();
+					}
+					else
+					{
+						disableLinks(e);
 					}
 				});
 				$('#id_close').click(function(e){
 					e.preventDefault();
 					$('#popup_back').hide();
 					$('#popup').hide();
-					resetClick();
+					enableLinks();
 				});
 				$('#id_cancel').click(function(e){
 					e.preventDefault();
 					$('#popup_back').hide();
 					$('#popup').hide();
-					$('.waiting_icon').hide();
-					resetClick();
+					enableLinks();
 				});
 				$('#id_ok').click(function(e){
 					var reason = $('#id_reason').val();
+					e.preventDefault();
 					if (reason == ''){
 						$('#reason_message').text("The reason can not be empty!").addClass('red').show();
-						e.preventDefault();
+						//e.preventDefault();
 					}else{
 						$('#reason_message').hide();
-						var request_url = $('#id_action_Reject').attr('href') + '?reason='+reason;
-						$(this).attr('href', request_url);
+						var request_url = $('#id_action_Reject').attr('href');// + '?reason='+reason;
+						//$(this).attr('href', request_url);
+						$('#popup_back').hide();
+						$('#popup').hide();
+						disableLinks(e);
+						$('#id_reject_form').attr('action', request_url).submit();
 					}
 				});
 			}
@@ -167,15 +177,17 @@
 		<div id="popup">
 			<div id="p_title">
 				<div class="left">Reason</div>
-				<span class="right"><a id="id_close" href="">Close X</a></span>
+				<span class="right"><a id="id_close" href="">X</a></span>
 			</div>
 			<div id="p_content">
-				<textarea id="id_reason" rows="5" cols="80" name="reason"></textarea>
-				<div class="left"><span id="reason_message"></span></div>
-				<div class="right" style="margin-top: 5px;">
-					<a id="id_cancel" href="" class="actionlink">Cancel<a/>
-					<a id="id_ok" href="" class="actionlink">Ok<a/>
-				</div>
+				<form id="id_reject_form" action="" method="POST">{% csrf_token %}
+					<textarea id="id_reason" rows="6" cols="80" name="reason"></textarea>
+					<div class="left"><span id="reason_message"></span></div>
+					<div class="right" style="margin-top: 5px;">
+						<a id="id_cancel" href="" class="actionlink">Cancel<a/>
+						<a id="id_ok" href="" class="actionlink">Ok<a/>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>

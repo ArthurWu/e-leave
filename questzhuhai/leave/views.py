@@ -254,7 +254,7 @@ def leave_request_approve(request, id):
 	
 def leave_request_reject(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
-	reason = request.GET.get('reason', '')
+	reason = request.POST.get('reason', '')
 	LeaveRequestProcesses(leave_request=leave_request,
 						who=request.employee.display_name,
 						do='Rejected',

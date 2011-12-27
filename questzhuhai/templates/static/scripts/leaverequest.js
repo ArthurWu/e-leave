@@ -48,7 +48,7 @@ $(document).ready(function(){
 		show_waiting_icon();
 		if (validation())
 		{
-			if (!is_modify_status())
+			if (is_modify_status())
 			{
 				submitReuest();
 			}

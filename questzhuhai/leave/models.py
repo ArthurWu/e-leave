@@ -62,4 +62,4 @@ class LeaveRequestProcesses(models.Model):
 	who = models.CharField(max_length=30)
 	do = models.CharField(max_length=30)
 	at = models.DateTimeField(auto_now=True)
-	reason = models.CharField(max_length=512, blank=True, null=True)
+	reason = models.TextField(blank=True, null=True)
