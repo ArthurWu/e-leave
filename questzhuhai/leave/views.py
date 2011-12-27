@@ -114,7 +114,7 @@ def leave_request(request, id=None, edit=False):
 				do = 'modified'
 				if request.employee.is_mine(current_lr):
 					process.get_processor(current_lr, request.employee).resubmit()
-					messages.add_message(request, messages.INFO, current_lr.employee.display_name + "'s leave request has been modified and resubmited!")
+					messages.add_message(request, messages.INFO, current_lr.employee.display_name + "'s leave request has been modified and resubmitted!")
 					do += ' and resubmited'
 				else:
 					process.get_processor(current_lr, request.employee).edit()

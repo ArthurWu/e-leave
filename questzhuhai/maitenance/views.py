@@ -112,9 +112,9 @@ def rend_row(data, template_name):
 @admin_require
 @never_cache
 def delete_admin(request):
-	id = request.GET.get('id', '').lower()
+	domain_id = request.GET.get('name', '').lower()
 	current_user = request.META['REMOTE_USER']
-	res = main_utils.delete_admin(id, current_user)
+	res = main_utils.delete_admin(domain_id, current_user)
 	
 	return HttpResponse(json.dumps({'error': res['error']}))
 

@@ -258,7 +258,7 @@ class AdjustmentDaysHistory(models.Model):
 class MarriageLeaveConfirm(models.Model):
 	employee = models.ForeignKey(Employee)
 	days = models.FloatField('Marriage Leave Days')
-	marrige_date = models.DateField(blank=True, null=True)
+	marrige_date = models.DateField(blank=True, null=True, verbose_name="Date of Marriage")
 	expire_date = models.DateField()
 	
 	def __unicode__(self):

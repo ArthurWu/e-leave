@@ -25,11 +25,11 @@
 		}
 		.years{
 			margin: 5px 0;
-			font-size: 24px;
 			font-weight: bold;
 		}
 		.years a{
 			padding:0;
+			font-size: 24px;
 			margin: 0 20px;
 		}
 		.years a:hover{
@@ -49,7 +49,7 @@
         <h1>Monthly Leave Reports</h1>
 		<div class="years">
 			{% for y in years %}
-			<a {% if y.1 %}class="selected_year"{% endif %} href="?year={{y.0}}">{{y.0}}</a>
+			<a style="font-size: 32px;" {% if y.1 %}class="selected_year"{% endif %} href="?year={{y.0}}">{{y.0}}</a>
 			{% endfor %}
 		</div>
 		<table>

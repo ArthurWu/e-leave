@@ -57,7 +57,7 @@ class LeaveRequestAdmin(admin.ModelAdmin):
 	
 	list_filter = ('leave_type', 'employee__department', 'status', 'create_date',)
 	list_per_page = 20
-	search_fields = ['employee', 'leave_type', 'status']
+	search_fields = ['employee__display_name', 'leave_type__name', 'status']
 	date_hierarchy = 'create_date'
 	
 	change_list_template = 'leave/change_list.html'

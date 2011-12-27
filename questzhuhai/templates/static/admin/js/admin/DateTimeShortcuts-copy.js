@@ -289,7 +289,7 @@ var DateTimeShortcuts = {
             var leave_type = $('#id_leave_type option:selected').val();
             if (leave_type == '')
             {
-                $('#leave_type_error').text('You must select a Leave Type!').show();
+                $('#leave_type_error').text('You must select a Leave Type to submit!').show();
             }
             else
             {

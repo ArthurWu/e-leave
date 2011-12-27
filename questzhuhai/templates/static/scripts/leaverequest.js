@@ -12,8 +12,8 @@ $(document).ready(function(){
 						'</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n'+
 						'To:<input id="id-end-date" class="vDateField notdatewidget" type="text" size="11" name="end_date'+periodCount+'" />\n'+
 						'<select id="id_end_time" class="timeOptions" name="end_time'+periodCount+'">'+
-							'<option value="9" selected="selected">AM</option>'+
-							'<option value="13">PM</option>'+
+							'<option value="9">AM</option>'+
+							'<option value="13" selected="selected">PM</option>'+
 						'</select>\n'+
 						'<input class="btn-delete-period" type="image" src="/static/admin/img/admin/icon_deletelink.gif" alt="" />'+
 						'</div>';
@@ -75,19 +75,26 @@ $(document).ready(function(){
 		var leave_type = $('#id_leave_type option:selected').val();
 		if (leave_type == '')
 		{
-			$('#leave_type_error').text('You must select a Leave Type!').show();
+			$('#leave_type_error').text('You must select a Leave Type to submit!').show();
 			empty = true;
 		}
 		
 		var dates = $('.period input.vDateField');
-		for(var i=0; i<dates.length; i=i+1){
-			if ($(dates[i]).val() != "")
-				continue;
+		if (dates.length > 0)
+		{
+			for(var i=0; i<dates.length; i=i+1){
+				if ($(dates[i]).val() != "")
+					continue;
+				empty = true;
+			}
+		}
+		else
+		{
 			empty = true;
 		}
 		
 		if (empty){
-			$('#period_errors').text('You must select a period!');
+			$('#period_errors').text('You must select a period to submit!');
 			$('.errorlist').show();
 			return false;
 		}
@@ -209,7 +216,7 @@ $(document).ready(function(){
 	}
 	
 	$('#id_leave_type').change(function(e){
-		$('.help').hide();
+		$('.leave_type_help').hide();
 		var selected_lt = $(this).find('option:selected').text();
 		var help_text_id = String(selected_lt).toLocaleLowerCase().replace(' ', '_');
 		$('#'+help_text_id+'_help').show();

@@ -14,6 +14,12 @@ PENDINGEMPLOYEE = 'Rejected'
 ARCHIVED = 'Archived'
 CANCELED = 'Canceled'
 
+def unique_a_list(seq):
+	noDepes = []
+	[noDepes.append(i) for i in seq if not noDepes.count(i)]
+	return noDepes
+
+
 class BaseStatus(object):
 	name = ''
 	afterSubmit = ''
@@ -130,13 +136,13 @@ class BaseStatus(object):
 		msg = MIMEText(email_text)
 		msg['Subject'] = subject
 		msg['From'] = from_addr
-		msg['To'] = ', '.join(tolist)
-		msg['CC'] = ', '.join(cc)
+		msg['To'] = ', '.join(unique_a_list(tolist))
+		msg['CC'] = ', '.join(unique_a_list(cc))
 		
 		s = smtplib.SMTP('10.1.0.160')
-		s.sendmail(from_addr, tolist + cc, msg.as_string())
+		s.sendmail(from_addr, unique_a_list(tolist + cc), msg.as_string())
 		s.quit()
-		
+				
 	def send_cancel_email(self):
 		tolist, cc = self._edit_cancel_emails()
 		subject = self.email_subject + ' - Canceled'

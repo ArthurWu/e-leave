@@ -147,7 +147,7 @@ def get_all_admins():
 	error = ''
 	admins = None
 	try:
-		admins = Admin.objects.all()
+		admins = Employee.objects.filter(is_administrative_staff=True)
 	except:
 		log.Except(resource.log_prefix + sys.exc_info()[1].__str__())
 		error = resource.failed_to_get_object % Admin.__name__
@@ -156,16 +156,29 @@ def get_all_admins():
 
 def add_admin(name, operator):
 	user, sid = ad_utils.GetADObject(name)
-	if sid:
-		res	= add_object(Admin,{"sid":sid,'name':name})
-		if not res['error']: add_maitenance_log(operator, 'added %s as Administrator' % user.DisplayName)
-		return res
+	#emp = Employee.objects.filter(sid=sid)
+	emp = Employee.objects.filter(domain_id=name)
+	if emp:
+		emp = emp[0]
+		emp.is_administrative_staff = True
+		emp.save()
+		#res	= add_object(Admin,{"sid":sid,'name':name})
+		add_maitenance_log(operator, 'added %s as Administrator' % emp.display_name)
+		return {'error': '', 'data': emp}
 	else:
 		return {'error': resource.user_not_exist % name, 'data': None}
 
 def delete_admin(id, operator):
-	res = delete_object(Admin, id)
-	if not res['error']: add_maitenance_log(operator, 'deleted %s' % res['data'].name)
+	res = {'error': '', 'data': None}
+	emp = Employee.objects.filter(domain_id=id)
+	if emp:
+		emp = emp[0]
+		emp.is_administrative_staff = False
+		emp.save()
+		res['data'] = emp
+		add_maitenance_log(operator, 'deleted %s' % emp.display_name)
+	else:
+		res['error'] = resource.user_not_exist % id
 	return res
 	
 	

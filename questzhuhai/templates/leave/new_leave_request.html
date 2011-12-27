@@ -45,10 +45,10 @@
 							{% endif %}
 							<span id="leave_type_error" class="red bold" style="margin-left: 20px;"></span>
 						</div>
-						<div id="leave_type_helps" style="width: 590px;display:none">
+						<div id="leave_type_helps" style="width: 100%;display:none">
 						{% for k, v in availableDays.items %}
 						{% if k == "annual_leave" %}
-						<span id="annual_leave_help" class="help">
+						<span id="annual_leave_help" class="leave_type_help">
 							Until next settlement day, you have
 							<strong id="{{k}}_total_days">{{v.total_days|floatformat:2}}</strong>
 							days of annual leave in total.
@@ -59,7 +59,7 @@
 							<strong id="{{k}}_available_days" class="">{{v.available_days|floatformat:2}}</strong> days.
 						</span>
 						{% else %}
-						<span id="{{k}}_help" class="help">
+						<span id="{{k}}_help" class="leave_type_help">
 							Total: <strong id="{{k}}_total_days">{{v.total_days|floatformat:2}}</strong> days,
 							Used: <strong id="{{k}}_used_days" class="">{{v.used_days|floatformat:2}}</strong> days;
 							Waiting for approval or settlement: <strong id="{{k}}_need_approval" class="">{{v.need_approval}}</strong> days;
