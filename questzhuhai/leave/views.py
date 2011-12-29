@@ -10,6 +10,26 @@ import datetime
 from common.logger import log
 import simplejson
 
+def permission_require(view_func):
+	'''
+	To use this decorator, the view function must have a "id" parameter
+	'''
+	def is_have_permission(request, *args, **kwargs):
+		emp = request.employee
+		leave_request = get_object_or_404(LeaveRequest, id=kwargs['id'])
+		if have_can_view_permission(emp, leave_request):
+			return view_func(request, *args, **kwargs)
+		return render_to_response('can_not_view.html', RequestContext(request, {}))
+	return is_have_permission
+							  
+def have_can_view_permission(emp, leave_request):
+	if emp.is_approver_of(leave_request) \
+				or emp.is_mine(leave_request) \
+				or emp.is_administrative_staff:
+		return True
+	else:
+		return False
+
 def index(request):
 	pass
 
@@ -82,7 +102,7 @@ def split_periods(dates_string):
 	start=datetime.datetime.strptime(start_str, '%Y-%m-%d-%H')
 	end=datetime.datetime.strptime(end_str, '%Y-%m-%d-%H')
 	return start, end
-	
+
 def leave_request(request, id=None, edit=False):
 	form = periods = leave_request = availableDays = None
 	if request.method == 'POST':
@@ -126,6 +146,10 @@ def leave_request(request, id=None, edit=False):
 			return redirect(current_lr)
 	elif id and edit:
 		leave_request = get_object_or_404(LeaveRequest, id=id)
+		
+		if not have_can_view_permission(request.employee, leave_request):
+			return render_to_response('can_not_view.html', RequestContext(request, {}))
+		
 		form = CreateLeaveRequestForm(instance=leave_request)
 		periods = Period.objects.filter(leave_request__id=leave_request.id)
 		availableDays = leave_request.employee.days_available()
@@ -147,19 +171,13 @@ def leave_request(request, id=None, edit=False):
 	}
 	return render_to_response('leave/new_leave_request.html',
 							  RequestContext(request, context))
-							  
+
+@permission_require
 def leave_request_view(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
 	
-	if not have_can_view_permission(request.employee, leave_request):
-		return render_to_response('can_not_view.html', RequestContext(request, {}))
-	
 	lrps = LeaveRequestProcesses.objects.filter(leave_request=leave_request).order_by('at')
 	actions = process.get_processor(leave_request, request.employee).actions()
-
-	#nav = 'my_leave_requests'
-	#if request.employee.is_approver_of(leave_request):
-	#	nav = 'to_do_list'
 		
 	context = {
 		'leaverequest': leave_request,
@@ -168,19 +186,12 @@ def leave_request_view(request, id):
 	}
 	return render_to_response('leave/leave_request.html',
 							  RequestContext(request, context))
-							  
-def have_can_view_permission(emp, leave_request):
-	if emp.is_approver_of(leave_request) \
-				or emp.is_mine(leave_request) \
-				or emp.is_administrative_staff:
-		return True
-	else:
-		return False
+
 
 def leave_request_by_emp(request):
 	s = request.GET.get('status', 'processing')
 	queryset = LeaveRequest.objects.by_employee(request.employee)
-	title =  'My Leave Request'
+	title =  'My Leave Requests'
 		
 	return leave_request_list(request, filter_leave_request(queryset, s), title, s)
 	
@@ -241,7 +252,8 @@ def leave_request_list(request, queryset, title, s="processing"):
 					'status': s
 					})
 			)
-			
+
+@permission_require
 def leave_request_approve(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
 	process.get_processor(leave_request, request.employee).approve()
@@ -251,7 +263,8 @@ def leave_request_approve(request, id):
 						do='Approved').save()
 
 	return redirect(leave_request)
-	
+
+@permission_require
 def leave_request_reject(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
 	reason = request.POST.get('reason', '')
@@ -264,7 +277,8 @@ def leave_request_reject(request, id):
 	messages.add_message(request, messages.INFO, "%s's leave request has been rejected successfully!" % leave_request.employee.display_name)
 				
 	return redirect(leave_request)
-	
+
+@permission_require
 def leave_request_archive(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
 	process.get_processor(leave_request, request.employee).archive()
@@ -273,7 +287,8 @@ def leave_request_archive(request, id):
 						who=request.employee.display_name,
 						do='Archived').save()
 	return redirect(leave_request)
-	
+
+@permission_require
 def leave_request_cancel(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
 	process.get_processor(leave_request, request.employee).cancel()
