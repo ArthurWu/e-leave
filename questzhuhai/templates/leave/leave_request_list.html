@@ -59,7 +59,7 @@
 		</div>
 		<table class="list-table">
 			<tr>
-				<th>Employee</th><th>Leave Type</th><th>Period</th><th></th><th>Status</th><th>Date</th><th>Actions</th>
+				<th>Employee</th><th>Leave Type</th><th>Period</th><th></th><th>Status</th><th>Date</th><!-- {% if nav == 'to_do_list' %}<th>Actions</th>{% endif %} -->
 			</tr>
 			{% for lr in leaverequest_list.object_list %}
 			<tr>
@@ -73,19 +73,23 @@
 				<td>({{lr.days}}Days)</td>
 				<td>{{lr.status}}</td>
 				<td>{{lr.create_date}}</td>
+				{% if nav == 'to_do_list' %}
 				<td>
-					{% for action_name, url in lr.manager_shortcut_actions %}
-						<a class="shortcut_action" href="{{url}}">{{action_name}}</a>
-					{% endfor %}
+					<!-- {% for action_name, url in lr.manager_shortcut_actions %}
+						<a class="shortcut_action" href="{{url}}?shortcut=1">{{action_name}}</a>
+					{% endfor %} -->
 				</td>
+				{% endif %}
 			</tr>
 			{% endfor %}
+		</table>
+		<!-- {% if nav == 'to_do_list' %}
 			<script>
 			$(function(){
 				$('.shortcut_action').bind('click', function(e){
 					e.preventDefault();
 					$.ajax({
-						url: $(this).attr('href') + '?shortcut=1',
+						url: $(this).attr('href'),
 						success: function(data){
 							$('html').load('/leave/leaverequests/todo/');
 						}
@@ -93,7 +97,7 @@
 				});
 			});
 			</script>
-		</table>
+			{% endif %} -->
 		{% if leaverequest_list.object_list %}
 		<div class="pagination center">
 			<span class="step-links">
