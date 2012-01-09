@@ -18,7 +18,7 @@
 		<div id="header">
 			<div id="menu">
 				<span>Hi, {{employee.display_name}}!</span>
-				<a id="id_new_leave_request" href="/leave/leaverequest/new/">New Leave Request</a>
+				<a id="id_new_leave_request" href="/">New Leave Request</a>
 				<a id="id_my_leave_requests" 
 				{% if not employee.is_approver %}
 					style="border-right: none"
@@ -29,7 +29,7 @@
 					{% if not employee.is_administrative_staff %}
 						style="border-right: none"
 					{% endif %}
-					href="/leave/leaverequests/todo/?status=processing">To Do List</a>
+					href="/leave/leaverequests/todo/">To Do List</a>
 				{% endif %}
 				{% if employee.is_administrative_staff %}
 					<a id="id_all_leave_requests" href="/leave/leaverequests/">All Leave Requests</a>

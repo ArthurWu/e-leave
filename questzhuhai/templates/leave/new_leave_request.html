@@ -43,6 +43,14 @@
 							{% if form.leave_type.errors %}
 								{{form.leave_type.errors}}
 							{% endif %}
+							<script>
+								var login = '{{employee.display_name}}';
+								var request_owner = '{% if edit %}{{leaverequest.employee.display_name}}{% else %}{{employee.display_name}}{% endif %}';
+								if (login != request_owner)
+								{
+									$('#id_leave_type').attr('disabled', 'disabled');
+								}
+							</script>
 							<span id="leave_type_error" class="red bold" style="margin-left: 20px;"></span>
 						</div>
 						<div id="leave_type_helps" style="width: 100%;display:none">
@@ -65,6 +73,25 @@
 							Waiting for approval or settlement: <strong id="{{k}}_need_approval" class="">{{v.need_approval}}</strong> days;
 							Available: <strong id="{{k}}_available_days" class="">{{v.available_days|floatformat:2}}</strong> days. {% if v.expire_date %}<strong id="marriage_leave_expire_date">Expire on: {{v.expire_date|date:"Y-m-d"}}</strong>{% endif %}
 						</span>
+							<!-- start table for leave type help info 
+							<table border='1'>
+								<tr>
+									<td>Total</td>
+									<td>Used</td>
+									<td>Pendding Approve</td>
+									<td>Available</td>
+								</tr>
+								<tr>
+									<td>{{v.total_days|floatformat:2}}</td>
+									<td>{{v.used_days|floatformat:2}}</td>
+									<td>{{v.need_approval|floatformat:2}}</td>
+									<td>{{v.available_days|floatformat:2}}</td>
+								</tr>
+							</table>
+							{% if v.expire_date %}
+							<strong id="marriage_leave_expire_date">Expire on: {{v.expire_date|date:"Y-m-d"}}</strong>
+							{% endif %} 
+							<!-- end table for leave type help info -->
 						{% endif %}
 						{% endfor %}
 						</div>

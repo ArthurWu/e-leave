@@ -4,7 +4,7 @@
 		"pk": 1,
 		"fields":{
 			"name":"Administrative Department",
-			"supervisor": "prod\\awu3"
+			"supervisor": "prod\\vchen"
 		}
 	},
 	{

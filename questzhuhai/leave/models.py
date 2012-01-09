@@ -34,6 +34,15 @@ class LeaveRequest(models.Model):
 	def get_absolute_url(self):
 		return '/leave/leaverequests/%i/' % self.id
 	
+	def manager_shortcut_actions(self):
+		actions = []
+		if self.status == status.PENDINGMANAGER:
+			actions = [
+				('Approve', '/leave/leaverequest/approve/%i/' % self.id),
+				#('Reject', '/leave/leaverequest/reject/%i/' % self.id),
+			]
+		return actions
+	
 	def started(self):
 		periods = self.period_set.all()
 		if len(periods) > 0:

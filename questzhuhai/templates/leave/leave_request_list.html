@@ -59,7 +59,7 @@
 		</div>
 		<table class="list-table">
 			<tr>
-				<th>Employee</th><th>Leave Type</th><th>Period</th><th></th><th>Status</th><th>Date</th>
+				<th>Employee</th><th>Leave Type</th><th>Period</th><th></th><th>Status</th><th>Date</th><th>Actions</th>
 			</tr>
 			{% for lr in leaverequest_list.object_list %}
 			<tr>
@@ -73,8 +73,26 @@
 				<td>({{lr.days}}Days)</td>
 				<td>{{lr.status}}</td>
 				<td>{{lr.create_date}}</td>
+				<td>
+					{% for action_name, url in lr.manager_shortcut_actions %}
+						<a class="shortcut_action" href="{{url}}">{{action_name}}</a>
+					{% endfor %}
+				</td>
 			</tr>
 			{% endfor %}
+			<script>
+			$(function(){
+				$('.shortcut_action').bind('click', function(e){
+					e.preventDefault();
+					$.ajax({
+						url: $(this).attr('href') + '?shortcut=1',
+						success: function(data){
+							$('html').load('/leave/leaverequests/todo/');
+						}
+					});
+				});
+			});
+			</script>
 		</table>
 		{% if leaverequest_list.object_list %}
 		<div class="pagination center">
@@ -96,7 +114,7 @@
 			<p class="center">There is no leave request for this query.</p>	
 		{% endif%}
 		
-		{% if title == "My Leave Request" %}
+		{% if title == "My Leave Requests" %}
 		<div id="my_leave_info">
 			{% for leavetype, value in  employee.days_available.items %}
 				{% if leavetype == 'annual_leave' %}

@@ -35,7 +35,7 @@ def index(request):
 
 def check_period(request):
 	periods_str = request.GET.get('periods')
-	leave_type_id = request.GET.get('leave_type_id')
+	leave_type_id = int(request.GET.get('leave_type_id'))
 	emp_id = request.GET.get('id')
 	periods = periods_str.rstrip("b").split('b')
 	log.Except(periods_str)
@@ -46,7 +46,16 @@ def check_period(request):
 		log.Except('Can not get Employee with id %s' % id)
 	
 	repeated = has_repeate_period(periods, req_emp, leave_type_id)
-	expired = marriage_leave_expire(periods, req_emp)
+	
+	try:
+		lr = LeaveType.objects.get(id=leave_type_id)
+	except:
+		lr = None
+	
+	expired = False
+	if not lr and lr.name == 'Marriage Leave':
+		expired = marriage_leave_expire(periods, req_emp)
+		
 	return HttpResponse(simplejson.dumps({'repeated': repeated, 'expired': expired}))
 	
 def marriage_leave_expire(periods, emp):	
@@ -74,8 +83,8 @@ def has_repeate_period(periods_str, emp, leave_type_id):
 	if not repeated:
 		for p in periods_str:
 			start, end = split_periods(p)
-			s_in = Period.objects.filter(start__gte=start, end__lte=start, leave_request__employee = emp, leave_request__leave_type__id = leave_type_id)
-			e_in = Period.objects.filter(start__gte=end, end__lte=end, leave_request__employee = emp, leave_request__leave_type__id = leave_type_id)
+			s_in = Period.objects.filter(start__lte=start, end__gte=start, leave_request__employee = emp, leave_request__leave_type__id = leave_type_id)
+			e_in = Period.objects.filter(start__lte=end, end__gte=end, leave_request__employee = emp, leave_request__leave_type__id = leave_type_id)
 			
 			if s_in or e_in:
 				repeated = True
@@ -189,7 +198,7 @@ def leave_request_view(request, id):
 
 
 def leave_request_by_emp(request):
-	s = request.GET.get('status', 'processing')
+	s = request.GET.get('status', 'all')
 	queryset = LeaveRequest.objects.by_employee(request.employee)
 	title =  'My Leave Requests'
 		
@@ -210,7 +219,7 @@ def leave_request_by_approver(request):
 	if not request.employee.is_approver():
 		return render_to_response('auth_error.html', RequestContext(request, {}))
 	
-	s = request.GET.get('status', 'processing')
+	s = request.GET.get('status', 'all')
 	queryset = LeaveRequest.objects.by_approver(request.employee)
 	title =  'Leave Requests Need To Approve'
 	
@@ -224,7 +233,7 @@ def leave_request_by_admin(request):
 	title =  'All Leave Request'
 	return leave_request_list(request, queryset, title)
 			
-def leave_request_list(request, queryset, title, s="processing"):
+def leave_request_list(request, queryset, title, s="all"):
 	lr_list = list(queryset)
 	paginator = Paginator(lr_list, 20)
 	
@@ -262,7 +271,11 @@ def leave_request_approve(request, id):
 						who=request.employee.display_name,
 						do='Approved').save()
 
-	return redirect(leave_request)
+	shortcut = int(request.GET.get('shortcut', '0'))
+	if not shortcut:
+		return redirect(leave_request)
+	else:
+		return HttpResponse({})
 
 @permission_require
 def leave_request_reject(request, id):

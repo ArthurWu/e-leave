@@ -215,7 +215,7 @@ $(document).ready(function(){
 		$('#leaveForm').submit()
 	}
 	
-	$('#id_leave_type').change(function(e){
+	$('#id_leave_type').bind('change', function(e){
 		$('.leave_type_help').hide();
 		var selected_lt = $(this).find('option:selected').text();
 		var help_text_id = String(selected_lt).toLocaleLowerCase().replace(' ', '_');
@@ -223,6 +223,7 @@ $(document).ready(function(){
 		$('#leave_type_helps').show()
 		DateTimeShortcuts.showDays();
 	});
+	$('#id_leave_type').trigger('change');
 	
 	function bindChangePeriodTime(){
 		$('.timeOptions').change(function(){ DateTimeShortcuts.showDays();});

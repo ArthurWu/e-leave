@@ -17,8 +17,13 @@
 {% endblock %}
 
 {% block content %}
-
-    <p>{% blocktrans %}Are you sure you want to update the selected {{ objects_name }}? {% endblocktrans %}</p>
+	
+	<h1>
+	{% if leave_record %}Generate employees' leave record report
+	{% else %}Generate employees' leave report
+	{% endif %}
+	</h1>
+    <p>Please input {% if leave_record %}start date and end date{% else %}end date{% endif %} for exporting.</p>
 
     <form action="" method="post">{% csrf_token %}
     {% if leave_record %}
@@ -39,7 +44,7 @@
     </div>
     </form>
 	<br />
-	All of the following objects will be updated:
+	All of the following Employee's data will be exported:
     {% for item in queryset %}
         <ul>{{ item }}</ul>
     {% endfor %}
