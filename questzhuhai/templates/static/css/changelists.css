@@ -142,6 +142,10 @@
     color: #999;
 }
 
+#changelist-filter h2 a {
+    color: #5B80B2
+}
+
 #changelist-filter a:hover {
     color: #036;
 }

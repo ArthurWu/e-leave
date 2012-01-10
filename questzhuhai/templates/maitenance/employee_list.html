@@ -12,11 +12,33 @@
 	<script type="text/javascript" src="/static/scripts/actions.min.js"></script>
 	<script type="text/javascript">
 	(function($) {
-	$(document).ready(function($) {
-		$("tr input.action-select").actions();
+		$(document).ready(function($) {
+			$("tr input.action-select").actions();
+			
+			// Add anchor tag for Show/Hide link
+			var elem = $("div#changelist-filter");
+			$(elem).find("h2").first().append(' (<a id="fieldsetcollapser"' + ' class="collapse-toggle" href="#">' + "Show" + '</a>)');
+			$("div#changelist-filter .filter-item").hide();
+
+			// Add toggle to anchor tag
+			$("div#changelist-filter a.collapse-toggle").toggle(
+				function() { // Show
+					$(this).text("Hide");
+					$("div#changelist-filter .filter-item").show();
+					return false;
+				},
+				function() { // Hide
+					$(this).text("Show");
+					$("div#changelist-filter .filter-item").hide();
+					return false;
+				}
+			);
 		});
 	})(django.jQuery);
+	
 	</script> 
+	
+	
 {% endblock %}
 
 {% block content %}
