@@ -328,7 +328,7 @@ var DateTimeShortcuts = {
             var _day = DateTimeShortcuts.caculateTime(start_time, end_time);
 			if (days < 0)
 				_day = -DateTimeShortcuts.caculateTime(end_time, start_time);
-			if (_day == 0) _day = -0.5;
+			if (_day == 0 && days == 0) _day = -0.5;
 			days = days + _day;
             total_days = days + total_days;
         });
