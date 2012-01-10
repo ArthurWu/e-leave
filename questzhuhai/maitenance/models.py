@@ -186,8 +186,15 @@ class Employee(models.Model):
 		days_to_now = self._total_days_to_next_settlement()
 		return days_to_now/365*self.al_entitlement
 		
-	def get_used_leave_days(self, leavetype):
-		lrs = self.leaverequest_set.all().filter(leave_type=leavetype)
+	def get_used_leave_days(self, leavetype):		
+		from leave.models import LeaveRequest
+		from django.db.models import Q
+		lrs = LeaveRequest.objects.filter(
+			(Q(period__start__year = datetime.datetime.now().year) | \
+			Q(period__end__year = datetime.datetime.now().year))&
+			Q(employee__id = self.id)&
+			Q(leave_type__id = leavetype.id)
+		)
 		used_days = need_approval = 0.0
 		for l in lrs:
 			if l.status in (processe.status.PENDINGADMIN, processe.status.ARCHIVED):

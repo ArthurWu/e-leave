@@ -50,6 +50,7 @@ $(document).ready(function(){
 		{
 			if (is_modify_status())
 			{
+				$('#id_leave_type').removeAttr('disabled');
 				submitReuest();
 			}
 			else
