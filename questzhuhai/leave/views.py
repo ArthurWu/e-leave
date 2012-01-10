@@ -53,7 +53,7 @@ def check_period(request):
 		lr = None
 	
 	expired = False
-	if not lr and lr.name == 'Marriage Leave':
+	if lr and lr.name == 'Marriage Leave':
 		expired = marriage_leave_expire(periods, req_emp)
 		
 	return HttpResponse(simplejson.dumps({'repeated': repeated, 'expired': expired}))
@@ -67,12 +67,10 @@ def marriage_leave_expire(periods, emp):
 	expired = False
 	if mar_confirm:
 		expire_date = mar_confirm.expire_date
-	
+		expire_datetime = datetime.datetime(expire_date.year, expire_date.month, expire_date.day, 17, 30)
 		for p in periods:
-			start_str, end_str = p.split(',')
-			start=datetime.datetime.strptime(start_str, '%Y-%m-%d-%H')
-			end=datetime.datetime.strptime(end_str, '%Y-%m-%d-%H')
-			if (expire_date < end) or (expire_date < datetime.datetime.today()):
+			start, end = split_periods(p)
+			if expire_datetime < end: # or (expire_date < datetime.datetime.today()):
 				expired = True
 
 	return expired
@@ -81,10 +79,11 @@ def has_repeate_period(periods_str, emp, leave_type_id):
 	repeated = period_repeated(periods_str)
 	
 	if not repeated:
+		checked_status = [status.PENDINGMANAGER, status.WAITINGADMINCONFIRM, status.PENDINGADMIN, status.PENDINGEMPLOYEE, status.ARCHIVED] 
 		for p in periods_str:
 			start, end = split_periods(p)
-			s_in = Period.objects.filter(start__lte=start, end__gte=start, leave_request__employee = emp, leave_request__leave_type__id = leave_type_id)
-			e_in = Period.objects.filter(start__lte=end, end__gte=end, leave_request__employee = emp, leave_request__leave_type__id = leave_type_id)
+			s_in = Period.objects.filter(start__lte=start, end__gte=start, leave_request__employee = emp, leave_request__leave_type__id = leave_type_id, leave_request__status__in = checked_status)
+			e_in = Period.objects.filter(start__lte=end, end__gte=end, leave_request__employee = emp, leave_request__leave_type__id = leave_type_id, leave_request__status__in = checked_status)
 			
 			if s_in or e_in:
 				repeated = True
@@ -138,7 +137,7 @@ def leave_request(request, id=None, edit=False):
 				
 			if not request.POST.has_key('modify'):
 				process.get_processor(current_lr, request.employee).submit()
-				messages.add_message(request, messages.INFO, 'You leave request has been submited successfully!')
+				messages.add_message(request, messages.INFO, 'You leave request has been submitted successfully!')
 			else:
 				do = 'modified'
 				if request.employee.is_mine(current_lr):
@@ -266,13 +265,13 @@ def leave_request_list(request, queryset, title, s="all"):
 def leave_request_approve(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
 	process.get_processor(leave_request, request.employee).approve()
-	messages.add_message(request, messages.INFO, "%s's leave request has been approved successfully!" % leave_request.employee.display_name)
 	LeaveRequestProcesses(leave_request=leave_request,
 						who=request.employee.display_name,
 						do='Approved').save()
 
 	shortcut = int(request.GET.get('shortcut', '0'))
 	if not shortcut:
+		messages.add_message(request, messages.INFO, "%s's leave request has been approved successfully!" % leave_request.employee.display_name)
 		return redirect(leave_request)
 	else:
 		return HttpResponse({})

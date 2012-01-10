@@ -110,7 +110,7 @@ $(document).ready(function(){
 				var end_date = new Date(e_dateString.replace('-','/').replace('-','/')+end_time_str);
 				
 				if (start_date > end_date){
-					$('#period_errors').text("'From date' can not be greater than 'to date'!");
+					$('#period_errors').text("'From date' cannot be greater than 'to date'!");
 					$('.errorlist').show();
 					valid = false;
 				}
@@ -128,7 +128,7 @@ $(document).ready(function(){
 			if (leave_type != 'Annual Leave'){
 				total_days = DateTimeShortcuts.getTotalDays();
 				if (total_days > available_days){
-					$('#period_errors').text("The days you ask for "+ leave_type + " is more than you have. Please ask a Annual Leave for the beyond days.");
+					$('#period_errors').text("The days you selected for "+ leave_type + " have exceeded your available days, please use annual leave for exceeded days.");
 					$('.errorlist').show();
 					valid = false;
 				}
