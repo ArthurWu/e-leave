@@ -156,13 +156,13 @@ class BaseStatus(object):
 	def _edit_cancel_emails(self):
 		emp = self.employee
 		tolist = emp.approvers_email() 
-		cc = emp.cc_to_email() + [emp.email] + admin_emails()
+		cc = emp.cc_to_email() + [emp.email] # + admin_emails()
 		
 		manager = self.employee.is_approver_of(self.leaveRequest)
 		admin = self.employee.is_administrative_staff
 		if manager or admin:
 			tolist = [self.leaveRequest.employee.email]
-			cc = [self.employee.email] + admin_emails() \
+			cc = [self.employee.email] \
 				+ self.leaveRequest.employee.cc_to_email() \
 				+ self.leaveRequest.employee.approvers_email()
 		return tolist, cc

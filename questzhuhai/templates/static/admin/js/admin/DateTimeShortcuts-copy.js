@@ -135,15 +135,15 @@ var DateTimeShortcuts = {
         var shortcuts_span = document.createElement('span');
         shortcuts_span.className = DateTimeShortcuts.shortCutsClass;
         inp.parentNode.insertBefore(shortcuts_span, inp.nextSibling);
-        var today_link = document.createElement('a');
-        today_link.setAttribute('href', 'javascript:DateTimeShortcuts.handleCalendarQuickLink(' + num + ', 0);');
-        today_link.appendChild(document.createTextNode(gettext('Today')));
+        //var today_link = document.createElement('a');
+        //today_link.setAttribute('href', 'javascript:DateTimeShortcuts.handleCalendarQuickLink(' + num + ', 0);');
+        //today_link.appendChild(document.createTextNode(gettext('Today')));
         var cal_link = document.createElement('a');
         cal_link.setAttribute('href', 'javascript:DateTimeShortcuts.openCalendar(' + num + ');');
         cal_link.id = DateTimeShortcuts.calendarLinkName + num;
         quickElement('img', cal_link, '', 'src', DateTimeShortcuts.admin_media_prefix + 'img/admin/icon_calendar.gif', 'alt', gettext('Calendar'));
         shortcuts_span.appendChild(document.createTextNode('\240'));
-        shortcuts_span.appendChild(today_link);
+        //shortcuts_span.appendChild(today_link);
         shortcuts_span.appendChild(document.createTextNode('\240|\240'));
         shortcuts_span.appendChild(cal_link);
 
@@ -218,7 +218,7 @@ var DateTimeShortcuts = {
         // Recalculate the clockbox position
         // is it left-to-right or right-to-left layout ?
         if (getStyle(document.body,'direction')!='rtl') {
-            cal_box.style.left = findPosX(cal_link) + 17 + 'px';
+            cal_box.style.left = findPosX(cal_link) + 'px';
         }
         else {
             // since style's width is in em, it'd be tough to calculate
@@ -227,7 +227,7 @@ var DateTimeShortcuts = {
             //       (it returns as it was left aligned), needs to be fixed.
             cal_box.style.left = findPosX(cal_link) - 180 + 'px';
         }
-        cal_box.style.top = Math.max(0, findPosY(cal_link) - 75) + 'px';
+        cal_box.style.top = Math.max(0, findPosY(cal_link) + 17) + 'px';
 
         cal_box.style.display = 'block';
         addEvent(window.document, 'click', function() { DateTimeShortcuts.dismissCalendar(num); return true; });

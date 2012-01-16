@@ -306,6 +306,10 @@ class DepartmentAdmin(admin.ModelAdmin):
 	add_form_template = 'maitenance/add_employee.html'
 	change_form_template = 'maitenance/add_employee.html'
 	delete_selected_confirmation_template = 'maitenance/delete_selected_confirmation.html'
+	
+	def changelist_view(self, request, extra_context=None):
+		extra_context = {'nav': 'departments'}
+		return super(DepartmentAdmin, self).changelist_view(request, extra_context)
 
 admin.site.register(Department, DepartmentAdmin)
 
@@ -315,5 +319,9 @@ class TeamAdmin(admin.ModelAdmin):
 	add_form_template = 'maitenance/add_employee.html'
 	change_form_template = 'maitenance/add_employee.html'
 	delete_selected_confirmation_template = 'maitenance/delete_selected_confirmation.html'
+	
+	def changelist_view(self, request, extra_context=None):
+		extra_context = {'nav': 'teams'}
+		return super(TeamAdmin, self).changelist_view(request, extra_context)
 
 admin.site.register(Team)
