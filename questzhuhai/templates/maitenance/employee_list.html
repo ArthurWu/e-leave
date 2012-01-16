@@ -17,21 +17,22 @@
 			
 			// Add anchor tag for Show/Hide link
 			var elem = $("div#changelist-filter");
-			$(elem).find("h2").first().append(' (<a id="fieldsetcollapser"' + ' class="collapse-toggle" href="#">' + "Show" + '</a>)');
-			$("div#changelist-filter .filter-item").hide();
+			$(elem).find("h2").first().append(' (<a id="fieldsetcollapser"' + ' class="collapse-toggle" href="#">' + "Hide" + '</a>)');
+			//$("div#changelist-filter .filter-item").hide();
 
 			// Add toggle to anchor tag
-			$("div#changelist-filter a.collapse-toggle").toggle(
-				function() { // Show
-					$(this).text("Hide");
-					$("div#changelist-filter .filter-item").show();
-					return false;
-				},
+			$("div#changelist-filter h2").toggle(
 				function() { // Hide
-					$(this).text("Show");
+					$('a.collapse-toggle').text("Show");
 					$("div#changelist-filter .filter-item").hide();
 					return false;
+				},
+				function() { // Show
+					$('a.collapse-toggle').text("Hide");
+					$("div#changelist-filter .filter-item").show();
+					return false;
 				}
+				
 			);
 		});
 	})(django.jQuery);
@@ -79,7 +80,7 @@
         {% if cl.has_filters %}
           <div id="changelist-filter">
             
-			<h2>{% trans 'Filter' %}</h2>
+			<h2 id="emp_filter" title="Click to toggle filter block.">{% trans 'Filter' %}</h2>
             {% for spec in cl.filter_specs %}<div class="filter-item">{% admin_list_filter cl spec %}</div>{% endfor %}
 			
           </div>

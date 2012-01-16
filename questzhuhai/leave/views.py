@@ -82,8 +82,8 @@ def has_repeate_period(periods_str, emp, leave_type_id):
 		checked_status = [status.PENDINGMANAGER, status.WAITINGADMINCONFIRM, status.PENDINGADMIN, status.PENDINGEMPLOYEE, status.ARCHIVED] 
 		for p in periods_str:
 			start, end = split_periods(p)
-			s_in = Period.objects.filter(start__lte=start, end__gte=start, leave_request__employee = emp, leave_request__leave_type__id = leave_type_id, leave_request__status__in = checked_status)
-			e_in = Period.objects.filter(start__lte=end, end__gte=end, leave_request__employee = emp, leave_request__leave_type__id = leave_type_id, leave_request__status__in = checked_status)
+			s_in = Period.objects.filter(start__lte=start, end__gte=start, leave_request__employee = emp, leave_request__status__in = checked_status)
+			e_in = Period.objects.filter(start__lte=end, end__gte=end, leave_request__employee = emp,  leave_request__status__in = checked_status)
 			
 			if s_in or e_in:
 				repeated = True
@@ -94,10 +94,11 @@ def period_repeated(periods_str):
 	periods = []
 	for p_str in periods_str:
 		periods.append(split_periods(p_str))
-	log.Except(periods)
+	
 	if len(periods) >=2:
 		for p1 in periods:
-			for p2 in periods:
+			index = periods.index(p1)
+			for p2 in periods[index+1:]:
 				s = max(p1[0], p2[0])
 				e = min(p1[1], p2[1])
 				if e >= s:
