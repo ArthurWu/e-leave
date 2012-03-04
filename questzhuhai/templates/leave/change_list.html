@@ -23,7 +23,14 @@
 	<div class="change-list">
   <div id="content-main">
 	<h1>Select a leave request to change</h1>
-    {% if cl.formset.errors %}
+    {% if messages %}
+		<ul class="messagelist">
+			{% for message in messages %}
+			<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+	{% if cl.formset.errors %}
         <p class="errornote">
         {% blocktrans count cl.formset.errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
         </p>

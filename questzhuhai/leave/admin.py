@@ -61,6 +61,7 @@ class LeaveRequestAdmin(admin.ModelAdmin):
 	date_hierarchy = 'create_date'
 	
 	change_list_template = 'leave/change_list.html'
+	delete_selected_confirmation_template = 'maitenance/delete_selected_confirmation.html'
 	archive_selected_confirmation_template = 'leave/archive_selected_confirmation.html'
 	
 	actions = [archive_seleted,]
