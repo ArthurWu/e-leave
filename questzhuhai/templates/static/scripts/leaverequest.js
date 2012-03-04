@@ -55,7 +55,7 @@ $(document).ready(function(){
 			}
 			else
 			{
-				check_if_periods_repeat_and_expired(get_periods(), handle_repeat_and_expire_result);
+				check_if_periods_repeated_and_expired(get_periods(), handle_repeat_and_expire_result);
 			}
 		}
 		else
@@ -165,7 +165,7 @@ $(document).ready(function(){
 		}
 	}
 
-	function check_if_periods_repeat_and_expired(periods, success_callback){
+	function check_if_periods_repeated_and_expired(periods, success_callback){
 		var empId = $('input[name="employee"]').val();
 		var leave_type_id = $('#id_leave_type option:selected').val();
 		var check_url = "/leave/checkrequest?id=" + empId + "&periods=" + periods + "&leave_type_id=" + leave_type_id;
@@ -181,7 +181,7 @@ $(document).ready(function(){
 		var expired = data['expired'];
 		if (repeated)
 		{
-			$('.errorlist').append('<li>Period repeat! Please check!</li>');
+			$('.errorlist').append('<li>'+data['message']+'</li>');
 			$('.errorlist').show();
 			hide_waiting_icon();
 		}
@@ -218,7 +218,13 @@ $(document).ready(function(){
 	
 	$('#id_leave_type').bind('change', function(e){
 		$('.leave_type_help').hide();
-		var selected_lt = $(this).find('option:selected').text();
+		var sel_opt = $(this).find('option:selected');
+		if (sel_opt.val() == '')
+			$('#leave_type_error').show();
+		else
+			$('#leave_type_error').hide();
+			
+		var selected_lt = sel_opt.text();
 		var help_text_id = String(selected_lt).toLocaleLowerCase().replace(' ', '_');
 		$('#'+help_text_id+'_help').show();
 		$('#leave_type_helps').show()

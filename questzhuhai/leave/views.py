@@ -45,7 +45,7 @@ def check_period(request):
 	except:
 		log.Except('Can not get Employee with id %s' % id)
 	
-	repeated = has_repeate_period(periods, req_emp, leave_type_id)
+	repeated, message = has_repeate_period(periods, req_emp, leave_type_id)
 	
 	try:
 		lr = LeaveType.objects.get(id=leave_type_id)
@@ -56,7 +56,7 @@ def check_period(request):
 	if lr and lr.name == 'Marriage Leave':
 		expired = marriage_leave_expire(periods, req_emp)
 		
-	return HttpResponse(simplejson.dumps({'repeated': repeated, 'expired': expired}))
+	return HttpResponse(simplejson.dumps({'repeated': repeated, 'expired': expired, 'message': message}))
 	
 def marriage_leave_expire(periods, emp):	
 	mar_confirm = None
@@ -77,18 +77,21 @@ def marriage_leave_expire(periods, emp):
 
 def has_repeate_period(periods_str, emp, leave_type_id):	
 	repeated = period_repeated(periods_str)
-	
-	if not repeated:
+	message = ''
+	if repeated:
+		message = 'The periods you selected are overlapped. Please remove the overlapped period.'
+	else:
 		checked_status = [status.PENDINGMANAGER, status.WAITINGADMINCONFIRM, status.PENDINGADMIN, status.PENDINGEMPLOYEE, status.ARCHIVED] 
 		for p in periods_str:
 			start, end = split_periods(p)
 			s_in = Period.objects.filter(start__lte=start, end__gte=start, leave_request__employee = emp, leave_request__status__in = checked_status)
-			e_in = Period.objects.filter(start__lte=end, end__gte=end, leave_request__employee = emp,  leave_request__status__in = checked_status)
+			e_in = Period.objects.filter(start__lte=end, end__gte=end, leave_request__employee = emp, leave_request__status__in = checked_status)
 			
 			if s_in or e_in:
 				repeated = True
+				message = 'The period(%s to %s) has already existed in other leave request, please check.' % (start.strftime('%Y-%m-%d %p'), end.strftime('%Y-%m-%d %p'))
 			
-	return repeated
+	return repeated, message
 
 def period_repeated(periods_str):
 	periods = []
@@ -275,7 +278,7 @@ def leave_request_approve(request, id):
 		messages.add_message(request, messages.INFO, "%s's leave request has been approved successfully!" % leave_request.employee.display_name)
 		return redirect(leave_request)
 	else:
-		return HttpResponse({})
+		return HttpResponse(leave_request.status)
 
 @permission_require
 def leave_request_reject(request, id):

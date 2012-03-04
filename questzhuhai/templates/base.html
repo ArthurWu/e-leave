@@ -16,11 +16,13 @@
 <body>
 	<div id="container">
 		<div id="header">
+			<div id="logo"></div>
+			<div style="text-align:right">
+			<div id="login_user"><span>Hi, {{employee.display_name}}</span></div>
 			<div id="menu">
-				<span>Hi, {{employee.display_name}}!</span>
 				<a id="id_new_leave_request" href="/">New Leave Request</a>
 				<a id="id_my_leave_requests" 
-				{% if not employee.is_approver %}
+				{% if not employee.is_approver and not employee.is_admin %}
 					style="border-right: none"
 				{% endif %}
 				href="/leave/leaverequests/my/">My Leave Requests</a>
@@ -46,14 +48,13 @@
 					active_nav.style.fontWeight = 'bold';
 			</script>
 			</div>
+			</div>
 		</div>
 		<div id="content">
 		{% block content %}{% endblock %}
 		</div>
 		<div id="footer">
-			<div id="copyright">
-			&copy; {% now "Y" %} Quest Software Zhuhai, Version 1.0
-			</div>
+			<div id="copyright"><table class="right"><tr><td><span>&copy; 2011-{% now "Y" %} Quest Software Zhuhai, Version 1.0. Design By </span><a id="author" href="#">Arthur Wu</a>&nbsp;&nbsp;</td></tr></table></div>
 		</div>
 	</div>
 </body>

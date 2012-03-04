@@ -133,7 +133,7 @@ class BaseStatus(object):
 		c = Context({'employee': self.leaveRequest.employee, 'leaverequest': self.leaveRequest, 'reason': self.reason, 'host': host, 'operator': self.employee})
 		email_text = t.render(c)
 		
-		msg = MIMEText(email_text)
+		msg = MIMEText(email_text, _charset='utf-8')
 		msg['Subject'] = subject
 		msg['From'] = from_addr
 		msg['To'] = ', '.join(unique_a_list(tolist))

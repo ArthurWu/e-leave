@@ -61,23 +61,38 @@ h5 {
 #footer{ clear: both; padding-top: 10px;}
 
 #header{
-	height:80px;
-	background: url(../images/quest-logo.gif) no-repeat 20px 25px;
+	#height:80px;
 	border-bottom: 1px solid #C9D7F1;
-	position: relative;
+	padding-bottom: 3px;
+	#position: relative;
+}
+#logo{
+	margin-top: 10px;
+	background: url(../images/quest-logo.gif) no-repeat;
+	float:left;
+	width: 170px;
+	height: 50px;
 }
 #menu{
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	float: right;
-	height: 25px;
+	#position: absolute;
+	#bottom: 0;
+	#right: 0;
+	#float: right;
+	#height: 25px;
+	margin-top: 37px;
+}
+#login_user{
+	#position: absolute;
+	#top: 5px;
+	#right: 0;
+	margin-top:5px;
+	padding-right: 5px;
 }
 #menu a, #menu a:visited{
-	display: inline;
-	line-height: 25px;
+	display: inline-block;
+	line-height: 12px;
 	font-size: 14px;
-	padding: 0 10px;
+	padding: 0 5px;
 	border-right: 1px solid #CCC;
 	text-decoration: underline;
 }
@@ -151,9 +166,10 @@ tr.admin-row td{vertical-align: middle; padding: 0;}
 	background-color: #eef1f5;
 	line-height: 24px;
 	text-align: right;
-	padding-right: 10px;
 	font-size:12px;
 	font-family: Tahoma;
+	float:left;
+	width: 100%;
 }
 a.link_disabled{
 	cursor: default;
@@ -292,4 +308,9 @@ form img{vertical-align: middle;}
 .tip{
 	font-size: 10px !important;
 	color: #999;
+}
+a#author{
+	color:#5B80B2;
+	font-weight:bold;
+	display: inline;
 }

@@ -39,6 +39,9 @@
 			display: block;
 			padding-top: 3px;
 		}
+		#shortcut_action_box{
+			width:70px;
+		}
 		
 	</style>
 {% endblock %}
@@ -59,7 +62,7 @@
 		</div>
 		<table class="list-table">
 			<tr>
-				<th>Employee</th><th>Leave Type</th><th>Period</th><th></th><th>Status</th><th>Date</th><!-- {% if nav == 'to_do_list' %}<th>Actions</th>{% endif %} -->
+				<th>Employee</th><th>Leave Type</th><th>Period</th><th></th><th>Status</th><th>Date</th>{% if nav == 'to_do_list' %}<th>Actions</th>{% endif %}
 			</tr>
 			{% for lr in leaverequest_list.object_list %}
 			<tr>
@@ -70,34 +73,42 @@
 					<strong>{{p}}</strong><br/>
 					{% endfor %}
 				</td>
-				<td>({{lr.days}}Days)</td>
-				<td>{{lr.status}}</td>
-				<td>{{lr.create_date}}</td>
+				<td>({{lr.days}}Day{% if lr.days > 1 %}s{% endif %})</td>
+				<td class="leave_status">{{lr.status}}</td>
+				<td>{{lr.create_date|date:"Y-m-d H:i"}}</td>
 				{% if nav == 'to_do_list' %}
-				<td>
-					<!-- {% for action_name, url in lr.manager_shortcut_actions %}
+				<td width="70px">
+					{% for action_name, url in lr.manager_shortcut_actions %}
 						<a class="shortcut_action" href="{{url}}?shortcut=1">{{action_name}}</a>
-					{% endfor %} -->
+						<span id="id_approving" class='invisible'>Approving...</span>
+					{% endfor %}
 				</td>
 				{% endif %}
 			</tr>
 			{% endfor %}
 		</table>
-		<!-- {% if nav == 'to_do_list' %}
+		{% if nav == 'to_do_list' %}
 			<script>
 			$(function(){
 				$('.shortcut_action').bind('click', function(e){
 					e.preventDefault();
+					var current_link = $(this);
 					$.ajax({
-						url: $(this).attr('href'),
+						url: current_link.attr('href'),
 						success: function(data){
-							$('html').load('/leave/leaverequests/todo/');
+							if (data != 'Approved')
+								current_link.show();
+							current_link.parent().parent().find('td.leave_status').text('Approved').text(data);
+							$('#id_approving').hide();
 						}
 					});
+					
+					current_link.hide();
+					$('#id_approving').show()
 				});
 			});
 			</script>
-			{% endif %} -->
+			{% endif %}
 		{% if leaverequest_list.object_list %}
 		<div class="pagination center">
 			<span class="step-links">

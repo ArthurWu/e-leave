@@ -62,13 +62,18 @@ class Employee(models.Model):
 		app_label = 'maitenance'
 		verbose_name = 'Employee'
 		verbose_name_plural = 'Employees'
-		
+	
+	@property
+	def is_admin(self):
+		return self.is_administrative_staff 
+	
 	def is_approver_of(self, leaverequest):
 		if self.domain_id in leaverequest.employee.approvers:
 			return True
 		else:
 			return False
 	
+	@property
 	def is_approver(self):
 		res = Employee.objects.filter(approvers__icontains = self.domain_id.strip(';')+';')
 		return len(res) > 0

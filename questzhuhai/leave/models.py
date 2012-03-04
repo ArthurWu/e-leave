@@ -36,11 +36,9 @@ class LeaveRequest(models.Model):
 	
 	def manager_shortcut_actions(self):
 		actions = []
-		if self.status == status.PENDINGMANAGER:
-			actions = [
-				('Approve', '/leave/leaverequest/approve/%i/' % self.id),
-				#('Reject', '/leave/leaverequest/reject/%i/' % self.id),
-			]
+		if self.status in (status.PENDINGMANAGER):#, status.WAITINGADMINCONFIRM):
+			actions.append(('Approve', '/leave/leaverequest/approve/%i/' % self.id))
+			#('Reject', '/leave/leaverequest/reject/%i/' % self.id),
 		return actions
 	
 	def started(self):
