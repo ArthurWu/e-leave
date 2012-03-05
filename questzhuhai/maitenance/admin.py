@@ -230,7 +230,7 @@ class EmployeeAdmin(admin.ModelAdmin):
 	list_per_page = 20
 	list_select_related = True
 	ordering = ('display_name',)
-	search_fields = ['domain_id', 'display_name', 'title', 'email']
+	search_fields = ['domain_id', 'display_name', 'email']
 	save_on_top = True
 	
 	fieldsets = (
