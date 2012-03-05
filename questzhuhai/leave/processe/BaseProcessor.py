@@ -27,19 +27,19 @@ class BaseProcessor(object):
 		self.currentStatus.edit()
 		
 	def approve(self):
-		self.currentStatus.approve()
+		return self.currentStatus.approve()
 		
 	def reject(self, reason=''):
-		self.currentStatus.reject(reason)
+		return self.currentStatus.reject(reason)
 		
 	def resubmit(self):
-		self.currentStatus.resubmit()
+		return self.currentStatus.resubmit()
 		
 	def archive(self):
-		self.currentStatus.archive()
+		return self.currentStatus.archive()
 		
 	def cancel(self):
-		self.currentStatus.cancel()
+		return self.currentStatus.cancel()
 		
 	def actions(self):
 		roles = []
@@ -63,7 +63,7 @@ class AnnualLeaveProcessor(BaseProcessor):
 		
 		self.status[PENDINGEMPLOYEE].afterResubmit = PENDINGMANAGER
 		self.status[PENDINGMANAGER].afterResubmit = PENDINGMANAGER
-		self.status[PENDINGADMIN].afterResubmit = PENDINGMANAGER
+		#self.status[PENDINGADMIN].afterResubmit = PENDINGMANAGER
 		self.status[WAITINGADMINCONFIRM].afterResubmit = PENDINGMANAGER
 		
 		self.status[PENDINGADMIN].afterArchive = ARCHIVED
@@ -84,7 +84,7 @@ class AdminConfirmLeaveProcessor(BaseProcessor):
 		self.status[PENDINGEMPLOYEE].afterResubmit = WAITINGADMINCONFIRM
 		self.status[WAITINGADMINCONFIRM].afterResubmit = WAITINGADMINCONFIRM
 		self.status[PENDINGMANAGER].afterResubmit = WAITINGADMINCONFIRM
-		self.status[PENDINGADMIN].afterResubmit = WAITINGADMINCONFIRM
+		#self.status[PENDINGADMIN].afterResubmit = WAITINGADMINCONFIRM
 		self.status[PENDINGMANAGER].afterApprove = PENDINGADMIN
 		self.status[PENDINGMANAGER].afterReject = PENDINGEMPLOYEE
 		self.status[PENDINGADMIN].afterArchive = ARCHIVED

@@ -19,6 +19,16 @@ def unique_a_list(seq):
 	[noDepes.append(i) for i in seq if not noDepes.count(i)]
 	return noDepes
 
+def actionHandler(action):
+	def _actionHandler(func):
+		def __actionHandler(self, *args, **kwargs):
+			after_status = getattr(self, 'after'+action)
+			if after_status and after_status != self.leaveRequest.status:
+				func(self, *args, **kwargs)
+				return True
+			else: return False
+		return __actionHandler
+	return _actionHandler
 
 class BaseStatus(object):
 	name = ''
@@ -95,29 +105,37 @@ class BaseStatus(object):
 		self.send_email()
 	
 	def edit(self):
-		self.is_edit = True
-		self.send_email()
+		if self.leaveRequest.status not in (ARCHIVED, CANCELED):
+			self.is_edit = True
+			self.send_email()
+			return True
+		else: return False
 	
+	@actionHandler('Approve')
 	def approve(self):
 		self.is_approve = True
 		self._change_status(self.afterApprove)
 		self.send_email()
-		
+			
+	@actionHandler('Reject')
 	def reject(self, reason=''):
 		self.reason = reason
 		self.is_approve = False
 		self._change_status(self.afterReject)
 		self.send_email()
 		
+	@actionHandler('Resubmit')
 	def resubmit(self):
 		self.is_resubmit = True
 		self._change_status(self.afterResubmit)
 		self.send_email()
-		
+				
+	@actionHandler('Archive')
 	def archive(self):
 		self._change_status(self.afterArchive)
 		self.send_email()
 		
+	@actionHandler('Cancel')
 	def cancel(self):
 		self.is_cancel = True
 		self._change_status(self.afterCancel)

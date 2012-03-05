@@ -131,7 +131,7 @@
 					<div class="period">
 						{% for period in leaverequest.period_set.all %}<p>{{period}}</p>{% endfor %}
 					</div>
-					<div style="float:right; font-size:24px;">{{leaverequest.days}}Days</div>
+					<div style="float:right; font-size:24px;">{{leaverequest.days}}Day{% if leaverequest.days > 1 %}s{% endif %}</div>
 						
 				</td>
 			</tr>

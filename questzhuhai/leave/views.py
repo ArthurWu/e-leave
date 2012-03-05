@@ -38,7 +38,6 @@ def check_period(request):
 	leave_type_id = int(request.GET.get('leave_type_id'))
 	emp_id = request.GET.get('id')
 	periods = periods_str.rstrip("b").split('b')
-	log.Except(periods_str)
 	try:
 		from maitenance.models import Employee
 		req_emp = Employee.objects.get(id=int(emp_id))
@@ -115,11 +114,24 @@ def split_periods(dates_string):
 	end=datetime.datetime.strptime(end_str, '%Y-%m-%d-%H')
 	return start, end
 
+def can_edit_leave_request(request, leave_req):
+	emp = request.employee
+	result = True
+	if leave_req.status == Status.PENDINGADMIN:
+		if not emp.is_admin and not emp.is_approver_of(leave_req):
+			result = False
+			
+	if leave_req.status in (Status.ARCHIVED,Status.CANCELED):
+		result = False
+	if not result: set_warning_msg(request, leave_req)
+	return result
+			
 def leave_request(request, id=None, edit=False):
 	form = periods = leave_request = availableDays = None
 	if request.method == 'POST':
 		if edit and request.POST.has_key('leave_request_id'):
 			lr = get_object_or_404(LeaveRequest, id=request.POST.get('leave_request_id'))
+			if not can_edit_leave_request(request, lr): return redirect(lr)
 			form = CreateLeaveRequestForm(request.POST, instance=lr)
 		else:
 			form = CreateLeaveRequestForm(request.POST)			
@@ -145,15 +157,23 @@ def leave_request(request, id=None, edit=False):
 			else:
 				do = 'modified'
 				if request.employee.is_mine(current_lr):
-					process.get_processor(current_lr, request.employee).resubmit()
-					messages.add_message(request, messages.INFO, current_lr.employee.display_name + "'s leave request has been modified and resubmitted!")
-					do += ' and resubmited'
-				else:
-					process.get_processor(current_lr, request.employee).edit()
-					messages.add_message(request, messages.INFO, current_lr.employee.display_name + "'s leave request has been modified successfully!")
-				LeaveRequestProcesses(leave_request=current_lr,
+					success_resubmit = process.get_processor(current_lr, request.employee).resubmit()
+					if success_resubmit:
+						messages.add_message(request, messages.INFO, current_lr.employee.display_name + "'s leave request has been modified and resubmitted!")
+						do += ' and resubmited'
+						LeaveRequestProcesses(leave_request=current_lr,
 									  who=request.employee.display_name,
 									  do=do).save()
+					else:
+						set_warning_msg(request, current_lr)
+				else:
+					success_edit = process.get_processor(current_lr, request.employee).edit()
+					if success_edit:
+						messages.add_message(request, messages.INFO, current_lr.employee.display_name + "'s leave request has been modified successfully!")
+						LeaveRequestProcesses(leave_request=current_lr,
+									  who=request.employee.display_name,
+									  do=do).save()
+					else: set_warning_msg(request, current_lr)
 				
 			return redirect(current_lr)
 	elif id and edit:
@@ -161,6 +181,8 @@ def leave_request(request, id=None, edit=False):
 		
 		if not have_can_view_permission(request.employee, leave_request):
 			return render_to_response('can_not_view.html', RequestContext(request, {}))
+		
+		if not can_edit_leave_request(request, leave_request): return redirect(leave_request)
 		
 		form = CreateLeaveRequestForm(instance=leave_request)
 		periods = Period.objects.filter(leave_request__id=leave_request.id)
@@ -268,14 +290,18 @@ def leave_request_list(request, queryset, title, s="all"):
 @permission_require
 def leave_request_approve(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
-	process.get_processor(leave_request, request.employee).approve()
-	LeaveRequestProcesses(leave_request=leave_request,
+	success = process.get_processor(leave_request, request.employee).approve()
+	if success:
+		LeaveRequestProcesses(leave_request=leave_request,
 						who=request.employee.display_name,
 						do='Approved').save()
 
 	shortcut = int(request.GET.get('shortcut', '0'))
 	if not shortcut:
-		messages.add_message(request, messages.INFO, "%s's leave request has been approved successfully!" % leave_request.employee.display_name)
+		if success:
+			messages.add_message(request, messages.SUCCESS, "%s's leave request has been approved successfully!" % leave_request.employee.display_name)
+		else:
+			set_warning_msg(request, leave_request)
 		return redirect(leave_request)
 	else:
 		return HttpResponse(leave_request.status)
@@ -284,22 +310,29 @@ def leave_request_approve(request, id):
 def leave_request_reject(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
 	reason = request.POST.get('reason', '')
-	LeaveRequestProcesses(leave_request=leave_request,
+	success = process.get_processor(leave_request, request.employee).reject(reason)
+	if success:
+		LeaveRequestProcesses(leave_request=leave_request,
 						who=request.employee.display_name,
 						do='Rejected',
 						reason=reason).save()
 		
-	process.get_processor(leave_request, request.employee).reject(reason)
-	messages.add_message(request, messages.INFO, "%s's leave request has been rejected successfully!" % leave_request.employee.display_name)
-				
+	
+		messages.add_message(request, messages.INFO, "%s's leave request has been rejected successfully!" % leave_request.employee.display_name)
+	else:
+		set_warning_msg(request, leave_request)
+	
 	return redirect(leave_request)
 
 @permission_require
 def leave_request_archive(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
-	process.get_processor(leave_request, request.employee).archive()
-	messages.add_message(request, messages.INFO, "%s's leave request has been archived successfully!" % leave_request.employee.display_name)
-	LeaveRequestProcesses(leave_request=leave_request,
+	success = process.get_processor(leave_request, request.employee).archive()
+	if not success:
+		set_warning_msg(request, leave_request)
+	else:
+		messages.add_message(request, messages.INFO, "%s's leave request has been archived successfully!" % leave_request.employee.display_name)
+		LeaveRequestProcesses(leave_request=leave_request,
 						who=request.employee.display_name,
 						do='Archived').save()
 	return redirect(leave_request)
@@ -307,10 +340,15 @@ def leave_request_archive(request, id):
 @permission_require
 def leave_request_cancel(request, id):
 	leave_request = get_object_or_404(LeaveRequest, id=id)
-	process.get_processor(leave_request, request.employee).cancel()
-	messages.add_message(request, messages.INFO, "%s's leave request has been canceled successfully!" % leave_request.employee.display_name)
-	LeaveRequestProcesses(leave_request=leave_request,
+	success = process.get_processor(leave_request, request.employee).cancel()
+	if not success:
+		set_warning_msg(request, leave_request)
+	else:
+		messages.add_message(request, messages.INFO, "%s's leave request has been canceled successfully!" % leave_request.employee.display_name)
+		LeaveRequestProcesses(leave_request=leave_request,
 						who=request.employee.display_name,
 						do='Canceled').save()
 	return redirect(leave_request)
-
+	
+def set_warning_msg(request, leave_request):
+	messages.add_message(request, messages.WARNING, "%s's leave request has been deal with before, please refresh page to see the result." % leave_request.employee.display_name)

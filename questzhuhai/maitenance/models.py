@@ -73,7 +73,6 @@ class Employee(models.Model):
 		else:
 			return False
 	
-	@property
 	def is_approver(self):
 		res = Employee.objects.filter(approvers__icontains = self.domain_id.strip(';')+';')
 		return len(res) > 0

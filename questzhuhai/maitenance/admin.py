@@ -229,7 +229,7 @@ class EmployeeAdmin(admin.ModelAdmin):
 	list_filter = ('department', 'team', 'title', 'join_date', 'is_administrative_staff', 'is_active')
 	list_per_page = 20
 	list_select_related = True
-	ordering = ('-display_name',)
+	ordering = ('display_name',)
 	search_fields = ['domain_id', 'display_name', 'title', 'email']
 	save_on_top = True
 	
