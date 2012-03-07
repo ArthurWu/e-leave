@@ -199,6 +199,9 @@ a.actionlink{
 .bold{font-weight: bold;}
 .block{ padding: 10px; clear: both;}
 .block table{width: 100%; padding: 5px; border: 1px solid #ccc;}
+.even-row{background-color:#F8F8F8}
+.shortcut-action{border-left: 1px solid #eee;}
+.shortcut-action a:hover{color: red;}
 .spec{
 	font-size: 13px;
 	font-family: Calibri;

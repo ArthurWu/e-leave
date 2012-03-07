@@ -1,7 +1,8 @@
 Dear,
 
-Please be noted the leave request have edited by {{operator.display_name}}, 
+Please be noted the leave request have been edited by {{operator.display_name}}, 
 
 please check on {{host}}{{leaverequest.get_absolute_url}}.
 
 Thanks & Regards
+{{operator.display_name}}

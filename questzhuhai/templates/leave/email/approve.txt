@@ -1,6 +1,6 @@
 Dear,
 
-Your following {{leaverequest.leave_type.name}} request has approved.
+Your following {{leaverequest.leave_type.name}} request has been approved.
 
 	Name:				{{employee.display_name}}
 	
@@ -14,3 +14,4 @@ Your following {{leaverequest.leave_type.name}} request has approved.
 	{{host}}{{leaverequest.get_absolute_url}}
 
 Thanks & Regards
+{{operator.display_name}}

@@ -1,9 +1,14 @@
 from django.core import mail
 import smtplib
-from email.mime.text import MIMEText
+
 from django.template import Template, Context, loader
 from django.core.urlresolvers import reverse
 from maitenance.models import Employee
+
+from smtplib import SMTP
+from email.MIMEText import MIMEText
+from email.Header import Header
+from email.Utils import parseaddr, formataddr
 
 
 INITIAL = 'New leave request'
@@ -124,11 +129,13 @@ class BaseStatus(object):
 		self._change_status(self.afterReject)
 		self.send_email()
 		
-	@actionHandler('Resubmit')
 	def resubmit(self):
-		self.is_resubmit = True
-		self._change_status(self.afterResubmit)
-		self.send_email()
+		if self.leaveRequest.status in (PENDINGEMPLOYEE, PENDINGMANAGER, WAITINGADMINCONFIRM):
+			self.is_resubmit = True
+			self._change_status(self.afterResubmit)
+			self.send_email()
+			return True
+		else: return False
 				
 	@actionHandler('Archive')
 	def archive(self):
@@ -141,25 +148,52 @@ class BaseStatus(object):
 		self._change_status(self.afterCancel)
 		self.send_cancel_email()
 		
-	def _send_email(self, tolist, cc, subject, template_name):
-		from_addr = self.employee.email
+	def _send_email(self, recipient, cc, subject, template_name):
+		'''Send an email.
+		All arguments should be Unicode strings (plain ASCII works as well).
+
+		Only the real name part of sender and recipient addresses may contain
+		non-ASCII characters.
+
+		The email will be properly MIME encoded and delivered though SMTP to
+		localhost port 25.  This is easy to change if you want something different.
+
+		The charset of the email will be the first one out of US-ASCII, ISO-8859-1
+		and UTF-8 that can represent all the characters occurring in the email.
+		'''		
+		sender = self.employee.email
 		t = loader.get_template(template_name)
 		
 		import settings
 		host = settings.LEAVESYSTEMHOST or ''
 		
 		c = Context({'employee': self.leaveRequest.employee, 'leaverequest': self.leaveRequest, 'reason': self.reason, 'host': host, 'operator': self.employee})
-		email_text = t.render(c)
-		
-		msg = MIMEText(email_text, _charset='utf-8')
-		msg['Subject'] = subject
-		msg['From'] = from_addr
-		msg['To'] = ', '.join(unique_a_list(tolist))
+		body = t.render(c)
+
+		# Header class is smart enough to try US-ASCII, then the charset we
+		# provide, then fall back to UTF-8.
+		header_charset = 'ISO-8859-1'
+
+		# We must choose the body charset manually
+		for body_charset in 'US-ASCII', 'ISO-8859-1', 'UTF-8':
+			try:
+				body.encode(body_charset)
+			except UnicodeError:
+				pass
+			else:
+				break
+
+		# Create the message ('plain' stands for Content-Type: text/plain)
+		msg = MIMEText(body.encode(body_charset), 'plain', body_charset)
+		msg['From'] = sender
+		msg['To'] = ', '.join(unique_a_list(recipient))
 		msg['CC'] = ', '.join(unique_a_list(cc))
-		
-		s = smtplib.SMTP('10.1.0.160')
-		s.sendmail(from_addr, unique_a_list(tolist + cc), msg.as_string())
-		s.quit()
+		msg['Subject'] = Header(unicode(subject), header_charset)
+
+		# Send the message via SMTP to localhost:25
+		smtp = SMTP("10.1.0.160")
+		smtp.sendmail(sender, unique_a_list(recipient + cc), msg.as_string())
+		smtp.quit()
 				
 	def send_cancel_email(self):
 		tolist, cc = self._edit_cancel_emails()

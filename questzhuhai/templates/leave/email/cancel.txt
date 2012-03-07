@@ -1,6 +1,6 @@
 Dear,
 
-Please note the following {{leaverequest.leave_type.name}} request has cancelled
+Please note the following {{leaverequest.leave_type.name}} request has been cancelled
 
 	Name:				{{employee.display_name}}
 	
@@ -14,3 +14,4 @@ Please note the following {{leaverequest.leave_type.name}} request has cancelled
 	{{host}}{{leaverequest.get_absolute_url}}
 
 Thanks & Regards
+{{operator.display_name}}

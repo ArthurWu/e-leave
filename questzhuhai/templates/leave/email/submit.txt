@@ -16,3 +16,4 @@ Please kindly review the following {{leaverequest.leave_type.name}} request:
 Kindly approve or reject on ({{host}}{{leaverequest.get_absolute_url}})
 
 Thanks & Regards
+{{operator.display_name}}

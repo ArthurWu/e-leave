@@ -65,7 +65,7 @@
 				<th>Employee</th><th>Leave Type</th><th>Period</th><th></th><th>Status</th><th>Date</th>{% if nav == 'to_do_list' %}<th>Actions</th>{% endif %}
 			</tr>
 			{% for lr in leaverequest_list.object_list %}
-			<tr>
+			<tr class="{% cycle 'even-row' '' %}">
 				<td><a href="{{lr.get_absolute_url}}">{{lr.employee.display_name}}</a></td>
 				<td><a href="{{lr.get_absolute_url}}">{{lr.leave_type.name}}</a></td>
 				<td>
@@ -77,7 +77,7 @@
 				<td class="leave_status">{{lr.status}}</td>
 				<td>{{lr.create_date|date:"Y-m-d H:i"}}</td>
 				{% if nav == 'to_do_list' %}
-				<td width="70px">
+				<td width="70px" class="shortcut-action">
 					{% for action_name, url in lr.manager_shortcut_actions %}
 						<a class="shortcut_action" href="{{url}}?shortcut=1">{{action_name}}</a>
 						<span id="id_approving" class='invisible'>Approving...</span>

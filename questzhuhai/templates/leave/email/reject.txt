@@ -1,6 +1,6 @@
 Dear,
 
-Your following {{leaverequest.leave_type.name}} request has rejected by {{operator.display_name}}.
+Your following {{leaverequest.leave_type.name}} request has been rejected by {{operator.display_name}}.
 
 	Name:				{{employee.display_name}}
 	
@@ -16,3 +16,4 @@ Your following {{leaverequest.leave_type.name}} request has rejected by {{operat
 	{{host}}{{leaverequest.get_absolute_url}}
 
 Thanks & Regards
+{{operator.display_name}}

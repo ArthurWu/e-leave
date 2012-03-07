@@ -75,6 +75,7 @@ def marriage_leave_expire(periods, emp):
 	return expired
 
 def has_repeate_period(periods_str, emp, leave_type_id):	
+	from django.db.models import Q
 	repeated = period_repeated(periods_str)
 	message = ''
 	if repeated:
@@ -83,12 +84,18 @@ def has_repeate_period(periods_str, emp, leave_type_id):
 		checked_status = [status.PENDINGMANAGER, status.WAITINGADMINCONFIRM, status.PENDINGADMIN, status.PENDINGEMPLOYEE, status.ARCHIVED] 
 		for p in periods_str:
 			start, end = split_periods(p)
-			s_in = Period.objects.filter(start__lte=start, end__gte=start, leave_request__employee = emp, leave_request__status__in = checked_status)
-			e_in = Period.objects.filter(start__lte=end, end__gte=end, leave_request__employee = emp, leave_request__status__in = checked_status)
-			
-			if s_in or e_in:
+			has_existed = Period.objects.filter(
+				(
+					Q(start__range=(start, end))|
+					Q(end__range=(start, end))|
+					(Q(start__gte=start)&Q(end__lte=end))|
+					(Q(start__lte=start)&Q(end__gte=end))
+				)&
+				Q(leave_request__employee=emp)&Q(leave_request__status__in=checked_status)
+			)
+			if has_existed:
 				repeated = True
-				message = 'The period(%s to %s) has already existed in other leave request, please check.' % (start.strftime('%Y-%m-%d %p'), end.strftime('%Y-%m-%d %p'))
+				message = 'The period(%s to %s) has been already existed in other leave request, please check.' % (start.strftime('%Y-%m-%d %p'), end.strftime('%Y-%m-%d %p'))
 			
 	return repeated, message
 
