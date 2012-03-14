@@ -13,27 +13,38 @@
 	<script type="text/javascript">
 	(function($) {
 		$(document).ready(function($) {
+			var filters = [];
+			get_filters();
 			$("tr input.action-select").actions();
 			
 			// Add anchor tag for Show/Hide link
 			var elem = $("div#changelist-filter");
-			$(elem).find("h2").first().append(' (<a id="fieldsetcollapser"' + ' class="collapse-toggle" href="#">' + "Hide" + '</a>)');
-			//$("div#changelist-filter .filter-item").hide();
+			//$(elem).find("h2").first().append(' (<a id="fieldsetcollapser" class="collapse-toggle" href="#">Show</a>)');
+			$("div#changelist-filter .filter-item").hide();
 
 			// Add toggle to anchor tag
 			$("div#changelist-filter h2").toggle(
-				function() { // Hide
-					$('a.collapse-toggle').text("Show");
-					$("div#changelist-filter .filter-item").hide();
-					return false;
-				},
 				function() { // Show
 					$('a.collapse-toggle').text("Hide");
 					$("div#changelist-filter .filter-item").show();
 					return false;
+				},
+				function() { // Hide
+					$('a.collapse-toggle').text("Show");
+					$("div#changelist-filter .filter-item").hide();
+					return false;
 				}
-				
 			);
+
+			function get_filters(){
+				$("div.filter-item ul li.selected").each(function(){
+					var f = $.trim($(this).text());
+					if (f != 'All' && f != 'Any date'){	
+						filters.push(f); 
+					}
+				});
+				$('#filter_text').text(filters.join(' + '));
+			}
 		});
 	})(django.jQuery);
 	
@@ -80,7 +91,10 @@
         {% if cl.has_filters %}
           <div id="changelist-filter">
             
-			<h2 id="emp_filter" title="Click to toggle filter block.">{% trans 'Filter' %}</h2>
+			<h2 id="emp_filter" title="Click to toggle filter block.">{% trans 'Filter' %}
+			(<a id="fieldsetcollapser" class="collapse-toggle" href="#">Show</a>)
+			<span id="filter_text"></span>
+			</h2>
             {% for spec in cl.filter_specs %}<div class="filter-item">{% admin_list_filter cl spec %}</div>{% endfor %}
 			
           </div>

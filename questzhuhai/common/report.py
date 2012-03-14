@@ -242,7 +242,7 @@ def add_annual_leave_header(ws, year, month, day):
 
 def create_report_data(employees, base_day, month=None, year=None):
 	res_data = []
-	for employee in employees:
+	for employee in list(employees):
 		alr = AnnualLeaveReport(employee = employee)
 		
 		today = datetime.date.today()
@@ -475,9 +475,8 @@ def monthly_taken_days(leave_report, employee, base_day, month, leave_type="Annu
 def month_leave_taken_days(employee, month, base_day=None, leave_type="Annual Leave"):
 	start_date, end_date = get_month_period(month, base_day)
 	report_days_ = report_days(start_date, end_date)
-	lrs = employee.leaverequest_set.all().filter(leave_type__name=leave_type,
-												 status__in=[status.PENDINGADMIN, status.ARCHIVED])
-
+	lrs = list(employee.leaverequest_set.all().filter(leave_type__name=leave_type,\
+												 status__in=[status.PENDINGADMIN, status.ARCHIVED]))
 	duration = 0.0
 	for l in lrs:
 		for p in l.period_set.all():

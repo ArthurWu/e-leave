@@ -24,7 +24,7 @@ class BaseProcessor(object):
 		self.currentStatus.submit()
 		
 	def edit(self):
-		self.currentStatus.edit()
+		return self.currentStatus.edit()
 		
 	def approve(self):
 		return self.currentStatus.approve()

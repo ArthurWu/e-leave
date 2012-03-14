@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load leave_utils %}
 {% load compress %}
-{% block title %}Ask a leave{% endblock %}
+{% block title %}{% if edit %}Edit{% else %}Ask{% endif %} a leave{% endblock %}
 {% block head %}
 	<link rel="stylesheet" type="text/css" href="/static/admin/css/widgets.css" /> 
 	<script type="text/javascript" src="/admin/jsi18n/"></script> 
@@ -77,40 +77,9 @@
 							<span id="leave_type_error" class="red bold" style="margin-left: 20px;"></span>
 						</div>
 						<div id="leave_type_helps" style="width: 100%; display:none">
-						{% for k, v in availableDays.items %}
-						<!-- {% if k == "annual_leave" %}
-							<span id="annual_leave_help1" class="leave_type_help">
-								Until next settlement day, you have
-								<strong id="{{k}}_total_days">{{v.total_days|floatformat:2}}</strong>
-								days of annual leave in total.
-								<strong id="{{k}}_used_days" class="">{{v.used_days|floatformat:2}}</strong>
-								days have been used, and there are
-								<strong id="{{k}}_need_approval" class="">{{v.need_approval}}</strong>
-								days are waiting for approval or settlement. so, your available annual leave is
-								<strong id="{{k}}_available_days" class="">{{v.available_days|floatformat:2}}</strong> days.
-							</span>
-						{% else %}
-							<span id="{{k}}_help1" class="leave_type_help">
-								Total: <strong id="{{k}}_total_days">{{v.total_days|floatformat:2}}</strong> days,
-								Used: <strong id="{{k}}_used_days" class="">{{v.used_days|floatformat:2}}</strong> days;
-								Waiting for approval or settlement: <strong id="{{k}}_need_approval" class="">{{v.need_approval}}</strong> days;
-								Available: <strong id="{{k}}_available_days" class="">{{v.available_days|floatformat:2}}</strong> days. {% if v.expire_date %}<strong id="marriage_leave_expire_date">Expire on: {{v.expire_date|date:"Y-m-d"}}</strong>{% endif %}
-							</span>
-							
-						{% endif %} -->
-							
+						{% for k, v in availableDays.items %}							
 							<div id="{{k}}_help" class="leave_type_help">
-							{% if k == "annual_leave" %}
-							<!-- <span>
-								You have totally <strong id="{{k}}_total_days">{{v.total_days|floatformat:2}}</strong>
-								day(s) annual leave by next settlement day,
-								<strong id="{{k}}_used_days" class="">{{v.used_days|floatformat:2}}</strong>
-								day(s) used, and 
-								<strong id="{{k}}_need_approval" class="">{{v.need_approval}}</strong>
-								day(s) waiting for approval or settlement. Your current available annual leave is 
-								<strong id="{{k}}_available_days" class="">{{v.available_days|floatformat:2}}</strong>day(s).
-							</span> -->
-							
+							{% if k == "annual_leave" %}							
 							<table id="hor-minimalist-b" width="100%">
 								<thead>
 								<tr>
@@ -218,9 +187,9 @@
 					<td class="col1"><strong>Approvers:</strong></td>
 					<td>
 					{% if edit %}
-					{% for e in leaverequest.employee.get_approvers %}{{e}}{% endfor %}
+					{{ leaverequest.employee.get_approvers|join:", " }}
 					{% else %}
-					{% for e in employee.get_approvers %}{{e}}{% endfor %}
+					{{ employee.get_approvers|join:", " }}
 					{% endif %}
 					</td>
 				</tr>

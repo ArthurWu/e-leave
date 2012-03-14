@@ -14,6 +14,7 @@ MONTH = ('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August
 
 def leave_report(year):
 	res = []
+	create, download, leave_report, leave_record = 'Create ', 'Download ', 'Leave Report', 'Leave Record'
 	for i in range(1, 13):
 		report_date_10 = datetime(year, i, settings.LEAVE_REPORT_FIRST_DAY)
 		report_date_25 = datetime(year, i, settings.LEAVE_REPORT_SECEND_DAY)
@@ -30,35 +31,28 @@ def leave_report(year):
 		leave_record_file_exist_25 = os.path.exists(leave_record_full_path_25)
 		#data_exist = AnnualLeaveReport.objects.filter(report_date = report_date_10)
 		
-		item = {
-			'download_link': [],
-			'generate_link': [],
-		}
+		item = []
 		if file_exist_10:
-			item['download_link'].append({'link': '/main/reports/download/leavereport/%s' % report_date_10.strftime('%Y/%m/%d/'), 'actual_on': report_date_10})
+			item.append((download+leave_report, '/main/reports/download/leavereport/%s' % report_date_10.strftime('%Y/%m/%d/'), report_date_10))
 		else:
-			item['generate_link'].append({'link':'/main/reports/generate?type=leavereport&year=%s&month=%s&day=%s' %
-				(report_date_10.year, report_date_10.month, report_date_10.day), 'actual_on': report_date_10})
+			item.append((create+leave_report, '/main/reports/generate?type=leavereport&year=%s&month=%s&day=%s' %
+				(report_date_10.year, report_date_10.month, report_date_10.day), report_date_10))
 		
 		if file_exist_25:
-			item['download_link'].append({'link': '/main/reports/download/leavereport/%s' % report_date_25.strftime('%Y/%m/%d/'), 'actual_on': report_date_25})
+			item.append((download+leave_report, '/main/reports/download/leavereport/%s' % report_date_25.strftime('%Y/%m/%d/'), report_date_25))
 		else:
-			item['generate_link'].append({'link':'/main/reports/generate?type=leavereport&year=%s&month=%s&day=%s' %
-				(report_date_25.year, report_date_25.month, report_date_25.day), 'actual_on': report_date_25})
+			item.append((create+leave_report, '/main/reports/generate?type=leavereport&year=%s&month=%s&day=%s' %
+				(report_date_25.year, report_date_25.month, report_date_25.day), report_date_25))
 		
 		if leave_record_file_exist_25:
-			item['download_link'].append({
-				'link': '/main/reports/download/leaverecord/%s/%s/' % (leave_record_satrt_date.strftime('%Y_%m_%d'), report_date_25.strftime('%Y_%m_%d')),
-				'actual_on': report_date_25,
-				'type': 'leave record'
-			})
+			item.append((download+leave_record, '/main/reports/download/leaverecord/%s/%s/' % (leave_record_satrt_date.strftime('%Y_%m_%d'), report_date_25.strftime('%Y_%m_%d')), report_date_25))
 		else:
-			item['generate_link'].append({
-				'link':'/main/reports/generate?type=leaverecord&start=%s&end=%s&year=%s' %
+			item.append((
+				create+leave_record,
+				'/main/reports/generate?type=leaverecord&start=%s&end=%s&year=%s' %
 				(leave_record_satrt_date.strftime('%Y-%m-%d'), report_date_25.strftime('%Y-%m-%d'), report_date_25.year),
-				'actual_on': report_date_25,
-				'type': 'leave record'
-			})
+				report_date_25
+			))
 			
 		res.append({MONTH[i-1]: item})
 		
@@ -75,7 +69,7 @@ def leave_report(year):
 	return res, years
 
 def generate_reports(report_type, year, month , day=settings.LEAVE_REPORT_FIRST_DAY, start_date=None, end_date=None):
-	employee_set = Employee.objects.all()
+	employee_set = list(Employee.objects.all().order_by('display_name'))
 	
 	if report_type == 'leavereport':
 		report.generate_leave_report_file(employee_set, day, month, year)

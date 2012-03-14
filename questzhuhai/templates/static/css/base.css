@@ -241,7 +241,7 @@ a.actionlink{
 .leave-form td{font-size:14px;line-height:25px;}
 h1{font-size: 36PX;}
 .days{margin-right: 50px;}
-.col1{width: 150px;}
+.col1{width: 170px;}
 .col-btn{text-align: right; padding-left:150px;}
 #leave-request-submit{width: 80px; height: 29px; font-size: 14px; cursor: pointer;}
 #id_status{border: none; color: red; font-size:16px; width: 95%;}

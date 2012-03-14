@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Report{% endblock %}
+{% block title %}Reports{% endblock %}
 
 {% block head %}
 	<style>
@@ -55,30 +55,22 @@
 		<table>
 		{% for item in reports %}
 			{% for k, v in item.items %}
-			<tr style="height: 30px;">
+			<tr class="report_row" style="height: 30px;">
 				<td><span><strong>{{k}}</strong></span>:</td>
+				{% for title, link, actual in v %}
 				<td>
-				{% if v.download_link %}
-					{% for l in v.download_link %}
-					<a href="{{l.link}}" {% if l.type == 'leave record' %}class="record"{% endif %}>
-						<span>{% if l.type == 'leave record' %}Leave Record{% else %}Leave Report{% endif %}</span>
-					</a><span class="sperate">({{l.actual_on|date:"Y-m-d"}})</span>
-					{% endfor %}
-				{% endif %}
-				
-				{% if v.generate_link %}
-					{% for g in v.generate_link %}
-						<a href="{{g.link}}" {% if g.type == 'leave record' %}class="record"{% endif %}>
-							Create 
-							{% if g.type == 'leave record' %}Leave Record{% else %}Leave Report{% endif %}
-						</a><span class="sperate">({{g.actual_on|date:"Y-m-d"}})</span>
-					{% endfor %}
-				{% endif %}
+					<a href="{{link}}">
+						<span>{{title}}</span>
+					</a><span class="sperate">({{actual|date:"Y-m-d"}})</span>
 				</td>
+				{% endfor %}
 			</tr>
 			{% endfor %}
 		{% endfor %}
 		</table>
     </div>
+	<script>
+		$('tr.report_row td:last-child a').addClass('record');
+	</script>
 
 {% endblock %}

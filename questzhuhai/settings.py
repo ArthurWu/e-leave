@@ -28,7 +28,7 @@ DATABASE_NAME = 'HrAdmin'
 DATABASE_HOST = 'arthur10'
 DATABASE_USER = 'sa'
 DATABASE_PASSWORD = '1'
-DATABASE_COMMAND_TIMEOUT = 30
+DATABASE_COMMAND_TIMEOUT = 60
 DATABASE_ENGINE = 'sqlserver_ado'
 
 #django required database settings
@@ -41,8 +41,9 @@ DATABASES = {
         'PASSWORD': DATABASE_PASSWORD,
         'COMMAND_TIMEOUT': DATABASE_COMMAND_TIMEOUT,
         'OPTIONS' : {
-             #'provider': 'SQLNCLI10',
-             #'extra_params': 'DataTypeCompatibility=80;MARS Connection=True;',
+            'use_mars': True,
+            'provider': 'SQLNCLI10',
+            'extra_params': 'MARS Connection=True',
         },
     }
 }
