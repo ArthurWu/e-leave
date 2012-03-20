@@ -30,9 +30,6 @@ def have_can_view_permission(emp, leave_request):
 	else:
 		return False
 
-def index(request):
-	pass
-
 def check_period(request):
 	periods_str = request.GET.get('periods')
 	leave_type_id = int(request.GET.get('leave_type_id'))

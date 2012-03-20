@@ -146,7 +146,7 @@ $(document).ready(function(){
 		if (leave_type == 'Marriage Leave')
 		{
 			var empId = $('input[name="employee"]').val();
-			var check_url = "/leave/expired?id=" + empId + "&periods=" + periods;
+			var check_url = "/eleave/leave/expired?id=" + empId + "&periods=" + periods;
 			$.ajax({
 				url: check_url,
 				dataType: 'json',
@@ -168,7 +168,7 @@ $(document).ready(function(){
 	function check_if_periods_repeated_and_expired(periods, success_callback){
 		var empId = $('input[name="employee"]').val();
 		var leave_type_id = $('#id_leave_type option:selected').val();
-		var check_url = "/leave/checkrequest?id=" + empId + "&periods=" + periods + "&leave_type_id=" + leave_type_id;
+		var check_url = "/eleave/leave/checkrequest?id=" + empId + "&periods=" + periods + "&leave_type_id=" + leave_type_id;
 		$.ajax({
 			url: check_url,
 			dataType: 'json',

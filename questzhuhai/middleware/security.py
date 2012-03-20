@@ -20,20 +20,21 @@ class RequestHandlerMiddleware(object):
 		emp = Employee.objects.filter(domain_id=current_user)
 		if len(emp) > 0:
 			request.employee = emp[0]
-			log.Info('Current Employee: %s' % request.employee.display_name)
+			from datetime import datetime
+			log.Info('Employee %s open url %s at: %s' % (request.employee.display_name, request.META['PATH_INFO'], datetime.now().isoformat()))
 		else:
 			request.employee = None
 			
 		return request.employee
 	
 	def set_admin_or_default(self, request):
-		log.Info('Set current user as admin, if admin not exist, then create default admin infomation.')
+		#log.Info('Set current user as admin, if admin not exist, then create default admin infomation.')
 		user = User.objects.filter(username = 'admin')
 		if not user:
 			user = User.objects.create_superuser(username='admin', email='admin@admin.com', password='1')
 		else:
 			user = user[0]
-		log.Info('Current User: %s' % user.username)
+		#log.Info('Current User: %s' % user.username)
 		request.user = user
 		
 		

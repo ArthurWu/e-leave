@@ -11,7 +11,7 @@ $(function(){
 		}
 		else
 		{
-			var request_url = '/main/get_teams_by_department?dep_id=' + dep_id;
+			var request_url = '/eleave/main/get_teams_by_department?dep_id=' + dep_id;
 			$.ajax({
 				url: request_url,
 				dataType: 'json',

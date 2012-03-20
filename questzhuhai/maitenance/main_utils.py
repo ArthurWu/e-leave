@@ -33,23 +33,23 @@ def leave_report(year):
 		
 		item = []
 		if file_exist_10:
-			item.append((download+leave_report, '/main/reports/download/leavereport/%s' % report_date_10.strftime('%Y/%m/%d/'), report_date_10))
+			item.append((download+leave_report, '/eleave/main/reports/download/leavereport/%s' % report_date_10.strftime('%Y/%m/%d/'), report_date_10))
 		else:
-			item.append((create+leave_report, '/main/reports/generate?type=leavereport&year=%s&month=%s&day=%s' %
+			item.append((create+leave_report, '/eleave/main/reports/generate?type=leavereport&year=%s&month=%s&day=%s' %
 				(report_date_10.year, report_date_10.month, report_date_10.day), report_date_10))
 		
 		if file_exist_25:
-			item.append((download+leave_report, '/main/reports/download/leavereport/%s' % report_date_25.strftime('%Y/%m/%d/'), report_date_25))
+			item.append((download+leave_report, '/eleave/main/reports/download/leavereport/%s' % report_date_25.strftime('%Y/%m/%d/'), report_date_25))
 		else:
-			item.append((create+leave_report, '/main/reports/generate?type=leavereport&year=%s&month=%s&day=%s' %
+			item.append((create+leave_report, '/eleave/main/reports/generate?type=leavereport&year=%s&month=%s&day=%s' %
 				(report_date_25.year, report_date_25.month, report_date_25.day), report_date_25))
 		
 		if leave_record_file_exist_25:
-			item.append((download+leave_record, '/main/reports/download/leaverecord/%s/%s/' % (leave_record_satrt_date.strftime('%Y_%m_%d'), report_date_25.strftime('%Y_%m_%d')), report_date_25))
+			item.append((download+leave_record, '/eleave/main/reports/download/leaverecord/%s/%s/' % (leave_record_satrt_date.strftime('%Y_%m_%d'), report_date_25.strftime('%Y_%m_%d')), report_date_25))
 		else:
 			item.append((
 				create+leave_record,
-				'/main/reports/generate?type=leaverecord&start=%s&end=%s&year=%s' %
+				'/eleave/main/reports/generate?type=leaverecord&start=%s&end=%s&year=%s' %
 				(leave_record_satrt_date.strftime('%Y-%m-%d'), report_date_25.strftime('%Y-%m-%d'), report_date_25.year),
 				report_date_25
 			))
@@ -280,7 +280,7 @@ def add_employee(domain_id, chinese_name, department, team, join_date, start_fis
 					jd = datetime.strptime(join_date, "%Y/%m/%d")
 					sfd = datetime.strptime(start_fiscal_date, "%Y/%m/%d")	
 				except:
-					errors[domain_id] = resource.log_prefix + "the date format is not match to 'day/month/year' or 'year/month/day'"
+					errors[domain_id] = resource.log_prefix + "%s and %s, date format is not match to 'day/month/year' or 'year/month/day'" % (str(join_date), str(start_fiscal_date))
 					return
 		
 

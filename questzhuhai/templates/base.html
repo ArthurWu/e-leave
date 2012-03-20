@@ -20,27 +20,27 @@
 			<div style="text-align:right">
 			<div id="login_user"><span>Hi, {{employee.display_name}}</span></div>
 			<div id="menu">
-				<a id="id_new_leave_request" href="/">New Leave Request</a>
+				<a id="id_new_leave_request" href="/eleave">New Leave Request</a>
 				<a id="id_my_leave_requests" 
 				{% if not employee.is_approver and not employee.is_admin %}
 					style="border-right: none"
 				{% endif %}
-				href="/leave/leaverequests/my/">My Leave Requests</a>
+				href="/eleave/leave/leaverequests/my/">My Leave Requests</a>
 				{% if employee.is_approver %}
 					<a id="id_to_do_list" 
 					{% if not employee.is_administrative_staff %}
 						style="border-right: none"
 					{% endif %}
-					href="/leave/leaverequests/todo/">To Do List</a>
+					href="/eleave/leave/leaverequests/todo/">To Do List</a>
 				{% endif %}
 				{% if employee.is_administrative_staff %}
-					<a id="id_all_leave_requests" href="/leave/leaverequests/">All Leave Requests</a>
-					<a id="id_reports" href="/main/reports/">Leaves Report</a>
-					<a id="id_employees" href="/main/employees/">Employees</a>
-					<a id="id_departments" href="/main/department/">Departments</a>
-					<a id="id_teams" href="/main/team/">Teams</a>
-					<a id="id_settings" href="/main/settings/">Settings</a>
-					<a id="id_action_logs" style="border-right: none" href="/main/action_logs">Action Logs</a>
+					<a id="id_all_leave_requests" href="/eleave/leave/leaverequests/">All Leave Requests</a>
+					<a id="id_reports" href="/eleave/main/reports/">Leaves Report</a>
+					<a id="id_employees" href="/eleave/main/employees/">Employees</a>
+					<a id="id_departments" href="/eleave/main/department/">Departments</a>
+					<a id="id_teams" href="/eleave/main/team/">Teams</a>
+					<a id="id_settings" href="/eleave/main/settings/">Settings</a>
+					<a id="id_action_logs" style="border-right: none" href="/eleave/main/action_logs">Action Logs</a>
 				{% endif %}
 			<script type="text/javascript">
 				var active_nav = document.getElementById('id_{{nav}}');
@@ -54,7 +54,7 @@
 		{% block content %}{% endblock %}
 		</div>
 		<div id="footer">
-			<div id="copyright"><table class="right"><tr><td><span>&copy; 2011-{% now "Y" %} Quest Software Zhuhai, Version 1.0. Designed By </span><a id="author" href="#">Arthur Wu</a>&nbsp;&nbsp;</td></tr></table></div>
+			<div id="copyright"><table class="right"><tr><td><span>&copy; 2011-{% now "Y" %} Quest Software Zhuhai, Version 1.0. Designed By </span><a id="author" href="mailto:arthur.wu%40quest.com">Arthur Wu</a>&nbsp;&nbsp;</td></tr></table></div>
 		</div>
 	</div>
 </body>

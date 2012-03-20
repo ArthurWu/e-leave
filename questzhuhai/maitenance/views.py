@@ -54,9 +54,9 @@ def generate_report(request):
 		type = 'leave record'
 		
 	from utils import send_email_to_admin
-	send_email_to_admin('maitenance/email/report_notification.txt', subject, end_date, start_date, type)
+	send_email_to_admin('report_notification.txt', subject, end_date, start_date, type)
 	
-	return redirect('/main/reports/')
+	return redirect('/eleave/main/reports/')
 
 @admin_require
 def download_report(request, report_type, year, month, day):

@@ -84,17 +84,17 @@ class Employee(models.Model):
 			return False
 		
 	def get_approvers(self):
-		domain_ids = self.approvers.strip(';').split(';')
+		domain_ids = self.approvers.strip().strip(';').split(';')
 		return Employee.objects.filter(domain_id__in=domain_ids)
 	
 	def approvers_email(self):
-		approvers = self.approvers.strip(';').replace(r'\\', r'\\\\').split(';')
+		approvers = self.approvers.strip().strip(';').replace(r'\\', r'\\\\').split(';')
 		apps = Employee.objects.filter(domain_id__in=approvers)
 		emails = [a.email for a in apps]
 		return emails
 	
 	def cc_to_email(self):
-		cc = self.cc_to.strip(';').replace(r'\\', r'\\\\').split(';')
+		cc = self.cc_to.strip().strip(';').replace(r'\\', r'\\\\').split(';')
 		cc_to = Employee.objects.filter(domain_id__in=cc)
 		emails = [c.email for c in cc_to]
 		return emails
@@ -106,7 +106,7 @@ class Employee(models.Model):
 		available_days = {}
 		for leavetype in leavetypes:
 			used_days, need_approval = self.get_used_leave_days(leavetype)
-			leave_adjustment_days = self.get_leave_adjustment_days(leavetype)
+			leave_adjustment_days = self.get_leave_adjustment_days(leavetype.name)
 			
 			if leavetype.name == 'Annual Leave':
 				usable_annual_leave_days = self.get_annual_leave_days()
@@ -183,7 +183,7 @@ class Employee(models.Model):
 		if sfd < first_day_of_this_year:
 			sfd = first_day_of_this_year
 			
-		days_to = float((today - sfd).days)
+		days_to = float((today - sfd).days) + 1
 		return days_to
 	
 	def get_annual_leave_days(self):
@@ -208,7 +208,7 @@ class Employee(models.Model):
 		return used_days, need_approval
 	
 	def get_leave_adjustment_days(self, leavetype):
-		return sum([a.adjustment_days for a in self.adjustmentdays_set.all() if a.leave_type.name == leavetype.name])
+		return sum([a.adjustment_days for a in self.adjustmentdays_set.all() if a.leave_type.name == leavetype])
 	
 
 CURRENT_YEAR = str(datetime.datetime.now().year)

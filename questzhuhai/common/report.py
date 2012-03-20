@@ -20,8 +20,6 @@ def generate_leave_record_report_file(employees, start_date, end_date):
 		)&
 		Q(status__in=[status.PENDINGADMIN, status.ARCHIVED])
 	).distinct()
-	#print queryset
-	#print len(queryset)
 	
 	template = open_workbook(settings.REPORT_TEMPLATE + r'leave record report.xls', formatting_info=True)
 	wb = copy(template)
@@ -305,7 +303,7 @@ def create_sick_leave_report_data(employees, base_day, month=None, year=None):
 		
 		_sl_entitlement_of = convert_to_tow_places_float((days_to_base_date_of_this_year/365)*employee.sl_entitlement)
 		slr.al_entitlement_of = employee.sl_entitlement
-		slr.total_entitled_as_of = _sl_entitlement_of
+		slr.total_entitled_as_of = _sl_entitlement_of + employee.get_leave_adjustment_days('Sick Leave')
 		
 		res = monthly_taken_days(slr, employee, base_day, month, leave_type="Sick Leave")
 		slr.taken_in_this_year = sum(res)
@@ -440,8 +438,8 @@ def monthly_deduction_days(annual_leave_report, employee, month=None):
 	month_deduction = ['jan_deduction', 'feb_deduction', 'mar_deduction', 'apr_deduction', 'may_deduction',
 				   'jun_deduction', 'jul_deduction', 'aug_deduction', 'sep_deduction', 'oct_deduction', 'nov_deduction', 'dec_deduction']
 	c_year = str(datetime.datetime.now().year)
-	aju_set = employee.adjustmentdays_set.all().filter(month__startswith=c_year)
-	aju_his_set = employee.adjustmentdayshistory_set.all().filter(month__startswith=c_year)
+	aju_set = employee.adjustmentdays_set.all().filter(month__startswith=c_year, leave_type__name='Annual Leave')
+	aju_his_set = employee.adjustmentdayshistory_set.all().filter(month__startswith=c_year, leave_type__name='Annual Leave')
 	res = []
 	
 	def set_value(queryset):

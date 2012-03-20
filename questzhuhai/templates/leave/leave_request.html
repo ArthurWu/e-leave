@@ -144,7 +144,7 @@
 			<tr>
 				<td class="col1"><strong>Approvers:</strong></td>
 				<td>
-				{{ for e in leaverequest.employee.get_approvers|join:", " }}
+				{{ leaverequest.employee.get_approvers|join:", " }}
 				</td>
 			</tr>
 			<tr>

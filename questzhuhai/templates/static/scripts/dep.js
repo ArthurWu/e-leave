@@ -3,7 +3,7 @@ $(function(){
 	$('#btn-add-dep').click(function(e){
 		e.preventDefault();
 		var dep_name = $('#dep_name').val();
-		var addUrl = '/main/dep/add?name=' + dep_name;
+		var addUrl = '/eleave/main/dep/add?name=' + dep_name;
 		
 		$.ajax({
 			url: addUrl,
@@ -36,7 +36,7 @@ $(function(){
 		e.preventDefault();
 		var deleteBtn = $(this);
 		var dep_id = deleteBtn.attr('name');
-		var deleteUrl = '/main/dep/delete?id=' + dep_id;
+		var deleteUrl = '/eleave/main/dep/delete?id=' + dep_id;
 		
 		$.ajax({
 			url: deleteUrl,

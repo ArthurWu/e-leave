@@ -10,15 +10,16 @@ def send_email_to_admin(template_name, subject, end_date, start_date=None, type=
 	tolist = [a.email for a in admins]
 	from_addr = tolist[0] if tolist else None
 	
-	t = get_template(template_name)
+	template_path = 'maitenance/email/'
+	t = get_template(template_path+template_name)
 	
 	import settings
 	host = settings.LEAVESYSTEMHOST or ''
 	
 	if type == 'leave report':
-		link = '/main/reports/download/leavereport/%s' % end_date.strftime('%Y/%m/%d/')
+		link = '/eleave/main/reports/download/leavereport/%s' % end_date.strftime('%Y/%m/%d/')
 	else:
-		link = '/main/reports/download/leaverecord/%s/%s/' % \
+		link = '/eleave/main/reports/download/leaverecord/%s/%s/' % \
 				(start_date.strftime('%Y_%m_%d'), end_date.strftime('%Y_%m_%d'))
 	
 	c = Context({'end_date': end_date, 'host': host, 'link': link, 'start_date': start_date, 'type': type})

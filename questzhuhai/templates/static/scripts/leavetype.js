@@ -3,7 +3,7 @@ $(function(){
 	$('#btn-add-leavetype').click(function(e){
 		e.preventDefault();
 		var leave_name = $('#leavetype_name').val();
-		var addUrl = '/main/leavetype/add?name=' + leave_name;
+		var addUrl = '/eleave/main/leavetype/add?name=' + leave_name;
 		
 		$.ajax({
 			url: addUrl,
@@ -33,7 +33,7 @@ $(function(){
 		e.preventDefault();
 		var deleteBtn = $(this);
 		var leavetype_id = deleteBtn.attr('name');
-		var deleteUrl = '/main/leavetype/delete?id=' + leavetype_id;
+		var deleteUrl = '/eleave/main/leavetype/delete?id=' + leavetype_id;
 		
 		$.ajax({
 			url: deleteUrl,
@@ -59,7 +59,7 @@ $(function(){
 		var leavetype_id = $(this).attr('id');
 		var notity_admin = $(this).attr('checked');
 		
-		var requestUrl = '/main/leavetype/set_notify_admin?id=' + leavetype_id + '&notify_admin=' + notity_admin;
+		var requestUrl = '/eleave/main/leavetype/set_notify_admin?id=' + leavetype_id + '&notify_admin=' + notity_admin;
 		$.ajax({
 			url: requestUrl,
 			dataType: 'json',

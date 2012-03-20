@@ -3,7 +3,7 @@ $(function(){
 	$('#btn-add-admin').click(function(e){
 		e.preventDefault();
 		var admin_id = $('#admin_id').val();
-		var addUrl = '/main/admin/add?name=' + admin_id;
+		var addUrl = '/eleave/main/admin/add?name=' + admin_id;
 		
 		$.ajax({
 			url: addUrl,
@@ -32,7 +32,7 @@ $(function(){
 		e.preventDefault();
 		var deleteBtn = $(this);
 		var admin_id = deleteBtn.attr('name');
-		var deleteUrl = '/main/admin/delete?name=' + admin_id;
+		var deleteUrl = '/eleave/main/admin/delete?name=' + admin_id;
 		
 		$.ajax({
 			url: deleteUrl,

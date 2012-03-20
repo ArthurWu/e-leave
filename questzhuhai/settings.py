@@ -1,10 +1,10 @@
 # Django settings for mysite project.
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Arthur Wu', 'Arthur.Wu@quest.com'),
 )
 
 MANAGERS = ADMINS
@@ -24,7 +24,7 @@ from common.logger import log
 log.Init(ROOTDIR + '\Logs\WebReports.log')
 
 # use old style settings for non-django dbapi tests
-DATABASE_NAME = 'HrAdmin'
+DATABASE_NAME = 'E-Leave'
 DATABASE_HOST = 'arthur10'
 DATABASE_USER = 'sa'
 DATABASE_PASSWORD = '1'
@@ -47,18 +47,6 @@ DATABASES = {
         },
     }
 }
-
-
-# DATABASES = {
-    # 'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        # 'NAME': os.path.join(ROOTDIR, 'database\model.sqlite'),  # Or path to database file if using sqlite3.
-        # 'USER': '',                      # Not used with sqlite3.
-        # 'PASSWORD': '',                  # Not used with sqlite3.
-        # 'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        # 'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    # }
-# }
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -161,9 +149,7 @@ TEMPLATE_DIRS = (
 	# Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
 	# Always use forward slashes, even on Windows.
 	# Don't forget to use absolute paths, not relative paths.
-	os.path.join(ROOTDIR, 'templates'),
-	#os.path.join(ROOTDIR, 'leave/templates'),
-	
+	os.path.join(ROOTDIR, 'templates'),	
 )
 
 INSTALLED_APPS = (
@@ -173,9 +159,7 @@ INSTALLED_APPS = (
 	'django.contrib.sites',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
-	# Uncomment the next line to enable the admin:
 	'django.contrib.admin',
-	# Uncomment the next line to enable admin documentation:
 	'django.contrib.admindocs',
 	'django.contrib.messages',
 	'maitenance',
@@ -185,46 +169,3 @@ INSTALLED_APPS = (
 )
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
-
-#CACHES = {
-#	'default': {
-#		'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache'
-#	}
-#}
-
-#CACHE_BACKEND = 'memcached://10.30.147.197:3149/'
-
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
-# LOGGING = {
-    # 'version': 1,
-    # 'disable_existing_loggers': False,
-    # 'handlers': {
-        # 'mail_admins': {
-            # 'level': 'ERROR',
-            # 'class': 'django.utils.log.AdminEmailHandler'
-        # }
-    # },
-    # 'loggers': {
-        # 'django.request': {
-            # 'handlers': ['mail_admins'],
-            # 'level': 'ERROR',
-            # 'propagate': True,
-        # },
-    # }
-# }
-
-#EMAIL_USE_TLS = True
-#EMAIL_HOST = '10.1.0.160'
-#EMAIL_HOST_USER = 'Arthur.Wu@quest.com'
-#EMAIL_HOST_PASSWORD = 'wzhai34WZH4'
-#EMAIL_PORT = '25'
-
-#EMAIL_USE_TLS = True
-#EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_HOST_USER = 'arthur.wu.34@gmail.com'
-#EMAIL_HOST_PASSWORD = 
-#EMAIL_PORT = 587

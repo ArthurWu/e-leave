@@ -4,4 +4,9 @@ Monthly leave report for {{end_date|date:'Y-m-d'}} had been generated.
 {% else %}
 Monthly leave record report for ({{start_date|date:'Y-m-d'}}~{{end_date|date:'Y-m-d'}})
 {% endif %}
-Download the report file {{host}}{{link}}
+Download this report file {{host}}{{link}}
+
+Check all reports on {{host}}/eleave/main/reports
+
+Best Regards,
+Send from E-Leave System

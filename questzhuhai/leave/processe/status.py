@@ -231,6 +231,8 @@ class Initial(BaseStatus):
 	# submit: email to approver, and cc to self and administrative staff 
 	def send_email(self):
 		tolist = self.employee.approvers_email()
+		if self.leaveRequest.leave_type.notifyadmin:
+			tolist += admin_emails()
 		cc = self.employee.cc_to_email() + [self.employee.email]
 		self._send_email(tolist, cc, self.email_subject, 'leave/email/submit.txt')
 

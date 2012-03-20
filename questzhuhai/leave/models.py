@@ -32,13 +32,13 @@ class LeaveRequest(models.Model):
 		return '%s-%s-%s' % (self.employee.display_name, self.leave_type.name, self.status)
 		
 	def get_absolute_url(self):
-		return '/leave/leaverequests/%i/' % self.id
+		return '/eleave/leave/leaverequests/%i/' % self.id
 	
 	def manager_shortcut_actions(self):
 		actions = []
 		if self.status in (status.PENDINGMANAGER):#, status.WAITINGADMINCONFIRM):
-			actions.append(('Approve', '/leave/leaverequest/approve/%i/' % self.id))
-			#('Reject', '/leave/leaverequest/reject/%i/' % self.id),
+			actions.append(('Approve', '/eleave/leave/leaverequest/approve/%i/' % self.id))
+			#('Reject', '/eleave/leave/leaverequest/reject/%i/' % self.id),
 		return actions
 	
 	def started(self):

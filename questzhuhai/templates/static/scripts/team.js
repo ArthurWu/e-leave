@@ -4,7 +4,7 @@ $(function(){
 		e.preventDefault();
 		var team_name = $('#team_name').val();
 		var dep_id = $('.open input').attr('name');
-		var addUrl = '/main/team/add?name=' + team_name + '&dep_id=' + dep_id;
+		var addUrl = '/eleave/main/team/add?name=' + team_name + '&dep_id=' + dep_id;
 		
 		$.ajax({
 			url: addUrl,
@@ -33,7 +33,7 @@ $(function(){
 		e.preventDefault();
 		var deleteBtn = $(this);
 		var dep_id = deleteBtn.attr('name');
-		var deleteUrl = '/main/team/delete?id=' + dep_id;
+		var deleteUrl = '/eleave/main/team/delete?id=' + dep_id;
 		
 		$.ajax({
 			url: deleteUrl,
