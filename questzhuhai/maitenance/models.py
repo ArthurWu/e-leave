@@ -198,7 +198,8 @@ class Employee(models.Model):
 			Q(period__end__year = datetime.datetime.now().year))&
 			Q(employee__id = self.id)&
 			Q(leave_type__id = leavetype.id)
-		)
+		).distinct()
+
 		used_days = need_approval = 0.0
 		for l in lrs:
 			if l.status in (processe.status.PENDINGADMIN, processe.status.ARCHIVED):

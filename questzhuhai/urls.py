@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     url(r'^eleave/admin/', include(admin.site.urls)),
     url(r'^eleave/main/', include('maitenance.urls')),
     url(r'^eleave/leave/', include('leave.urls')),
-	url(r'^eleave$', "leave.views.leave_request"),
+	url(r'^eleave/$', "leave.views.leave_request"),
 	url(r'^$', "leave.views.leave_request"),
 )
 
