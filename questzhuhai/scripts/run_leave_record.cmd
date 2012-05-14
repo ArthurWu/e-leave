@@ -1,1 +1,1 @@
-python.exe monthly_leave_record_25.py
+python.exe C:\E-LeaveSystem\questzhuhai\scripts\monthly_leave_record_25.py

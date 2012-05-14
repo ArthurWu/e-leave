@@ -22,9 +22,9 @@ def generate_leave_record_report(modeladmin, request, queryset):
 			end_date = datetime.datetime.strptime(end_date_, '%Y-%m-%d')
 			
 			from common.report import generate_leave_record_report_file
-			filename = generate_leave_record_report_file(queryset, start_date, end_date)
+			filename = generate_leave_record_report_file(queryset, start_date, end_date, 'export_')
 			
-			link = '/eleave/main/reports/download/leaverecord/%s/%s/' % (start_date.strftime('%Y_%m_%d'),end_date.strftime('%Y_%m_%d'))
+			link = '/eleave/main/reports/download/leaverecord/%s/%s/?export=1' % (start_date.strftime('%Y_%m_%d'),end_date.strftime('%Y_%m_%d'))
 			cont={'link': link}
 			return render_to_response('maitenance/generate_report_successful.html',cont, context_instance=template.RequestContext(request))
 	
@@ -65,9 +65,9 @@ def generate_leave_report(modeladmin, request, queryset):
 			date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
 			
 			from common.report import generate_leave_report_file
-			filename = generate_leave_report_file(queryset, date.day, date.month, date.year)
+			filename = generate_leave_report_file(queryset, date.day, date.month, date.year, prefix='export_')
 			
-			link = '/eleave/main/reports/download/leavereport/%s' % date.strftime('%Y/%m/%d/')
+			link = '/eleave/main/reports/download/leavereport/%s?export=1' % date.strftime('%Y/%m/%d/')
 			cont={'link': link}
 			return render_to_response('maitenance/generate_report_successful.html',cont, context_instance=template.RequestContext(request))
 	

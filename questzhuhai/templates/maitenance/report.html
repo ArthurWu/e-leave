@@ -41,6 +41,7 @@
 		}
 		a.record{color: #0d3805}
 		img.download_icon{display:block; float:left;}
+		.icon1{position: relative; top: 5px;}
 	</style>
 {% endblock %}
 
@@ -57,17 +58,30 @@
 			{% for k, v in item.items %}
 			<tr class="report_row" style="height: 30px;">
 				<td><span><strong>{{k}}</strong></span>:</td>
-				{% for title, link, actual in v %}
+				{% for title, dlink, ulink, actual in v %}
 				<td>
-					<a href="{{link}}">
+					<a href="{{dlink}}{{ulink}}">
 						<span>{{title}}</span>
-					</a><span class="sperate">({{actual|date:"Y-m-d"}})</span>
+					</a><span class="sperate1">({{actual|date:"Y-m-d"}})</span>
+					{% if dlink != '' %}
+					<a class="update_link icon1" href="{{ulink}}"><img id="update_report" src="/static/images/update.ico" alt="Update" title="Update report" /></a>
+					<img id="updating_report" class="invisible icon1" src="/static/images/waiting.gif" width="16" height="16" alt="" title="Updating..." />
+					{% endif %}
 				</td>
 				{% endfor %}
 			</tr>
 			{% endfor %}
 		{% endfor %}
 		</table>
+		<script type="text/javascript">
+			$('.update_link').click(function(e){
+				e.preventDefault();
+				var self = $(this);
+				self.hide();
+				self.next().show();
+				window.location = self.attr('href');
+			});
+		</script>
     </div>
 	<script>
 		$('tr.report_row td:last-child a').addClass('record');

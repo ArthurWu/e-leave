@@ -24,7 +24,7 @@ class LeaveRequest(models.Model):
 	status = models.CharField(max_length=50, default=status.INITIAL)
 	leave_type = models.ForeignKey(LeaveType)
 	days = models.FloatField(default=0)
-	create_date = models.DateTimeField(auto_now_add=True)
+	create_date = models.DateTimeField(auto_now_add=False)
 	comments = models.CharField(max_length=500, blank=True, null=True)
 	objects = LeaveRequestManager()
 	
@@ -51,6 +51,10 @@ class LeaveRequest(models.Model):
 	
 	def is_approved(self):
 		return self.status in (status.PENDINGADMIN, status.ARCHIVED)
+		
+	def delay_days(self):
+		from datetime import datetime
+		return (datetime.now() - self.create_date).days
 	
 class Period(models.Model):
 	leave_request = models.ForeignKey(LeaveRequest)

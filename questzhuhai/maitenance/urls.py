@@ -11,6 +11,7 @@ team_admin = TeamAdmin(Team, AdminSite())
 urlpatterns = patterns('',
     url(r'^reports/$', "maitenance.views.reports"),
     url(r'^settings/$', "maitenance.views.maitenance"),
+    url(r'^setcycle$', "maitenance.views.setcycle"),
     url(r'^admin/add$', "maitenance.views.add_admin"),
     url(r'^admin/delete$', "maitenance.views.delete_admin"),
     url(r'^leavetype/add$', "maitenance.views.add_leave_type"),

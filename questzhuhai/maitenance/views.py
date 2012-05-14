@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response, redirect
 from django.template.loader import get_template
 from django.template import Context, RequestContext
 import main_utils
+import common.utils as utils
 from common.logger import log
 import simplejson as json
 import settings
@@ -36,6 +37,7 @@ def generate_report(request):
 		month = request.GET.get('month', today.month)
 		
 		day = request.GET.get('day', settings.LEAVE_REPORT_FIRST_DAY)
+		start_date = datetime(int(year), 1, 1)
 		end_date = datetime(int(year), int(month), int(day))
 		main_utils.generate_reports(report_type, int(year), int(month), int(day))
 		
@@ -53,7 +55,7 @@ def generate_report(request):
 		subject = "Monthly leave record report(%s~%s)" % (start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
 		type = 'leave record'
 		
-	from utils import send_email_to_admin
+	from common.utils import send_email_to_admin
 	send_email_to_admin('report_notification.txt', subject, end_date, start_date, type)
 	
 	return redirect('/eleave/main/reports/')
@@ -61,11 +63,13 @@ def generate_report(request):
 @admin_require
 def download_report(request, report_type, year, month, day):
 	filename = '%s-%s-%s-%s.xls' % (report_type, year, month, day)
+	if request.GET.get('export', 0): filename = 'export_' + filename
 	return main_utils.download_report(filename)
 	
 @admin_require
 def download_leave_record_report(request, report_type, start_date, end_date):
 	filename = 'leaverecordreport-%s-%s.xls' % (start_date, end_date)
+	if request.GET.get('export', 0): filename = 'export_' + filename
 	return main_utils.download_report(filename)
 
 @admin_require
@@ -77,12 +81,21 @@ def maitenance(request):
 	admins = main_utils.get_all_admins()
 	leavetypes = main_utils.get_all_leave_types()
 	departments = main_utils.get_all_departments()
+	cycle = utils.read(utils.resfile(), 'Default', 'email.alert.cycle')
 	return render_to_response('maitenance/maitenance.html',RequestContext(request, {
 		'admins': admins, 
 		'leavetypes': leavetypes,
 		'departments': departments,
-		'nav': 'settings'})
+		'nav': 'settings',
+		'cycle': cycle})
 	)
+	
+@admin_require
+def setcycle(request):
+	if request.method == 'POST':
+		cycle = request.POST.get('cycle')
+		utils.write(utils.resfile(), 'Default', 'email.alert.cycle', cycle)
+	return redirect('/eleave/main/settings')
 	
 @admin_require
 def action_logs(request):

@@ -11,15 +11,52 @@ from xlutils.copy import copy
 from xlutils.styles import Styles
 
 from common.logger import log
+import utils
+
+def CheckNotYetApprovedReqeusts():
+	''' Return not approved and needed alert email leave requests
+	'''
+	notApproveds = LeaveRequest.objects.filter(status__in = \
+		[status.PENDINGMANAGER, status.WAITINGADMINCONFIRM, status.PENDINGEMPLOYEE])
+	return [l for l in notApproveds if is_need_mail_alert(l)]
 	
-def generate_leave_record_report_file(employees, start_date, end_date):
+def GetNoeApprovedInReportMonth(start_date, end_date):
+	''' Return not approved leave request between given period
+	'''
+	notApproveds = get_reqs_in_period(start_date, end_date, [status.PENDINGMANAGER, status.WAITINGADMINCONFIRM, status.PENDINGEMPLOYEE])
+	return list(notApproveds)
+	
+def is_need_mail_alert(leave_request):
+	alert_cycle = utils.read(utils.resfile(), 'Default', 'email.alert.cycle')
+	exec 'cycle = [' + alert_cycle + ']'
+	
+	if leave_request.delay_days() > sum(cycle):
+		return True
+	
+	days = [sum(cycle[:cycle.index(i)+1]) for i in cycle]
+	if leave_request.delay_days() in days:
+		return True
+	
+	return False
+	
+def get_reqs_in_period(start_date, end_date, leave_status=[status.PENDINGADMIN, status.ARCHIVED]):
+	log.Except('=1=1=1=')
+	log.Except(start_date)
+	log.Except(end_date)
+	log.Except(leave_status)
 	queryset = LeaveRequest.objects.filter(
 		(
 			Q(period__start__range=(start_date, end_date))|
-			Q(period__end__range=(start_date, end_date))
+			Q(period__end__range=(start_date, end_date))|
+			Q(period__start__lt=start_date, period__end__gt=end_date)
 		)&
-		Q(status__in=[status.PENDINGADMIN, status.ARCHIVED])
+		Q(status__in=leave_status)
 	).distinct()
+	
+	return queryset
+	
+def generate_leave_record_report_file(employees, start_date, end_date, prefix=''):
+	queryset = get_reqs_in_period(start_date, end_date)
 	
 	template = open_workbook(settings.REPORT_TEMPLATE + r'leave record report.xls', formatting_info=True)
 	wb = copy(template)
@@ -95,12 +132,12 @@ def generate_leave_record_report_file(employees, start_date, end_date):
 			lrws.write_merge(original_index, curr_index - 1, 0, 0, employee.display_name, style)
 			original_index = start_index = curr_index
 		
-	filename = settings.REPORT_FILES + 'leaverecordreport-%s-%s.xls' % (start_date.strftime('%Y_%m_%d'), end_date.strftime('%Y_%m_%d'))
+	filename = settings.REPORT_FILES + prefix + 'leaverecordreport-%s-%s.xls' % (start_date.strftime('%Y_%m_%d'), end_date.strftime('%Y_%m_%d'))
 	wb.save(filename)
 	
 	return filename
 
-def generate_leave_report_file(employees, base_day, month=None, year=None, start_date = None):
+def generate_leave_report_file(employees, base_day, month=None, year=None, start_date = None, prefix=''):
 	'''
 	start_date is the date report data start to generate.
 	if None, will user 01-01 of the 'year'
@@ -119,7 +156,7 @@ def generate_leave_report_file(employees, base_day, month=None, year=None, start
 
 	today = datetime.date.today()
 	report_date = datetime.date(today.year, month, base_day)
-	filename = settings.REPORT_FILES + 'leavereport-%s.xls' % report_date.strftime('%Y-%m-%d')
+	filename = settings.REPORT_FILES + prefix + 'leavereport-%s.xls' % report_date.strftime('%Y-%m-%d')
 	wb.save(filename)
 	
 	return filename
@@ -478,11 +515,11 @@ def month_leave_taken_days(employee, month, base_day=None, leave_type="Annual Le
 	duration = 0.0
 	for l in lrs:
 		for p in l.period_set.all():
-			if p.start.strftime('%Y-%m-%d') in report_days_:
-				if p.end < end_date:
-					duration += duration_days(p.start, p.end)
-				else:
-					duration += duration_days(p.start, end_date)
+			start_ = max(p.start, start_date)
+			end_ = min(p.end, end_date)
+
+			if start_ <= end_:
+				duration += duration_days(start_, end_)
 	return duration
 
 def leave_requests_duration_days(leaverequests, start_date, end_date):

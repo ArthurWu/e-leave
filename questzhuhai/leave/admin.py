@@ -52,7 +52,7 @@ def archive_seleted(modeladmin, request, queryset):
 archive_seleted.short_description = "Archive selected %(verbose_name_plural)s"
 
 class LeaveRequestAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'employee', 'leave_type', 'days', 'status', 'create_date')
+	list_display = ('__unicode__', 'employee', 'leave_type', 'periods_in_request', 'days', 'status', 'create_date')
 	list_display_links = ('__unicode__', 'employee', 'leave_type')
 	
 	list_filter = ('leave_type', 'employee__department', 'status', 'create_date',)
@@ -65,6 +65,12 @@ class LeaveRequestAdmin(admin.ModelAdmin):
 	archive_selected_confirmation_template = 'leave/archive_selected_confirmation.html'
 	
 	actions = [archive_seleted,]
+	
+	def periods_in_request(self, obj):
+		res = [p.__unicode__() for p in obj.period_set.all()]
+		return '<br>'.join(res)
+	periods_in_request.short_description = 'Periods'
+	periods_in_request.allow_tags = True
 	
 	def changelist_view(self, request, extra_context=None):
 		extra_context = {'nav': 'all_leave_requests'}

@@ -211,6 +211,21 @@ class Employee(models.Model):
 	def get_leave_adjustment_days(self, leavetype):
 		return sum([a.adjustment_days for a in self.adjustmentdays_set.all() if a.leave_type.name == leavetype])
 	
+	def send_approve_alert_email(self, lr):
+		template = 'maitenance/email/alert_email.txt'
+		subject = "Please handle my leave request"
+		receiver = lr.employee.email
+		
+		import settings
+		host = settings.LEAVESYSTEMHOST or ''
+		
+		from common.utils import send_mail
+		send_mail(template = template,
+				sender = self.email,
+				receivers = [receiver],
+				context = {'host': host, 'leave_request': lr, 'receiver': lr.employee.display_name, 'sender': self.display_name},
+				subject = subject,
+				cc = [])
 
 CURRENT_YEAR = str(datetime.datetime.now().year)
 MONTH_CHOICES = (

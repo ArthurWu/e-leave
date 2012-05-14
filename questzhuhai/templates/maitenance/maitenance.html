@@ -70,4 +70,24 @@
 			</table>
 		</div>
 	</div>
+	<div class="admin-block">
+		<h2 class="admin-title">Email Alert Schedules</h2>
+		<p class="spec">
+		Set the cycle for email alert. You can use a single fixed digit, or multiple digits which split with comma symbol. Default is "3,2,1"
+		</p>
+		<div class="block left">
+			<form action="/eleave/main/setcycle" method="post">{% csrf_token %}
+			<div class="left" style="padding-right: 20px;">
+				<strong style="font-size: 14px">Alert Cycle: </strong>
+				<input id="cycle" class="input_text" type="text" size="30" maxlength="50" name="cycle" value="{{cycle}}" />
+			</div>
+			<div class="buttons left">
+				<button type="submit" class="positive">
+					<img src="/static/images/add.png" alt=""/> Save 
+				</button>
+			</div>
+			</form>
+		</div>
+		<div class="clear"></div>
+	</div>
 {% endblock %}

@@ -1,0 +1,9 @@
+Dear {{receiver}},
+
+Please approve the folowing leave requsts of your team, thanks.
+{% for r in reqs %}
+	{{r.employee.display_name}}    {{r.leave_type.name}}    {{r.days}} days    {% for p in r.period_set.all %}{{p}}    {% endfor %}
+	{{host}}{{r.get_absolute_url}}
+{% endfor %}
+Best Regards,
+{{sender}}

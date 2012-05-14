@@ -4,9 +4,13 @@ Monthly leave report for {{end_date|date:'Y-m-d'}} had been generated.
 {% else %}
 Monthly leave record report for ({{start_date|date:'Y-m-d'}}~{{end_date|date:'Y-m-d'}})
 {% endif %}
-Download this report file {{host}}{{link}}
-
+Download report file {{host}}{{link}}
 Check all reports on {{host}}/eleave/main/reports
+{% if not_approved_reqs %}
+Leave Requests are not approved in this report month:
+	{% for r in not_approved_reqs %}{{r.employee.display_name}}    {{r.leave_type.name}}    {{r.days}} days    {% for p in r.period_set.all %}{{p}}    {% endfor %}
+	{{host}}{{r.get_absolute_url}}
 
-Best Regards,
+	{% endfor %}{% endif %}
+Best Regards
 Send from E-Leave System

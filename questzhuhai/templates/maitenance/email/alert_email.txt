@@ -1,0 +1,8 @@
+Dear {{receiver}},
+
+My leave request has not deal with yet. Could you please approve it now?
+
+Kindly approve or reject on ({{host}}{{leave_request.get_absolute_url}})
+
+Best Regards,
+{{sender}}
