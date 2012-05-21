@@ -40,10 +40,6 @@ def is_need_mail_alert(leave_request):
 	return False
 	
 def get_reqs_in_period(start_date, end_date, leave_status=[status.PENDINGADMIN, status.ARCHIVED]):
-	log.Except('=1=1=1=')
-	log.Except(start_date)
-	log.Except(end_date)
-	log.Except(leave_status)
 	queryset = LeaveRequest.objects.filter(
 		(
 			Q(period__start__range=(start_date, end_date))|

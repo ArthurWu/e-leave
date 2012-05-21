@@ -24,7 +24,7 @@ class LeaveRequest(models.Model):
 	status = models.CharField(max_length=50, default=status.INITIAL)
 	leave_type = models.ForeignKey(LeaveType)
 	days = models.FloatField(default=0)
-	create_date = models.DateTimeField(auto_now_add=False)
+	create_date = models.DateTimeField(auto_now_add=True)
 	comments = models.CharField(max_length=500, blank=True, null=True)
 	objects = LeaveRequestManager()
 	

@@ -84,14 +84,11 @@ class Employee(models.Model):
 			return False
 		
 	def get_approvers(self):
-		domain_ids = self.approvers.strip().strip(';').split(';')
-		return Employee.objects.filter(domain_id__in=domain_ids)
+		approvers = self.approvers.strip().strip(';').replace(r'\\', r'\\\\').split(';')
+		return Employee.objects.filter(domain_id__in=approvers)
 	
 	def approvers_email(self):
-		approvers = self.approvers.strip().strip(';').replace(r'\\', r'\\\\').split(';')
-		apps = Employee.objects.filter(domain_id__in=approvers)
-		emails = [a.email for a in apps]
-		return emails
+		return [a.email for a in self.get_approvers()]
 	
 	def cc_to_email(self):
 		cc = self.cc_to.strip().strip(';').replace(r'\\', r'\\\\').split(';')
