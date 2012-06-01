@@ -68,7 +68,7 @@ class Employee(models.Model):
 		return self.is_administrative_staff 
 	
 	def is_approver_of(self, leaverequest):
-		if self.domain_id in leaverequest.employee.approvers:
+		if self.domain_id.lower() in leaverequest.employee.approvers.lower():
 			return True
 		else:
 			return False

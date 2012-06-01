@@ -40,8 +40,6 @@ def send_email_to(groups):
 	admin = admins and admins[0] or type('', (object,), {'display_name': 'Emily Chen', 'email': 'Emily.Chen@quest.com'})
 	
 	log.Info('Send Alert Email:')
-	log.Info(groups)
-	log.Info(admin)
 	for emp_info, reqs in groups.iteritems():
 		log.Info('Receiver -- ' + emp_info)
 		approver_name, approver_email = emp_info.split('&')

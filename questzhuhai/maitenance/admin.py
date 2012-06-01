@@ -279,7 +279,8 @@ class EmployeeAdmin(admin.ModelAdmin):
 			emp = emp and emp[0] or None
 			if emp:
 				import common.ad_utils as ad_utils
-				emp.sid = ad_utils.GetADObject(objname)[1] or ''
+				import uuid
+				emp.sid = ad_utils.GetADObject(objname)[1] or uuid.uuid1()
 				emp.approvers = emp.approvers.strip(';')+';'
 				emp.cc_to = emp.cc_to.strip(';')+';'
 				emp.save()

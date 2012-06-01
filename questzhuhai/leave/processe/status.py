@@ -261,7 +261,7 @@ class PendingManager(BaseStatus):
 		else:
 			template, subject = self.get_template_and_subject()
 			tolist = [self.leaveRequest.employee.email]
-			cc = admin_emails() + [self.employee.email]
+			cc = self.leaveRequest.employee.cc_to_email() + admin_emails() + [self.employee.email]
 			self._send_email(tolist, cc, subject, template)
 		
 class WaitingAdminConfirm(PendingManager):

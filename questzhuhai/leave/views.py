@@ -19,7 +19,9 @@ def permission_require(view_func):
 		leave_request = get_object_or_404(LeaveRequest, id=kwargs['id'])
 		if have_can_view_permission(emp, leave_request):
 			return view_func(request, *args, **kwargs)
-		return render_to_response('can_not_view.html', RequestContext(request, {}))
+		else:
+			log.Info("User(%s) have not permission to do %s" % (emp.display_name, view_func.__name__))
+			return render_to_response('can_not_view.html', RequestContext(request, {}))
 	return is_have_permission
 							  
 def have_can_view_permission(emp, leave_request):
