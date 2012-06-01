@@ -6,6 +6,7 @@ def GetADObject(principal):
 	try:
 		log.Info('Get AD Object: ' + principal)
 		sid, domain, type = win32security.LookupAccountName('', principal)
+		log.Info(str(sid))
 		user = win32com.client.GetObject("LDAP://%s/<SID=%s>" % (domain, str(sid)[6:]))
 		return user, str(sid)[6:]
 	except BaseException, e:

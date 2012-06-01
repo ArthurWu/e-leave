@@ -9,10 +9,15 @@ from common.utils import send_email_to_admin, send_mail
 from common.logger import log
 
 def DoCheck():
+	log.Info('Start do alert email check....')
 	reqs = report.CheckNotYetApprovedReqeusts()
 	#map(lambda r: r.employee.send_approve_alert_email(r), reqs)
 	
 	groups = group_reqs(reqs)
+
+	log.Info('Groups: ')
+	log.Info(groups)
+
 	groups and send_email_to(groups)
 	
 def group_reqs(reqs):
