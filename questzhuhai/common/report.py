@@ -534,7 +534,7 @@ def duration_days(start, end):
 	def caculate(s, e):
 		if s == e: return 0.5
 		if s == 'AM' and e == 'PM': return 1.0
-		if s == 'PM' and e == 'AM': return 0
+		if s == 'PM' and e == 'AM': return 1.0
 		
 	start_ampm = start.strftime('%Y-%m-%d-%p').split('-')[-1]
 	end_ampm = end.strftime('%Y-%m-%d-%p').split('-')[-1]
