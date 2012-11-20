@@ -41,7 +41,7 @@ def send_email_to(groups):
 	
 	import settings
 	host = settings.LEAVESYSTEMHOST or ''
-	admins = Employee.objects.filter(is_administrative_staff=True, domain_id='prod\echen1')
+	admins = Employee.objects.filter(is_administrative_staff=True)#, domain_id='prod\echen1')
 	admin = admins and admins[0] or type('', (object,), {'display_name': 'Emily Chen', 'email': 'Emily.Chen@quest.com'})
 	
 	log.Info('Send Alert Email:')
@@ -51,7 +51,8 @@ def send_email_to(groups):
 		c = {'sender': admin.display_name, 'receiver': approver_name, 'reqs': reqs, 'host': host}
 		
 		# For test, add cc to Arthur Wu to confirm that email has been sended.
-		send_mail(template, admin.email, [approver_email], c, subject, cc=['Arthur.Wu@quest.com', 'Vivien.Chen@quest.com'])
+		send_mail(template, admin.email, [approver_email], c, subject, 
+            cc=['Arthur.Wu@quest.com'] + [a.email for a in admins])
 
 if __name__ == '__main__':
 	DoCheck()
