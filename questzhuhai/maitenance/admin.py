@@ -232,6 +232,7 @@ class EmployeeAdmin(admin.ModelAdmin):
 	ordering = ('display_name',)
 	search_fields = ['domain_id', 'display_name', 'email']
 	save_on_top = True
+	list_editable = ('balanced_forward',)
 	
 	fieldsets = (
 		(None, {
